@@ -3347,8 +3347,8 @@ function gainLove(amount){
   // 3 = Bonus:     instant +love
   const CUBEROULETTE = {
     durationMs: 30000,
-    minGapMs: 9 * 60000,
-    maxGapMs: 14 * 60000
+    minGapMs: 5 * 60000,
+    maxGapMs: 10 * 60000
   };
 
   function randInt(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
@@ -3360,7 +3360,7 @@ function gainLove(amount){
   }
 
   function ensureEventState(){
-    if(!state.event) state.event = { type:null, endsAt:0, nextFanAt:0, nextCubeAt:0, cubeMode:null, cubeBonus:0 };
+    if(!state.event) state.event = { type:null, endsAt:0, nextFanAt:0, nextCubeAt:0, cubeMode:null, cubeBonus:0, cubeClickMult:1, cubeAutoOff:false };
   }
 
   function scheduleNextFanMeet(fromTs){
@@ -3425,28 +3425,62 @@ function gainLove(amount){
   state.event.endsAt = now + dur;
 
   state.event.cubeMode = null;
-  state.event.cubeBonus = 0;
+      state.event.cubeBonus = 0;
+      state.event.cubeClickMult = 1;
+      state.event.cubeAutoOff = false;
   scheduleNextFanMeet(state.event.endsAt);
 }
 
   function startCubeRoulette(){
     const now = Date.now();
     state.event.type = "cuberoulette";
-    state.event.endsAt = now + CUBEROULETTE.durationMs;
-    // pick mode
-    const mode = randInt(0, 3);
+
+    // Cube Roulette: раз в 5–10 минут, упор на ручные клики
+    // modes:
+    // tiny   — ×15 (10с)
+    // long   — ×60 (18с)
+    // sprint — ×120 (12с)
+    // ultra  — ×300 (8с)
+    // jackpot— мгновенный бонус (от силы клика) + ×450 (6с)
+    // error  — авто=0, но ×600 (15с)
+    const roll = Math.random();
+    let mode = "tiny";
+    if(roll < 0.30) mode = "tiny";
+    else if(roll < 0.55) mode = "long";
+    else if(roll < 0.75) mode = "sprint";
+    else if(roll < 0.90) mode = "ultra";
+    else if(roll < 0.98) mode = "jackpot";
+    else mode = "error";
+
     state.event.cubeMode = mode;
     state.event.cubeBonus = 0;
+    state.event.cubeClickMult = 1;
+    state.event.cubeAutoOff = false;
+
+    let dur = 10000;
+    if(mode==="tiny"){ dur = 10000; state.event.cubeClickMult = 15; }
+    if(mode==="long"){ dur = 18000; state.event.cubeClickMult = 60; }
+    if(mode==="sprint"){ dur = 12000; state.event.cubeClickMult = 120; }
+    if(mode==="ultra"){ dur = 8000;  state.event.cubeClickMult = 300; }
+    if(mode==="jackpot"){ dur = 6000; state.event.cubeClickMult = 450; }
+    if(mode==="error"){ dur = 15000; state.event.cubeAutoOff = true; state.event.cubeClickMult = 600; }
+
+    state.event.endsAt = now + dur;
 
     state.eventSeen = state.eventSeen || {};
-    if(mode === 0) state.eventSeen.cubeGood = true;
-    if(mode === 1) state.eventSeen.cubeBad = true;
-    if(mode === 2) state.eventSeen.cubeNothing = true;
-    if(mode === 3) state.eventSeen.cubeBonus = true;
+    if(mode==="ultra" || mode==="jackpot") state.eventSeen.cubeGood = true;
+    if(mode==="error") state.eventSeen.cubeBad = true;
+    if(mode==="tiny") state.eventSeen.cubeNothing = true;
+    if(mode==="jackpot") state.eventSeen.cubeBonus = true;
 
-    if(mode === 3){
-      const rate = baseAutoRate();
-      const bonus = Math.max(1000, rate * 25); // scales with progress
+    if(mode==="jackpot"){
+      // jackpot — мгновенный бонус, завязан на силу клика (не на буст зданий)
+      const base = state.clickBase || 1;
+      const mult = clickMultFromLevel(state.clickLevel||0);
+      const pct = Math.max(0, state.clickCpsPct || 0);
+      const fromProd = autoRate() * pct; // часть, добавляемая к клику (уже существующая механика)
+      const rawClick = (base * mult + fromProd);
+      const bonus = Math.max(1500, Math.floor(rawClick * 1200));
       state.event.cubeBonus = bonus;
       gainLove(bonus);
     }
@@ -3479,24 +3513,26 @@ function gainLove(amount){
   }
 
   function eventClickMult(){
-  if(activeType()!=="fanmeet") return 1;
-  const v = fanmeetVariant();
-  if(v===1) return 777;
-  if(v===3) return fanmeetV3Mult();
-  return 1; // v2: only shop discount
+  if(activeType()==="fanmeet"){
+    const v = fanmeetVariant();
+    if(v===1) return 777;
+    if(v===3) return fanmeetV3Mult();
+    return 1; // v2: only shop discount
+  }
+  if(activeType()==="cuberoulette"){
+    return (state.event && state.event.cubeClickMult) ? state.event.cubeClickMult : 1;
+  }
+  return 1;
 }
 
 
   function eventAutoMult(){
-    if(activeType()==="fanmeet") return 1;
-if(activeType()==="cuberoulette"){
-      const mode = state.event.cubeMode;
-      if(mode===0) return 2;
-      if(mode===1) return 0.5;
-      return 1; // nothing or bonus-only
-    }
-    return 1;
+  if(activeType()==="fanmeet") return 1;
+  if(activeType()==="cuberoulette"){
+    return (state.event && state.event.cubeAutoOff) ? 0 : 1;
   }
+  return 1;
+}
 
 // === Fanmeet variants (added) ===
 function fanmeetVariant(){
@@ -4258,11 +4294,13 @@ const banner = document.getElementById("eventBanner");
         if(subEl) subEl.textContent = desc;
       }else if(type==="cuberoulette"){
         const mode = state.event.cubeMode;
-        let desc = "Сейчас что-то произойдёт…";
-        if(mode===0) desc = "30 сек: 💚/сек ×2 (хорошее настроение)";
-        if(mode===1) desc = "30 сек: 💚/сек ×0.5 (плохое настроение)";
-        if(mode===2) desc = "30 сек: ничего не произошло 🤡";
-        if(mode===3) desc = `Мгновенный бонус: +${fmt(state.event.cubeBonus)} 💚`;
+        let desc = "Крутится…";
+        if(mode==="tiny")     desc = "10 сек: 💚 за клик ×15";
+        if(mode==="long")     desc = "18 сек: 💚 за клик ×60";
+        if(mode==="sprint")   desc = "12 сек: 💚 за клик ×120";
+        if(mode==="ultra")    desc = "8 сек: 💚 за клик ×300";
+        if(mode==="jackpot")  desc = `6 сек: Джекпот +${fmt(state.event.cubeBonus)} 💚 и 💚 за клик ×450`;
+        if(mode==="error")    desc = "15 сек: авто=0, но 💚 за клик ×600";
         if(titleEl) titleEl.textContent = "Cube Roulette 🎲";
         if(subEl) subEl.innerHTML = `${desc} <span class="eventTime" id="eventTime">${Math.ceil(left/1000)}с</span>`;
       }
@@ -4501,7 +4539,7 @@ if(loveEl) loveEl.textContent = fmt(love);
     state.clickLevel = 0;
     state.clickCpsPct = 0;
     // сбрасываем состояние ивентов/таймеров
-    state.event = { type:null, endsAt:0, nextFanAt:0, nextCubeAt:0, cubeMode:null, cubeBonus:0 };
+    state.event = { type:null, endsAt:0, nextFanAt:0, nextCubeAt:0, cubeMode:null, cubeBonus:0, cubeClickMult:1, cubeAutoOff:false };
     state.lastSeen = Date.now();
 
     // Перерисовка + сохранение нулевого состояния
