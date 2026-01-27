@@ -2407,6 +2407,81 @@ body.viral .eventBadge{
 .ach-btn-top:hover{ border-color: rgba(255,255,255,.35); }
 .ach-btn-top:active{ transform: translateY(1px); }
 
+.stats-btn-top{
+  align-self:center;
+  margin-left:12px;
+  padding:6px 10px;
+  font-size:12px;
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,.22);
+  color: rgba(255,255,255,.86);
+  border-radius: 999px;
+  cursor:pointer;
+}
+.stats-btn-top:hover{ border-color: rgba(255,255,255,.35); }
+.stats-btn-top:active{ transform: translateY(1px); }
+
+.statsOverlay{
+  position:fixed; inset:0;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(8px);
+  display:flex; align-items:center; justify-content:center;
+  padding: 18px;
+  z-index: 9999;
+}
+.statsOverlay.hidden{ display:none; }
+
+.statsModal{
+  width:min(560px, 92vw);
+  max-height: 82vh;
+  overflow:auto;
+  background: rgba(12,20,14,.86);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius: 18px;
+  box-shadow: 0 26px 80px rgba(0,0,0,.55);
+  padding: 14px 14px 12px;
+}
+
+.statsHeader{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+.statsTitle{ font-size:16px; font-weight:700; }
+.statsClose{
+  background: transparent;
+  border:1px solid rgba(255,255,255,.18);
+  color: rgba(255,255,255,.85);
+  border-radius: 10px;
+  padding: 6px 10px;
+  cursor:pointer;
+}
+.statsClose:hover{ border-color: rgba(255,255,255,.32); }
+
+.statsList{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.statRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  background: rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius: 14px;
+  padding: 10px 10px 9px;
+}
+.statLabel{ color: rgba(255,255,255,.80); font-size: 13px; }
+.statValue{
+  font-weight:950;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+}
+.statsFooter{
+  margin-top:10px;
+  color: rgba(255,255,255,.72);
+  font-size: 12.5px;
+}
+
 .achOverlay{
   position:fixed; inset:0;
   background: rgba(0,0,0,.55);
@@ -2584,10 +2659,7 @@ body.viral .eventBadge{
       </div>
 
       <div class="stats">
-        <div class="pill" id="pillTotal"><span class="k">Любовь</span><span class="v" id="love">0</span></div>
-        <div class="pill" id="pillPerClick"><span class="k">За клик</span><span class="v" id="perClick">1</span></div>
-        <div class="pill" id="pillAuto"><span class="k">В сек.</span><span class="v" id="autoRate">0</span></div>
-        <div class="pill" id="pillBest"><span class="k">Рекорд</span><span class="v" id="best">0</span></div>
+<button class="stats-btn-top" id="statsBtn" title="Статистика">Статистика</button>
       <button class="ach-btn-top" id="achBtn" title="Достижения">Достижения</button>
       <button class="reset-btn-top" onclick="resetProgress()" title="Сбросить прогресс">Сброс</button>
       </div>
@@ -2596,7 +2668,7 @@ body.viral .eventBadge{
         <div class="eventBadge">ИВЕНТ</div>
         <div class="eventText">
           <div class="eventTitle" id="eventTitle">Фанмитинг с Миён</div>
-          <div class="eventSub" id="eventSub">60 сек: 💚 за клик ×2, 💚/сек ×1.5 <span class="eventTime" id="eventTime"></span></div>
+          <div class="eventSub" id="eventSub">Фанмитинг! <span class="eventTime" id="eventTime"></span></div>
         </div>
       </div>
 
@@ -2712,6 +2784,35 @@ body.viral .eventBadge{
     </div>
   
 
+
+  </div>
+
+  <!-- STATS -->
+  <div class="statsOverlay hidden" id="statsOverlay" aria-hidden="true">
+    <div class="statsModal" role="dialog" aria-modal="true" aria-label="Статистика">
+      <div class="statsHeader">
+        <div class="statsTitle">Статистика</div>
+        <button class="statsClose" id="statsClose" type="button">Закрыть</button>
+      </div>
+
+      <div class="statsList" id="statsList">
+        <div class="statRow"><div class="statLabel">Всего любви за всё время</div><div class="statValue" id="statTotalEarned">0</div></div>
+        <div class="statRow"><div class="statLabel">Любовь сейчас</div><div class="statValue" id="statLoveNow">0</div></div>
+        <div class="statRow"><div class="statLabel">Любовь за клик</div><div class="statValue" id="statPerClick">0</div></div>
+        <div class="statRow"><div class="statLabel">Любовь в секунду</div><div class="statValue" id="statPerSec">0</div></div>
+        <div class="statRow"><div class="statLabel">Рекорд</div><div class="statValue" id="statBest">0</div></div>
+        <div class="statRow"><div class="statLabel">Всего кликов</div><div class="statValue" id="statClicks">0</div></div>
+        <div class="statRow"><div class="statLabel">Потрачено любви</div><div class="statValue" id="statSpent">0</div></div>
+
+        <div class="statRow"><div class="statLabel">Куплено уникальных предметов в магазине</div><div class="statValue" id="statPurchases">0</div></div>
+        <div class="statRow"><div class="statLabel">Самый популярный предмет</div><div class="statValue" id="statTopItem">—</div></div>
+        <div class="statRow"><div class="statLabel">Время в игре</div><div class="statValue" id="statPlayTime">00:00:00</div></div>
+      </div>
+
+      <div class="statsFooter" id="statsFooter"></div>
+    </div>
+  </div>
+
 <script>
 (() => {
   "use strict";
@@ -2772,6 +2873,8 @@ body.viral .eventBadge{
     totalClicks: 0,
     totalEarned: 0,
     totalSpent: 0,
+    totalPurchases: 0,
+    playTimeMs: 0,
     achievements: {},
     eventSeen: {},
         love: 0,
@@ -2796,6 +2899,8 @@ body.viral .eventBadge{
       if(!s || typeof s !== "object") return;
       Object.assign(state, s);
       state.owned = state.owned || {};
+      state.totalPurchases = state.totalPurchases || 0;
+      state.playTimeMs = state.playTimeMs || 0;
       state.upgrades = state.upgrades || {};
       state.revealedItems = state.revealedItems || {};
       state.boughtUpgrades = state.boughtUpgrades || {};
@@ -3093,6 +3198,91 @@ function totalUpgradesGoal(){
   if(achOverlay) achOverlay.addEventListener("click", (e)=>{ if(e.target === achOverlay) closeAchievements(); });
 
 
+/* STATS UI */
+const statsBtn = $("statsBtn");
+const statsOverlay = $("statsOverlay");
+const statsClose = $("statsClose");
+
+
+function formatTimeMs(ms){
+  const total = Math.max(0, Math.floor((Number(ms)||0)/1000));
+  const h = String(Math.floor(total/3600)).padStart(2,"0");
+  const m = String(Math.floor((total%3600)/60)).padStart(2,"0");
+  const s = String(total%60).padStart(2,"0");
+  return `${h}:${m}:${s}`;
+}
+function getTopItemLabel(){
+  try{
+    let bestId = null;
+    let bestN = 0;
+    for(const it of (typeof ITEMS !== "undefined" ? ITEMS : [])){
+      const n = Math.floor((state.owned && state.owned[it.id]) || 0);
+      if(n > bestN){ bestN = n; bestId = it.id; }
+    }
+    if(!bestId || bestN<=0) return "—";
+    const it = (typeof ITEMS !== "undefined" ? ITEMS : []).find(x=>x.id===bestId);
+    return `${it ? it.name : bestId} ×${bestN}`;
+  }catch(_){
+    return "—";
+  }
+}
+
+function renderStats(){
+  const elTotal = $("statTotalEarned");
+  const elNow   = $("statLoveNow");
+  const elPC    = $("statPerClick");
+  const elPS    = $("statPerSec");
+  const elBest  = $("statBest");
+  const elClk   = $("statClicks");
+  const elSpent = $("statSpent");
+  const elPurch = $("statPurchases");
+  const elTop   = $("statTopItem");
+  const elTime  = $("statPlayTime");
+  const footer  = $("statsFooter");
+
+  const totalEarned = Math.floor(state.totalEarned || 0);
+  const nowLove = Math.floor(state.love || 0);
+  const pc = perClick();
+  const ps = autoRate();
+  const best = Math.floor(state.best || 0);
+  const clicks = Math.floor(state.totalClicks || 0);
+  const spent = Math.floor(state.totalSpent || 0);
+  const purchases = Math.floor(state.totalPurchases || 0);
+  const topItem = getTopItemLabel();
+  const playTime = formatTimeMs(state.playTimeMs || 0);
+
+  if(elTotal) elTotal.textContent = fmt(totalEarned);
+  if(elNow)   elNow.textContent   = fmt(nowLove);
+  if(elPC)    elPC.textContent    = fmt(pc);
+  if(elPS)    elPS.textContent    = fmt(ps);
+  if(elBest)  elBest.textContent  = fmt(best);
+  if(elClk)   elClk.textContent   = fmt(clicks);
+  if(elSpent) elSpent.textContent = fmt(spent);
+  if(elPurch) elPurch.textContent = fmt(purchases);
+  if(elTop)   elTop.textContent   = topItem;
+  if(elTime)  elTime.textContent  = playTime;
+
+  if(footer){
+    }
+}
+
+function openStats(){
+  if(!statsOverlay) return;
+  renderStats();
+  statsOverlay.classList.remove("hidden");
+  statsOverlay.setAttribute("aria-hidden","false");
+}
+function closeStats(){
+  if(!statsOverlay) return;
+  statsOverlay.classList.add("hidden");
+  statsOverlay.setAttribute("aria-hidden","true");
+}
+
+if(statsBtn) statsBtn.addEventListener("click", openStats);
+if(statsClose) statsClose.addEventListener("click", closeStats);
+if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === statsOverlay) closeStats(); });
+
+
   function announceReveal(itemId){
     const it = ITEMS.find(x=>x.id===itemId);
     if(!it) return;
@@ -3117,18 +3307,27 @@ function totalUpgradesGoal(){
   ======================= */
   function unitPrice(item){
     const c = getOwned(item.id);
-    return Math.floor(item.baseCost * Math.pow(item.costMult, c));
+    return Math.floor((item.baseCost * Math.pow(item.costMult, c)) * fanmeetShopDiscount());
   }
   function totalPrice(item, mult){
     const c = getOwned(item.id);
     const k = Math.max(1, mult|0);
     const r = item.costMult;
     const base = item.baseCost * Math.pow(r, c);
-    if(k === 1) return Math.floor(base);
+    if(k === 1) return Math.floor(base * fanmeetShopDiscount());
     const sum = base * (Math.pow(r, k) - 1) / (r - 1);
-    return Math.floor(sum);
+    return Math.floor(sum * fanmeetShopDiscount());
   }
   function canAfford(cost){ return state.love >= cost; }
+
+
+function gainLove(amount){
+  const a = Number(amount) || 0;
+  if(a === 0) return;
+  state.love += a;
+  state.best = Math.max(state.best || 0, state.love);
+  if(a > 0) state.totalEarned = (state.totalEarned || 0) + a;
+}
 
   /* =======================
      RATES
@@ -3146,7 +3345,7 @@ function totalUpgradesGoal(){
     durationMs: 60000,
     minGapMs: 6 * 60000,
     maxGapMs: 10 * 60000,
-    clickMult: 2,
+    clickMult: 1,
     autoMult: 1.5
   };
 
@@ -3165,7 +3364,7 @@ function totalUpgradesGoal(){
   // Viral Moment: rare surprise
   const VIRAL = {
     durationMs: 60000,
-    autoMult: 1.5,
+    autoMult: 1,
     chancePerMinute: 0.02
   };
 
@@ -3232,17 +3431,28 @@ function totalUpgradesGoal(){
   }
 
   function startFanMeet(){
-    const now = Date.now();
-    state.eventSeen = state.eventSeen || {};
-    state.eventSeen.fanmeet = true;
-    state.event.type = "fanmeet";
-    state.event.endsAt = now + FANMEET.durationMs;
-    state.event.cubeMode = null;
-    state.event.cubeBonus = 0;
-    scheduleNextFanMeet(state.event.endsAt);
-  }
+  const now = Date.now();
+  state.eventSeen = state.eventSeen || {};
+  state.eventSeen.fanmeet = true;
 
-  function startViral(){
+  // pick variant (v3 opens only after buying all 4 girls at least once)
+  const canV3 = fanmeetV3Unlocked();
+  const pool = canV3 ? [1,2,3] : [1,2];
+  const variant = pool[Math.floor(Math.random()*pool.length)];
+
+  state.event.type = "fanmeet";
+  state.event.fanVariant = variant;
+
+  // duration: v1=13s, v2/v3=10s
+  const dur = (variant===1) ? 13*1000 : 10*1000;
+  state.event.endsAt = now + dur;
+
+  state.event.cubeMode = null;
+  state.event.cubeBonus = 0;
+  scheduleNextFanMeet(state.event.endsAt);
+}
+
+function startViral(){
     const now = Date.now();
     state.eventSeen = state.eventSeen || {};
     state.eventSeen.viral = true;
@@ -3255,8 +3465,7 @@ function totalUpgradesGoal(){
     const rate = baseAutoRate();
     const bonus = Math.max(2000, rate * 40);
     state.event.viralBonus = bonus;
-    state.love += bonus;
-    state.best = Math.max(state.best||0, Math.floor(state.love));
+    gainLove(bonus);
 
     // next check in ~1 minute
     state.event.nextViralCheckAt = now + 60000;
@@ -3281,8 +3490,7 @@ function totalUpgradesGoal(){
       const rate = baseAutoRate();
       const bonus = Math.max(1000, rate * 25); // scales with progress
       state.event.cubeBonus = bonus;
-      state.love += bonus;
-      state.best = Math.max(state.best||0, Math.floor(state.love));
+      gainLove(bonus);
     }
 
     scheduleNextCubeRoulette(state.event.endsAt);
@@ -3313,11 +3521,16 @@ function totalUpgradesGoal(){
   }
 
   function eventClickMult(){
-    return activeType()==="fanmeet" ? FANMEET.clickMult : 1;
-  }
+  if(activeType()!=="fanmeet") return 1;
+  const v = fanmeetVariant();
+  if(v===1) return 777;
+  if(v===3) return fanmeetV3Mult();
+  return 1; // v2: only shop discount
+}
+
 
   function eventAutoMult(){
-    if(activeType()==="fanmeet") return FANMEET.autoMult;
+    if(activeType()==="fanmeet") return 1;
     if(activeType()==="viral") return VIRAL.autoMult;
     if(activeType()==="cuberoulette"){
       const mode = state.event.cubeMode;
@@ -3327,6 +3540,21 @@ function totalUpgradesGoal(){
     }
     return 1;
   }
+
+// === Fanmeet variants (added) ===
+function fanmeetVariant(){
+  return (state.event && state.event.type==="fanmeet") ? (state.event.fanVariant||1) : 1;
+}
+function fanmeetV3Unlocked(){
+  return getOwned("minnie")>=1 && getOwned("soyeon")>=1 && getOwned("shuhua")>=1 && getOwned("yuqi")>=1;
+}
+function fanmeetV3Mult(){
+  const total = getOwned("minnie")+getOwned("soyeon")+getOwned("shuhua")+getOwned("yuqi");
+  return Math.max(1, total + 7); // пример: 13 -> ×20
+}
+function fanmeetShopDiscount(){
+  return (activeType()==="fanmeet" && fanmeetVariant()===2) ? 0.95 : 1;
+}
 
 function perClick(){
     const base = state.clickBase || 1;
@@ -3477,6 +3705,7 @@ function clickMultFromLevel(lvl){
 
     state.love -= u.cost;
     state.totalSpent = (state.totalSpent||0) + u.cost;
+    state.totalPurchases = (state.totalPurchases||0) + 1;
 
     // Apply upgrade effects
     if(u.eventKey){
@@ -3820,6 +4049,7 @@ row.addEventListener("mousemove", (e)=>{ if(tt && tt.style.display==="block") sh
             const costM = totalPrice(item, best);
             state.love -= costM;
             state.totalSpent = (state.totalSpent||0) + costM;
+            state.totalPurchases = (state.totalPurchases||0) + 1;
             setOwned(item.id, owned + best);
             checkAchievements();
             chatOnPurchase(item.id);
@@ -3832,6 +4062,7 @@ row.addEventListener("mousemove", (e)=>{ if(tt && tt.style.display==="block") sh
           }
           state.love -= priceN;
           state.totalSpent = (state.totalSpent||0) + priceN;
+          state.totalPurchases = (state.totalPurchases||0) + 1;
           setOwned(item.id, owned + buyMult);
           checkAchievements();
           chatOnPurchase(item.id);
@@ -3853,7 +4084,7 @@ row.addEventListener("mousemove", (e)=>{ if(tt && tt.style.display==="block") sh
           const refund = Math.floor(lastBlock * 0.5);
 
           setOwned(item.id, owned - sellCount);
-          state.love += refund;
+          gainLove(refund);
           persist();
           toast(`Продано x${sellCount} (+${fmt(refund)} 💚)`);
           renderAll();
@@ -3905,10 +4136,8 @@ function popClickValue(x, y, val){
 function doClick(clientX, clientY){
     const add = perClick();
     popClickValue(clientX, clientY, add);
-    state.love += add;
-    state.best = Math.max(state.best, state.love);
+    gainLove(add);
     state.totalClicks = (state.totalClicks||0) + 1;
-    state.totalEarned = (state.totalEarned||0) + add;
     persist();
     checkAchievements();
 
@@ -3966,8 +4195,7 @@ function doClick(clientX, clientY){
     if(base <= 0) return;
 
     const bonus = Math.floor(base * 30 * cubes);
-    state.love += bonus;
-    state.best = Math.max(state.best, state.love);
+    gainLove(bonus);
     toast(`Cube неожиданно помог: +${fmt(bonus)} 💚`);
   }
   setInterval(cubeBonusTick, 10000);
@@ -3982,8 +4210,7 @@ function doClick(clientX, clientY){
     const rate = autoRate();
     if(deltaSec > 2 && rate > 0){
       const gain = Math.floor(rate * deltaSec);
-      state.love += gain;
-      state.best = Math.max(state.best, state.love);
+      gainLove(gain);
       toast(`Оффлайн: +${fmt(gain)} 💚`);
     }
     state.lastSeen = now;
@@ -3999,13 +4226,15 @@ function doClick(clientX, clientY){
     const dt = Math.max(0, Math.min(5, (now - prev)/1000));
     state._lastTickTs = now;
 
+    state.playTimeMs = (state.playTimeMs || 0) + dt*1000;
+
     maybeStartEvents();
     const rate = autoRate();
     state._autoFrac = state._autoFrac || 0;
     const gainF = rate * dt + state._autoFrac;
     const gainI = Math.floor(gainF);
     state._autoFrac = gainF - gainI;
-    state.love += gainI;
+    gainLove(gainI);
     
     // Sync shop availability even when love grows passively
     try{ updateShopAffordability(); }catch(e){}
@@ -4065,11 +4294,14 @@ state.best = Math.max(state.best, state.love);
       if(timeEl) timeEl.textContent = `(${Math.ceil(left/1000)}с)`;
 
       if(type==="fanmeet"){
+        const v = (state.event && state.event.fanVariant) ? state.event.fanVariant : 1;
         if(titleEl) titleEl.textContent = "Фанмитинг с Миён";
-        if(subEl) subEl.innerHTML = `60 сек: 💚 за клик ×2, 💚/сек ×1.5 <span class="eventTime" id="eventTime">${Math.ceil(left/1000)}с</span>`;
-    // keep shop in sync with current love
-    try{ updateShopAffordability(); }catch(e){}
-  }else if(type==="viral"){
+        let desc = "";
+        if(v===1) desc = "13 сек: 💚 за клик ×777";
+        else if(v===2) desc = "10 сек: скидка −5% в магазине";
+        else desc = `10 сек: 💚 за клик ×${fanmeetV3Mult()} (i-dle)`;
+        if(subEl) subEl.textContent = desc;
+      }else if(type==="viral"){
         const desc = `✨ Вирусный момент! Все говорят о Миён — +${fmt(state.event.viralBonus || 0)} 💚 и 💚/сек ×1.5`;
         if(titleEl) titleEl.textContent = "Вирусный момент ✨";
         if(subEl) subEl.innerHTML = `${desc} <span class="eventTime" id="eventTime">${Math.ceil(left/1000)}с</span>`;
@@ -4307,6 +4539,8 @@ if(loveEl) loveEl.textContent = fmt(love);
     state.eventUpgrades = {};
     state.clicks = 0;
     state.totalClicks = 0;
+    state.totalPurchases = 0;
+    state.playTimeMs = 0;
     state._lastTickTs = Date.now();
     state._autoFrac = 0;
     // сбрасываем достижения и связанные счётчики
