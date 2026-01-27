@@ -2382,15 +2382,6 @@ body.cuberoulette .eventBadge{
 }
 
 
-/* ===== Viral Moment Event ===== */
-body.viral .eventBanner{
-  border-color: rgba(255, 215, 0, .55);
-  box-shadow: 0 20px 70px rgba(255,215,0,.14), 0 18px 60px rgba(0,0,0,.25);
-}
-body.viral .eventBadge{
-  border-color: rgba(255, 215, 0, .65);
-  background: rgba(255, 215, 0, .16);
-}
 
 
 .ach-btn-top{
@@ -2887,7 +2878,7 @@ body.viral .eventBadge{
     clickLevel: 0,
     clickCpsPct: 0,
     lastSeen: Date.now(),
-    event: { type:null, endsAt:0, nextFanAt:0, nextCubeAt:0, nextViralCheckAt:0, viralBonus:0, cubeMode:null, cubeBonus:0 },
+    event: { type:null, endsAt:0, nextFanAt:0, nextCubeAt:0, cubeMode:null, cubeBonus:0 },
     eventUpgrades: {}
   };
 
@@ -2913,7 +2904,7 @@ body.viral .eventBadge{
       if(typeof state.clickLevel !== 'number') state.clickLevel = 0;
       if(typeof state.clickBase !== 'number') state.clickBase = 1;
       if(typeof state.clickCpsPct !== 'number') state.clickCpsPct = 0;
-      state.event = state.event || { type:null, endsAt:0, nextFanAt:0, nextCubeAt:0, nextViralCheckAt:0, viralBonus:0, cubeMode:null, cubeBonus:0 };
+      state.event = state.event || { type:null, endsAt:0, nextFanAt:0, nextCubeAt:0, cubeMode:null, cubeBonus:0 };
     }catch(_){}
   }
   function persist(){
@@ -3089,9 +3080,6 @@ const qtyTabs = $("qtyTabs");
     { id:"fanmeet_once", icon:"🎂", name:"Фанмитинг!", desc:"Поймай ивент Фанмитинг хотя бы 1 раз.", hidden:true,
       prog:()=> (state.eventSeen && state.eventSeen.fanmeet) ? 1 : 0 },
 
-    { id:"viral_once",   icon:"✨", name:"Вирусный момент", desc:"Поймай ивент Вирусный момент хотя бы 1 раз.", hidden:true,
-      prog:()=> (state.eventSeen && state.eventSeen.viral) ? 1 : 0 },
-
     { id:"cube_triple",  icon:"🎲", name:"Три лица Cube", desc:"В Cube Roulette получи хорошее, плохое и ничего.", hidden:true,
       prog:()=> {
         const s = state.eventSeen || {};
@@ -3103,6 +3091,12 @@ const qtyTabs = $("qtyTabs");
     { id:"cube_bonus",   icon:"💥", name:"Джекпот!", desc:"В Cube Roulette поймай мгновенный бонус.", hidden:true,
       prog:()=> (state.eventSeen && state.eventSeen.cubeBonus) ? 1 : 0 },
   
+    
+
+
+    
+
+
 ];
 
   function isAchDone(id){ return !!(state.achievements && state.achievements[id]); }
@@ -3115,7 +3109,7 @@ const qtyTabs = $("qtyTabs");
   }
 
 function totalUpgradesGoal(){
-
+    // 3 upgrades per shop item + 6 click-related upgrades (3 multipliers + 3 additive)
     return (ITEMS.length * 3) + 6;
   }
 
@@ -3172,18 +3166,18 @@ function totalUpgradesGoal(){
       row.className = "achItem";
       const badge = isAchDone(a.id) ? '<span class="achBadge done">Получено</span>' : `<span class="achBadge">${Math.floor(p*100)}%</span>`;
       row.innerHTML = `
-      <div class="achRowTop">
-        <div class="achMain">
-          <div class="achIcon">${isAchDone(a.id) ? (a.icon || "🏅") : "🔒"}</div>
-        <div>
-          <div class="achName">${isAchDone(a.id) ? a.name : `Секретное достижение №${achNum}`}</div>
-          <div class="achDesc">${isAchDone(a.id) ? a.desc : ""}</div>
+        <div class="achRowTop">
+          <div class="achMain">
+            <div class="achIcon">${isAchDone(a.id) ? (a.icon || "🏅") : "🔒"}</div>
+            <div>
+              <div class="achName">${isAchDone(a.id) ? a.name : `Секретное достижение №${achNum}`}</div>
+              <div class="achDesc">${isAchDone(a.id) ? a.desc : ""}</div>
+            </div>
+          </div>
+          ${badge}
         </div>
-      </div>
-      ${badge}
-    </div>
-    <div class="achProg"><div style="width:${Math.floor(p*100)}%"></div></div>
-    `;
+        <div class="achProg"><div style="width:${Math.floor(p*100)}%"></div></div>
+      `;
       achList.appendChild(row);
     }
     if(achFooter) achFooter.textContent = `Получено: ${done}/${ACHIEVEMENTS.length}`;
@@ -3357,13 +3351,6 @@ function gainLove(amount){
     maxGapMs: 14 * 60000
   };
 
-  // Viral Moment: rare surprise
-  const VIRAL = {
-    durationMs: 60000,
-    autoMult: 1,
-    chancePerMinute: 0.02
-  };
-
   function randInt(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
 
   function eventGapFactor(key){
@@ -3373,7 +3360,7 @@ function gainLove(amount){
   }
 
   function ensureEventState(){
-    if(!state.event) state.event = { type:null, endsAt:0, nextFanAt:0, nextCubeAt:0, nextViralCheckAt:0, viralBonus:0, cubeMode:null, cubeBonus:0 };
+    if(!state.event) state.event = { type:null, endsAt:0, nextFanAt:0, nextCubeAt:0, cubeMode:null, cubeBonus:0 };
   }
 
   function scheduleNextFanMeet(fromTs){
@@ -3397,16 +3384,10 @@ function gainLove(amount){
     if(!state.event.nextFanAt) scheduleNextFanMeet(now);
     if(!state.event.nextCubeAt) scheduleNextCubeRoulette(now);
 
-    // Viral check (once per minute)
-    if(!state.event.nextViralCheckAt) state.event.nextViralCheckAt = now + 60000;
-
     // Если ты поменяла интервалы в коде, а в сохранении остались старые "дальние" таймеры —
     // подтягиваем расписание к новым настройкам, чтобы ивенты можно было быстро проверить.
     if(state.event.nextFanAt - now > FANMEET.maxGapMs) scheduleNextFanMeet(now);
     if(state.event.nextCubeAt - now > CUBEROULETTE.maxGapMs) scheduleNextCubeRoulette(now);
-
-    // if viral check was scheduled too far (e.g., old save), pull it closer
-    if(state.event.nextViralCheckAt - now > 60000) state.event.nextViralCheckAt = now + 60000;
   }
 
   function isEventActive(){
@@ -3447,25 +3428,6 @@ function gainLove(amount){
   state.event.cubeBonus = 0;
   scheduleNextFanMeet(state.event.endsAt);
 }
-
-function startViral(){
-    const now = Date.now();
-    state.eventSeen = state.eventSeen || {};
-    state.eventSeen.viral = true;
-    state.event.type = "viral";
-    state.event.endsAt = now + VIRAL.durationMs;
-    state.event.cubeMode = null;
-    state.event.cubeBonus = 0;
-
-    // bonus scales with progress
-    const rate = baseAutoRate();
-    const bonus = Math.max(2000, rate * 40);
-    state.event.viralBonus = bonus;
-    gainLove(bonus);
-
-    // next check in ~1 minute
-    state.event.nextViralCheckAt = now + 60000;
-  }
 
   function startCubeRoulette(){
     const now = Date.now();
@@ -3527,8 +3489,7 @@ function startViral(){
 
   function eventAutoMult(){
     if(activeType()==="fanmeet") return 1;
-    if(activeType()==="viral") return VIRAL.autoMult;
-    if(activeType()==="cuberoulette"){
+if(activeType()==="cuberoulette"){
       const mode = state.event.cubeMode;
       if(mode===0) return 2;
       if(mode===1) return 0.5;
@@ -4276,9 +4237,7 @@ state.best = Math.max(state.best, state.love);
 
     document.body.classList.toggle("fanmeet", type==="fanmeet");
     document.body.classList.toggle("cuberoulette", type==="cuberoulette");
-    document.body.classList.toggle("viral", type==="viral");
-
-    const banner = document.getElementById("eventBanner");
+const banner = document.getElementById("eventBanner");
     const titleEl = document.getElementById("eventTitle");
     const subEl = document.getElementById("eventSub");
     const timeEl = document.getElementById("eventTime");
@@ -4297,10 +4256,6 @@ state.best = Math.max(state.best, state.love);
         else if(v===2) desc = "10 сек: скидка −5% в магазине";
         else desc = `10 сек: 💚 за клик ×${fanmeetV3Mult()} (i-dle)`;
         if(subEl) subEl.textContent = desc;
-      }else if(type==="viral"){
-        const desc = `✨ Вирусный момент! Все говорят о Миён — +${fmt(state.event.viralBonus || 0)} 💚 и 💚/сек ×1.5`;
-        if(titleEl) titleEl.textContent = "Вирусный момент ✨";
-        if(subEl) subEl.innerHTML = `${desc} <span class="eventTime" id="eventTime">${Math.ceil(left/1000)}с</span>`;
       }else if(type==="cuberoulette"){
         const mode = state.event.cubeMode;
         let desc = "Сейчас что-то произойдёт…";
@@ -4317,7 +4272,7 @@ state.best = Math.max(state.best, state.love);
 
     const ico = document.querySelector("#sideHeart .ico");
     if(ico){
-      ico.textContent = type==="fanmeet" ? "🩷" : (type==="viral" ? "✨" : (type==="cuberoulette" ? "🎲" : "💚"));
+      ico.textContent = type==="fanmeet" ? "🩷" : ((type==="cuberoulette" ? "🎲" : "💚"));
     }
 if(loveEl) loveEl.textContent = fmt(love);
     if(perClickEl) perClickEl.textContent = fmt(perClick());
@@ -4546,7 +4501,7 @@ if(loveEl) loveEl.textContent = fmt(love);
     state.clickLevel = 0;
     state.clickCpsPct = 0;
     // сбрасываем состояние ивентов/таймеров
-    state.event = { type:null, endsAt:0, nextFanAt:0, nextCubeAt:0, nextViralCheckAt:0, viralBonus:0, cubeMode:null, cubeBonus:0 };
+    state.event = { type:null, endsAt:0, nextFanAt:0, nextCubeAt:0, cubeMode:null, cubeBonus:0 };
     state.lastSeen = Date.now();
 
     // Перерисовка + сохранение нулевого состояния
