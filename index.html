@@ -3103,12 +3103,6 @@ const qtyTabs = $("qtyTabs");
     { id:"cube_bonus",   icon:"💥", name:"Джекпот!", desc:"В Cube Roulette поймай мгновенный бонус.", hidden:true,
       prog:()=> (state.eventSeen && state.eventSeen.cubeBonus) ? 1 : 0 },
   
-    
-
-
-    
-
-
 ];
 
   function isAchDone(id){ return !!(state.achievements && state.achievements[id]); }
@@ -3121,7 +3115,7 @@ const qtyTabs = $("qtyTabs");
   }
 
 function totalUpgradesGoal(){
-    // 3 upgrades per shop item + 6 click-related upgrades (3 multipliers + 3 additive)
+
     return (ITEMS.length * 3) + 6;
   }
 
@@ -3178,18 +3172,18 @@ function totalUpgradesGoal(){
       row.className = "achItem";
       const badge = isAchDone(a.id) ? '<span class="achBadge done">Получено</span>' : `<span class="achBadge">${Math.floor(p*100)}%</span>`;
       row.innerHTML = `
-        <div class="achRowTop">
-          <div class="achMain">
-            <div class="achIcon">${(isAchDone(a.id) || !a.hidden) ? (a.icon || "🏅") : "🔒"}</div>
-            <div>
-              <div class="achName">${(isAchDone(a.id) || !a.hidden) ? a.name : "Секретное достижение №${achNum}"}</div>
-              <div class="achDesc">${(isAchDone(a.id) || !a.hidden) ? a.desc : "Открой условие и получи награду"}</div>
-            </div>
-          </div>
-          ${badge}
+      <div class="achRowTop">
+        <div class="achMain">
+          <div class="achIcon">${isAchDone(a.id) ? (a.icon || "🏅") : "🔒"}</div>
+        <div>
+          <div class="achName">${isAchDone(a.id) ? a.name : `Секретное достижение №${achNum}`}</div>
+          <div class="achDesc">${isAchDone(a.id) ? a.desc : ""}</div>
         </div>
-        <div class="achProg"><div style="width:${Math.floor(p*100)}%"></div></div>
-      `;
+      </div>
+      ${badge}
+    </div>
+    <div class="achProg"><div style="width:${Math.floor(p*100)}%"></div></div>
+    `;
       achList.appendChild(row);
     }
     if(achFooter) achFooter.textContent = `Получено: ${done}/${ACHIEVEMENTS.length}`;
