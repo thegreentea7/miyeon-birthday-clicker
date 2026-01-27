@@ -1,0 +1,4365 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Miyeon Birthday Clicker</title>
+  <style>
+
+:root{
+      --bgA:#06150B;
+      --bgB:#0A2B17;
+
+      --green:#3DFF8B;
+      --green2:#A8FFCC;
+
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+
+      --stroke: rgba(255,255,255,.12);
+      --card: rgba(255,255,255,.06);
+
+      --shadow: 0 22px 70px rgba(0,0,0,.45);
+      --radius: 18px;
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; overflow:hidden; }
+    body{
+      margin:0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(1200px 850px at 15% 15%, rgba(61,255,139,.14), transparent 60%),
+        radial-gradient(900px 700px at 85% 25%, rgba(168,255,204,.10), transparent 55%),
+        linear-gradient(160deg, var(--bgA), var(--bgB));
+      overflow:hidden;
+    }
+
+    /* FULL WIDTH LAYOUT */
+    .page{
+      width:100vw;
+      height:100vh;
+      display:grid;
+      grid-template-rows: auto 1fr;
+      gap:12px;
+      padding:14px;
+    }
+
+    .topbar{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 14px;
+      border:1px solid var(--stroke);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      flex-wrap:wrap;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width: 240px;
+    }
+    .logo{
+      width:42px; height:42px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(18px 18px at 25% 25%, rgba(255,255,255,.75), transparent 70%),
+        radial-gradient(26px 26px at 75% 75%, rgba(61,255,139,.18), transparent 70%),
+        linear-gradient(180deg, rgba(61,255,139,.20), rgba(255,255,255,.04));
+      display:grid;
+      place-items:center;
+      font-size:18px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+    }
+    .title{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      line-height:1.12;
+    }
+    .title b{ font-size:15.5px; letter-spacing:.2px; }
+    .title span{ font-size:12.5px; color: var(--muted); }
+
+    .stats{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .pill{
+      padding:8px 10px;
+      border-radius: 999px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.06);
+      font-size:12.5px;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      white-space:nowrap;
+    }
+    .pill .k{ color: var(--muted); }
+    /* make changing numbers not "jump" in width */
+    .pill .v{
+      font-weight:950;
+      font-family: var(--mono);
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1, "lnum" 1;
+      display:inline-block;
+      min-width: 6.2ch;
+      text-align:right;
+    }
+
+    /* MAIN GRID: playfield + shop */
+    .main{
+      width:100%;
+      display:grid;
+      grid-template-columns: minmax(320px, 360px) 1fr minmax(300px, 360px);
+      gap:12px;
+      min-height: 0;
+      align-items: stretch;
+    }
+    @media (max-width: 980px){
+      .main{
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel{
+      border:1px solid var(--stroke);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      overflow:hidden;
+      position:relative;
+      min-height: 0;
+    }
+
+    /* PLAYFIELD */
+    .play{
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      min-height: 640px;
+    }
+
+    .playHeader{
+      padding:14px 14px 10px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(900px 160px at 50% 0%, rgba(61,255,139,.10), transparent 60%),
+        rgba(0,0,0,.18);
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .bigStat{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .bigStat .h{
+      font-weight:950;
+      letter-spacing:.2px;
+      opacity:.92;
+    }
+    .bigStat .num{
+      font-weight:950;
+      font-size:34px;
+      line-height:1;
+      text-shadow: 0 12px 30px rgba(0,0,0,.35);
+      font-family: var(--mono);
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1, "lnum" 1;
+    }
+    .bigStat .sub{
+      color: var(--muted);
+      font-size:12.5px;
+    }
+
+    .playBody{
+      position:relative;
+      flex:1 1 auto;
+      min-height:0;
+      overflow:hidden;
+      background:
+        radial-gradient(900px 600px at 50% 45%, rgba(61,255,139,.12), transparent 60%),
+        linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.18));
+    }
+
+    /* falling hearts layer */
+    .heartsLayer{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index:1;
+    }
+    .fallHeart{
+      position:absolute;
+      top:-40px;
+      font-size: 22px;
+      opacity:.75;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.25));
+      animation: fall linear forwards;
+    }
+    @keyframes fall{
+      to{
+        transform: translateY(calc(100vh + 120px)) rotate(160deg);
+        opacity:.0;
+      }
+    }
+
+    /* glow in center (just vibes) */
+    .glow{
+      position:absolute;
+      left:50%;
+      top:52%;
+      transform: translate(-50%,-50%);
+      width:min(520px, 70%);
+      aspect-ratio: 1/1;
+      border-radius:50%;
+      background: radial-gradient(circle, rgba(61,255,139,.18), transparent 65%);
+      filter: blur(1px);
+      z-index:0;
+    }
+
+    /* SIDE HEART CLICK BUTTON */
+    .sideHeart{
+      position:fixed;
+      right:18px;
+      top:50%;
+      transform: translateY(-50%);
+      z-index:3;
+      width:118px;
+      height:118px;
+      border-radius: 28px;
+      border:1px solid rgba(255,255,255,.16);
+      background:
+        radial-gradient(45px 45px at 30% 28%, rgba(255,255,255,.55), transparent 70%),
+        radial-gradient(90px 90px at 70% 78%, rgba(61,255,139,.40), transparent 62%),
+        linear-gradient(180deg, rgba(61,255,139,.30), rgba(255,255,255,.06));
+      box-shadow:
+        0 24px 90px rgba(0,0,0,.40),
+        inset 0 1px 0 rgba(255,255,255,.16);
+      cursor:pointer;
+      user-select:none;
+      display:grid;
+      place-items:center;
+      transition: transform .06s ease;
+    }
+    .sideHeart:active{ transform: translate(-50%,-50%) scale(.985); }
+    .sideHeart .ico{
+      font-size:54px;
+      filter: drop-shadow(0 14px 28px rgba(0,0,0,.22));
+    }
+    .sideHeart .tap{
+      position:absolute;
+      bottom:-34px;
+      left:50%;
+      transform: translateX(-50%);
+      font-size:12px;
+      color: rgba(255,255,255,.72);
+      white-space:nowrap;
+      text-shadow: 0 10px 18px rgba(0,0,0,.35);
+    }
+    @media (max-width: 980px){
+      .sideHeart{
+        position:fixed;
+        right:14px;
+        bottom:16px;
+        top:auto;
+        transform:none;
+        width:96px;
+        height:96px;
+        border-radius: 24px;
+      }
+      .sideHeart:active{ transform: scale(.985); }
+      .sideHeart .ico{ font-size:46px; }
+      .sideHeart .tap{ display:none; }
+    }
+
+    /* Center strip (full width, between play and shop on desktop -> on mobile it stays above shop) */
+    .centerStrip{
+      grid-column: 1 / -1;
+      border-radius: var(--radius);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      box-shadow: 0 16px 45px rgba(0,0,0,.35);
+    }
+    .stripTop{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:10px 14px;
+      background: linear-gradient(180deg, rgba(0,0,0,.35), rgba(255,255,255,.05));
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .stripTitle{
+      font-weight:950;
+      letter-spacing:.3px;
+      opacity:.92;
+    }
+    .stripHint{
+      font-size:12.5px;
+      opacity:.65;
+      white-space:nowrap;
+    }
+    .stripTrack{
+      position:relative;
+      height:92px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px) 0 0/18px 18px,
+        linear-gradient(0deg, rgba(255,255,255,.05) 1px, transparent 1px) 0 0/18px 18px,
+        radial-gradient(900px 120px at 50% 0%, rgba(61,255,139,.12), transparent 60%),
+        rgba(0,0,0,.16);
+    }
+    .stripTrack::before,
+    .stripTrack::after{
+      content:"";
+      position:absolute;
+      left:0; right:0;
+      height:10px;
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.25));
+      opacity:.85;
+    }
+    .stripTrack::before{ top:0; }
+    .stripTrack::after{ bottom:0; }
+    .trackRow{
+      height:100%;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 0 14px;
+      overflow:hidden;
+    }
+    .trackChip{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      white-space:nowrap;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+    }
+    .trackChip .ico{ font-size:22px; }
+    .trackChip .txt{ font-weight:950; font-size:14px; opacity:.92; }
+    .trackChip .lvl{ font-family: var(--mono); opacity:.65; font-size:12px; }
+
+    /* SHOP (Cookie-clicker-ish) */
+    .sideShop{
+      padding:0;
+      display:flex;
+      flex-direction:column;
+      height: 92vh;
+      max-height: 92vh;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .shopHeader{
+      padding:14px 16px 12px;
+      text-align:center;
+      font-weight:950;
+      font-size:28px;
+      letter-spacing:.6px;
+      text-shadow: 0 6px 16px rgba(0,0,0,.55);
+      background:
+        radial-gradient(700px 140px at 50% 0%, rgba(255,255,255,.10), transparent 60%),
+        linear-gradient(180deg, rgba(0,0,0,.22), rgba(255,255,255,.03));
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+
+    .upBar{
+      padding:10px 12px 12px;
+      background: rgba(0,0,0,.22);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .upBarTitle{
+      font-size:12.5px;
+      color: rgba(255,255,255,.70);
+      margin-bottom:8px;
+    }
+    .upIcons{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .upIcon{
+      width:46px;
+      height:46px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+      display:grid;
+      place-items:center;
+      font-size:22px;
+      cursor:pointer;
+      position:relative;
+    }
+    .upIcon.locked{ filter: grayscale(1) brightness(.75); opacity:.65; cursor:default; }
+    .upIcon.owned{ outline: 2px solid rgba(61,255,139,.35); }
+    /* Upgrade rarities */
+    .upIcon.rarity-common{
+      border-color: rgba(220,220,220,.38);
+      background: linear-gradient(180deg, rgba(220,220,220,.14), rgba(255,255,255,.04));
+    }
+    .upIcon.rarity-epic{
+      border-color: rgba(190,140,255,.55);
+      background: linear-gradient(180deg, rgba(190,140,255,.18), rgba(255,255,255,.04));
+    }
+    .upIcon.rarity-legendary{
+      border-color: rgba(255,208,96,.72);
+      background: linear-gradient(180deg, rgba(255,208,96,.22), rgba(255,255,255,.04));
+      box-shadow: 0 0 0 1px rgba(255,208,96,.16), inset 0 1px 0 rgba(255,255,255,.14);
+    }
+
+
+    .shopControls{
+      padding:10px 12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      background: rgba(255,255,255,.05);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+
+    .modeTabs{ display:flex; gap:8px; align-items:center; font-weight:900; }
+    .modeTabs .tab{
+      border:1px solid transparent;
+      background: transparent;
+      color: rgba(255,255,255,.65);
+      font-weight:950;
+      padding:6px 8px;
+      border-radius:10px;
+      cursor:pointer;
+    }
+    .modeTabs .tab.active{
+      color: rgba(255,255,255,.92);
+      background: rgba(0,0,0,.25);
+      border-color: rgba(255,255,255,.10);
+    }
+
+    .qtyTabs{
+      display:flex; gap:10px; align-items:center;
+      font-family: var(--mono); font-weight:900;
+    }
+    .qtyTabs .q{
+      border:1px solid transparent;
+      background: transparent;
+      color: rgba(255,255,255,.65);
+      padding:6px 8px;
+      border-radius:10px;
+      cursor:pointer;
+    }
+    .qtyTabs .q.active{
+      color: rgba(255,255,255,.92);
+      background: rgba(0,0,0,.25);
+      border-color: rgba(255,255,255,.10);
+    }
+
+    .shopList{
+      flex:1 1 auto;
+      min-height:0;
+      overflow-y:auto;
+      overflow-x:hidden;
+      -webkit-overflow-scrolling: touch;
+      background:
+        radial-gradient(700px 600px at 80% 0%, rgba(61,255,139,.08), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.18));
+    
+      box-sizing:border-box;
+      padding-bottom: max(90px, env(safe-area-inset-bottom));
+      scroll-padding-bottom: max(90px, env(safe-area-inset-bottom));
+    }
+    .shopList::-webkit-scrollbar{ width:12px; }
+    .shopList::-webkit-scrollbar-thumb{
+      background: rgba(255,255,255,.16);
+      border-radius:999px;
+      border:3px solid rgba(0,0,0,.15);
+    }
+    .shopList::-webkit-scrollbar-track{ background: rgba(0,0,0,.10); }
+
+    .shopRow{
+      display:grid;
+      grid-template-columns: 62px 1fr 56px;
+      gap:10px;
+      align-items:center;
+      padding:10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      cursor:pointer;
+      position:relative;
+    }
+    .shopRow:hover{ background: rgba(255,255,255,.07); }
+
+    .shopRow.disabled{
+      opacity:.45;
+      filter: saturate(.55);
+    }
+    .shopRow.disabled:hover{
+      background: rgba(255,255,255,.04);
+    }
+
+    .shopRow.locked{ cursor:default; opacity:.72; filter: grayscale(.1); }
+
+    .shopRow.bought{ animation: boughtPulse .30s ease-out; }
+    @keyframes boughtPulse{
+      0%{ transform: scale(1); }
+      60%{ transform: scale(1.01); }
+      100%{ transform: scale(1); }
+    }
+
+    .shopIcon{
+      width:52px; height:52px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        radial-gradient(24px 24px at 30% 30%, rgba(255,255,255,.10), transparent 70%),
+        rgba(0,0,0,.20);
+      display:grid;
+      place-items:center;
+      font-size:26px;
+    }
+    .shopMain{ display:flex; flex-direction:column; gap:4px; }
+    .shopName{
+      font-weight:950;
+      font-size:22px;
+      line-height:1;
+      text-shadow: 0 4px 12px rgba(0,0,0,.35);
+    }
+    .shopCost{
+      font-family: var(--mono);
+      font-size:13px;
+      color: rgba(168,255,204,.90);
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .shopCost .c{ color: rgba(255,255,255,.55); }
+
+    .shopBonus{
+      font-family: var(--mono);
+      font-size:12px;
+      color: rgba(255,255,255,.62);
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .shopBonus b{ color: rgba(61,255,139,.92); }
+    .shopBonus .c{ color: rgba(255,255,255,.46); }
+
+    .shopRightLvl{
+      justify-self:end;
+      font-weight:950;
+      font-size:34px;
+      color: rgba(255,255,255,.22);
+      text-shadow: 0 10px 22px rgba(0,0,0,.45);
+    }
+
+    /* tooltip */
+    .tt{
+      position:fixed;
+      z-index:9999;
+      display:none;
+      max-width:min(340px, 86vw);
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.62);
+      backdrop-filter: blur(10px);
+      color: rgba(255,255,255,.92);
+      font-size:13px;
+      line-height:1.25;
+      box-shadow: 0 18px 50px rgba(0,0,0,.40);
+    }
+    .tt b{ color: rgba(255,255,255,.95); }
+
+    /* toast */
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      background: rgba(0,0,0,.55);
+      border:1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(12px);
+      color: rgba(255,255,255,.92);
+      padding:10px 12px;
+      border-radius: 14px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.35);
+      font-size:13px;
+      display:none;
+      max-width:min(720px, 92vw);
+      text-align:center;
+      z-index:999;
+    }
+    .toast.show{ display:block; animation: toastIn .15s ease-out; }
+    @keyframes toastIn{
+      from{transform:translateX(-50%) translateY(6px); opacity:0}
+      to{transform:translateX(-50%) translateY(0); opacity:1}
+    }
+
+    /* click pop */
+    .pop{
+      position:absolute;
+      pointer-events:none;
+      font-weight:950;
+      text-shadow: 0 12px 18px rgba(0,0,0,.25);
+      animation: floatUp .9s ease-out forwards;
+      white-space:nowrap;
+      font-size: 15.5px;
+      z-index:4;
+    }
+    @keyframes floatUp{
+      from { transform: translate(-50%, -10%) scale(1); opacity: 1; }
+      to   { transform: translate(-50%, -150%) scale(1.10); opacity: 0; }
+    }
+  
+    /* ===== Cookie-clicker-ish 3-column look ===== */
+    .centerStrip{ display:none; }
+    .panel{
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.16);
+      border-radius: 12px;
+      overflow:hidden;
+      box-shadow: 0 18px 60px rgba(0,0,0,.35);
+      position:relative;
+    }
+
+    .play{ min-height: 640px; }
+    .playHeader{
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(0,0,0,.35), rgba(255,255,255,.03));
+    }
+    .bigStat .h{ opacity:.8; font-weight:900; letter-spacing:.2px; }
+    .bigStat .num{ font-size: 34px; font-weight:1000; color: rgba(168,255,204,.95); text-shadow: 0 10px 24px rgba(0,0,0,.35); }
+    .bigStat .sub{ opacity:.8; }
+
+    .playBody{
+      position:relative;
+      min-height: 560px;
+      background:
+        radial-gradient(600px 420px at 50% 45%, rgba(61,255,139,.10), transparent 60%),
+        linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.20));
+    }
+
+    /* big click heart (center-left like cookie) */
+    .sideHeart{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform: translate(-50%,-50%);
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(120px 120px at 30% 30%, rgba(255,255,255,.55), transparent 65%),
+        radial-gradient(180px 180px at 70% 70%, rgba(61,255,139,.25), transparent 62%),
+        rgba(0,0,0,.18);
+      box-shadow: 0 24px 90px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.14);
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      user-select:none;
+      -webkit-user-select:none;
+      touch-action: manipulation;
+    }
+    .sideHeart .ico{ font-size: 96px; filter: drop-shadow(0 14px 22px rgba(0,0,0,.35)); }
+    .sideHeart:active{ transform: translate(-50%,-50%) scale(.985); }
+
+    /* cursors ring (visual like cookie clicker) */
+    .cursorRing{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform: translate(-50%,-50%);
+      width: 360px;
+      height: 360px;
+      pointer-events:none;
+      opacity:.95;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.25));
+    }
+    .cursorRing .cur{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform-origin: 0 0;
+      font-size: 18px;
+    }
+
+    /* WORLD panel */
+    .world{
+      min-height: 640px;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.24)),
+        radial-gradient(900px 700px at 50% 10%, rgba(168,255,204,.06), transparent 60%);
+    }
+    .worldTop{
+      padding: 10px 12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(0,0,0,.40), rgba(255,255,255,.02));
+    }
+    .worldMsg{
+      font-weight:900;
+      opacity:.88;
+      text-shadow: 0 8px 22px rgba(0,0,0,.40);
+    }
+    .worldSide{ display:flex; gap:10px; align-items:center; opacity:.75; font-size:12.5px; }
+    .worldMini{
+      padding:6px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.20);
+      white-space:nowrap;
+      font-family: var(--mono);
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1, "lnum" 1;
+    }
+    .worldBody{
+      height: calc(100% - 48px);
+      overflow: hidden;
+      padding: 10px 10px 14px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .worldBody::-webkit-scrollbar{ width:12px; }
+    .worldBody::-webkit-scrollbar-thumb{
+      background: rgba(255,255,255,.16);
+      border-radius:999px;
+      border:3px solid rgba(0,0,0,.15);
+    }
+
+    .lane{
+      height: 108px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.10);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.22));
+      position:relative;
+      overflow:hidden;
+    }
+    .laneTop{
+      position:absolute;
+      left:10px;
+      top:8px;
+      font-weight:900;
+      font-size:13px;
+      opacity:.82;
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .laneTop .tag{
+      font-family: var(--mono);
+      font-size:12px;
+      opacity:.65;
+    }
+    .laneField{
+      position:absolute;
+      left:0; right:0;
+      top:30px; bottom:0;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 0 10px;
+      overflow:hidden;
+    }
+    .sprite{
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.20);
+      font-size: 22px;
+      flex: 0 0 auto;
+      opacity:.92;
+    }
+    .laneEmpty{
+      opacity:.55;
+      font-size:12.5px;
+      padding-left:8px;
+    }
+
+    /* === Center world polish === */
+    .laneStats{
+      position:absolute;
+      right:10px;
+      top:8px;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      font-family: var(--mono);
+      font-size:12px;
+      opacity:.85;
+    }
+    .laneStat{
+      padding:4px 8px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      white-space:nowrap;
+    }
+    .laneStat b{ font-weight:900; }
+    .laneStat span{ opacity:.75; margin-left:4px; }
+
+    .laneTitle{ display:flex; align-items:center; gap:8px; }
+    .laneIco{ font-size:16px; }
+
+    /* accents per lane */
+    .laneLike{ box-shadow: inset 0 0 0 1px rgba(92,255,170,.08); }
+    .laneComment{ box-shadow: inset 0 0 0 1px rgba(143,211,255,.08); }
+    .laneMinnie{ box-shadow: inset 0 0 0 1px rgba(255,170,210,.10); }
+    .laneYuqi{ box-shadow: inset 0 0 0 1px rgba(255,225,120,.10); }
+    .laneShuhua{ box-shadow: inset 0 0 0 1px rgba(210,210,255,.10); }
+    .laneSoyeon{ box-shadow: inset 0 0 0 1px rgba(255,215,120,.14); }
+
+    .laneLike::before, .laneComment::before, .laneMinnie::before, .laneYuqi::before, .laneShuhua::before, .laneSoyeon::before{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background: radial-gradient(closest-side at 20% 20%, rgba(92,255,170,.10), transparent 70%);
+      opacity:.0;
+      transition: opacity .18s ease;
+      pointer-events:none;
+    }
+    .laneComment::before{ background: radial-gradient(closest-side at 20% 20%, rgba(143,211,255,.10), transparent 70%); }
+    .laneMinnie::before{ background: radial-gradient(closest-side at 20% 20%, rgba(255,170,210,.12), transparent 70%); }
+    .laneYuqi::before{ background: radial-gradient(closest-side at 20% 20%, rgba(255,225,120,.12), transparent 70%); }
+    .laneShuhua::before{ background: radial-gradient(closest-side at 20% 20%, rgba(210,210,255,.12), transparent 70%); }
+    .laneSoyeon::before{ background: radial-gradient(closest-side at 20% 20%, rgba(255,215,120,.14), transparent 70%); }
+    .lane:hover::before{ opacity:1; }
+
+    /* sprites: less "grid", more alive */
+    .sprite{
+      transition: transform .12s ease, filter .12s ease;
+    }
+    .sprite.wiggle{ animation: wiggle 3.6s ease-in-out infinite; }
+    @keyframes wiggle{
+      0%,100%{ transform: translateY(0) rotate(0deg); }
+      25%{ transform: translateY(-1px) rotate(-2deg); }
+      50%{ transform: translateY(1px) rotate(2deg); }
+      75%{ transform: translateY(-1px) rotate(1deg); }
+    }
+    .sprite.pop{ animation: pop .28s ease-out 1; }
+    @keyframes pop{
+      0%{ transform: scale(.7); filter: brightness(1.15); }
+      70%{ transform: scale(1.08); }
+      100%{ transform: scale(1); }
+    }
+    .spriteMore{
+      font-family: var(--mono);
+      font-weight:900;
+      font-size:14px;
+      opacity:.85;
+      background: rgba(0,0,0,.28);
+    }
+
+
+  
+    /* === Center world lines (improved) === */
+    .worldLine{
+      margin: 10px 12px;
+      padding: 10px 12px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(420px 120px at 30% 0%, rgba(61,255,139,.16), transparent 60%),
+        rgba(0,0,0,.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+    }
+    .worldLineTop{
+      display:flex;
+      justify-content:space-between;
+      align-items:baseline;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .worldLineTitle{
+      font-weight:950;
+      letter-spacing:.2px;
+      color: rgba(255,255,255,.92);
+    }
+    .worldLineTitle .muted{ opacity:.65; font-weight:800; margin-left:8px; }
+    .worldLineStat{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; opacity:.85; }
+    .worldLineStat .muted{ opacity:.65; }
+
+    .worldUnits{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .worldUnits .unit{
+      width:38px;
+      height:38px;
+      display:grid;
+      place-items:center;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+      font-size:20px;
+    }
+    .worldUnits .icoW{
+      animation: wiggle 2.6s ease-in-out infinite;
+      transform-origin: 50% 80%;
+    }
+    @keyframes wiggle{
+      0%,100%{ transform: rotate(-2deg) translateY(0); }
+      50%{ transform: rotate(2deg) translateY(-1px); }
+    }
+    .unitMore{
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.25);
+      font-weight:950;
+      opacity:.85;
+    }
+
+    .lineGold{
+      background:
+        radial-gradient(420px 140px at 30% 0%, rgba(255,210,120,.18), transparent 60%),
+        rgba(0,0,0,.18);
+      border-color: rgba(255,210,120,.18);
+    }
+    .lineBlue{
+      background:
+        radial-gradient(420px 140px at 30% 0%, rgba(143,211,255,.16), transparent 60%),
+        rgba(0,0,0,.18);
+      border-color: rgba(143,211,255,.18);
+    }
+    .linePink{
+      background:
+        radial-gradient(420px 140px at 30% 0%, rgba(255,143,200,.14), transparent 60%),
+        rgba(0,0,0,.18);
+      border-color: rgba(255,143,200,.18);
+    }
+
+    /* placeholder in upgrades bar */
+    .upPlaceholder{
+      color: rgba(255,255,255,.68);
+      font-size: 12.5px;
+      padding: 10px 12px;
+      border:1px dashed rgba(255,255,255,.14);
+      border-radius: 12px;
+      background: rgba(0,0,0,.16);
+    }
+
+    /* Burst hearts on click */
+    .burstHeart{
+      position:absolute;
+      left:0;
+      top:0;
+      transform: translate(-50%,-50%);
+      pointer-events:none;
+      font-size:18px;
+      animation: burst 0.9s ease-out forwards;
+      z-index: 2;
+      filter: drop-shadow(0 10px 16px rgba(0,0,0,.35));
+    }
+    @keyframes burst{
+      0%{ opacity:1; transform: translate(-50%,-50%) scale(1); }
+      100%{ opacity:0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.6); }
+    }
+
+    /* pressed feedback */
+    .sideHeart.pressed{ transform: translate(-50%,-50%) scale(0.98); }
+
+  
+    /* === World FX (center ambience) === */
+    .world{ position:relative; overflow:hidden; }
+    .worldBody{ position:relative; }
+    .worldFX{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index:0;
+    }
+    .worldBody > *:not(.worldFX){ position:relative; z-index:1; }
+
+    .fxP{
+      position:absolute;
+      left: var(--x);
+      top: 110%;
+      font-size: var(--s);
+      opacity: var(--o);
+      filter: drop-shadow(0 10px 16px rgba(0,0,0,.25));
+      animation: fxRise var(--d) linear forwards;
+      will-change: transform, opacity;
+    }
+    @keyframes fxRise{
+      0%{ transform: translate(0,0) rotate(0deg); opacity: var(--o); }
+      85%{ opacity: var(--o); }
+      100%{ transform: translate(var(--dx), -120vh) rotate(var(--r)); opacity: 0; }
+    }
+
+    /* Make center lanes more "game-like" */
+    .worldLine{
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.35), rgba(255,255,255,.03)),
+        radial-gradient(520px 140px at 25% 0%, rgba(61,255,139,.18), transparent 60%),
+        rgba(0,0,0,.20);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.10),
+        0 14px 40px rgba(0,0,0,.30);
+    }
+    .worldUnits{
+      flex-wrap:nowrap;
+      overflow:hidden;
+      padding-bottom:2px;
+    }
+    .worldUnits .unit{
+      flex: 0 0 auto;
+    }
+    .unitMore{
+      flex: 0 0 auto;
+      background: rgba(0,0,0,.35);
+    }
+
+    /* Hide the small centerStrip "Лента прогресса" to declutter (optional) */
+    .centerStrip{ display:none; }
+
+
+    .unit.pop{ animation: popUnit .22s ease-out 1; }
+    @keyframes popUnit{ 0%{ transform: scale(.92); } 70%{ transform: scale(1.06);} 100%{ transform: scale(1);} }
+
+
+    /* ===== Chat in center (Miyeon x Neverland) ===== */
+    .worldBody{ position:relative; }
+    .chatWrap{
+      position:relative;
+      z-index:2;
+      width:100%;
+      height:100%;
+      min-height:0;
+      padding: 26px 36px 30px;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+      gap:12px;
+    }
+    .chatMsgs{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      width:100%;
+      flex: 1 1 auto;
+      justify-content:flex-end;
+    }
+    .msg{
+      display:flex;
+      gap:10px;
+      align-items:flex-end;
+      max-width: 100%;
+      animation: fadeUp .28s ease-out;
+    }
+    .msg.neverland{ align-self:flex-start; }
+    .msg.miyeon{ align-self:flex-end; flex-direction:row-reverse; }
+    .avatar{
+      width:34px; height:34px;
+      border-radius: 12px;
+      display:grid; place-items:center;
+      font-weight:950; font-size:12.5px;
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 10px 26px rgba(0,0,0,.25);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.90);
+      flex: 0 0 auto;
+    }
+    .msg.miyeon .avatar{
+      background: rgba(61,255,139,.18);
+      border-color: rgba(61,255,139,.35);
+      color: #eafff2;
+    }
+    .bubble{
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+      backdrop-filter: blur(10px);
+    
+      max-width: 70%; }
+    .msg.neverland .bubble{ background: rgba(255,255,255,.08); }
+    .msg.miyeon .bubble{
+      background: rgba(61,255,139,.16);
+      border-color: rgba(61,255,139,.30);
+    }
+    .name{
+      font-size:12px;
+      opacity:.75;
+      margin-bottom:6px;
+      font-weight:900;
+    }
+    .text{
+      font-size:15px;
+      line-height:1.35;
+      color: var(--text);
+    }
+
+    .typing{
+      display:none;
+      gap:10px;
+      align-items:flex-end;
+      max-width: 76%;
+      margin-top: 6px;
+    }
+    .typing.miyeon{ align-self:flex-end; flex-direction:row-reverse; }
+    .typing .bubble{ min-width: 170px; }
+    .dots{ display:flex; gap:6px; padding-top:2px; }
+    .dots span{
+      width:6px; height:6px; border-radius:999px;
+      background: rgba(255,255,255,.70);
+      opacity:.75;
+      animation: dot 0.9s infinite ease-in-out;
+    }
+    .dots span:nth-child(2){ animation-delay:.12s; }
+    .dots span:nth-child(3){ animation-delay:.24s; }
+    @keyframes dot{
+      0%,100%{ transform: translateY(0); opacity:.55; }
+      50%{ transform: translateY(-3px); opacity:.95; }
+    }
+/* ===== Hard lock: no scrollbars anywhere ===== */
+html, body { overflow: hidden !important; }
+
+/* ===== Keep heart stable on click (no drifting) ===== */
+.sideHeart { will-change: transform; }
+.sideHeart.pressed { transform: translate(-50%,-50%) scale(0.98) !important; }
+.sideHeart:active { transform: translate(-50%,-50%) scale(.985) !important; }
+
+/* ===== Give chat safe margins so bubbles/shadows never clip ===== */
+.chatWrap { padding: 26px 44px 34px !important; }
+
+
+:root{
+      --bgA:#06150B;
+      --bgB:#0A2B17;
+
+      --green:#3DFF8B;
+      --green2:#A8FFCC;
+
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+
+      --stroke: rgba(255,255,255,.12);
+      --card: rgba(255,255,255,.06);
+
+      --shadow: 0 22px 70px rgba(0,0,0,.45);
+      --radius: 18px;
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; overflow:hidden; }
+    body{
+      margin:0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(1200px 850px at 15% 15%, rgba(61,255,139,.14), transparent 60%),
+        radial-gradient(900px 700px at 85% 25%, rgba(168,255,204,.10), transparent 55%),
+        linear-gradient(160deg, var(--bgA), var(--bgB));
+      overflow:hidden;
+    }
+
+    /* FULL WIDTH LAYOUT */
+    .page{
+      width:100vw;
+      height:100vh;
+      display:grid;
+      grid-template-rows: auto 1fr;
+      gap:12px;
+      padding:14px;
+    }
+
+    .topbar{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 14px;
+      border:1px solid var(--stroke);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      flex-wrap:wrap;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width: 240px;
+    }
+    .logo{
+      width:42px; height:42px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(18px 18px at 25% 25%, rgba(255,255,255,.75), transparent 70%),
+        radial-gradient(26px 26px at 75% 75%, rgba(61,255,139,.18), transparent 70%),
+        linear-gradient(180deg, rgba(61,255,139,.20), rgba(255,255,255,.04));
+      display:grid;
+      place-items:center;
+      font-size:18px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+    }
+    .title{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      line-height:1.12;
+    }
+    .title b{ font-size:15.5px; letter-spacing:.2px; }
+    .title span{ font-size:12.5px; color: var(--muted); }
+
+    .stats{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .pill{
+      padding:8px 10px;
+      border-radius: 999px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.06);
+      font-size:12.5px;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      white-space:nowrap;
+    }
+    .pill .k{ color: var(--muted); }
+    .pill .v{ font-weight:950; }
+
+    /* MAIN GRID: playfield + shop */
+    .main{
+      width:100%;
+      display:grid;
+      grid-template-columns: minmax(320px, 360px) 1fr minmax(300px, 360px);
+      gap:12px;
+      min-height: 0;
+      align-items: stretch;
+    }
+    @media (max-width: 980px){
+      .main{
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel{
+      border:1px solid var(--stroke);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      overflow:hidden;
+      position:relative;
+      min-height: 0;
+    }
+
+    /* PLAYFIELD */
+    .play{
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      min-height: 640px;
+    }
+
+    .playHeader{
+      padding:14px 14px 10px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(900px 160px at 50% 0%, rgba(61,255,139,.10), transparent 60%),
+        rgba(0,0,0,.18);
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .bigStat{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .bigStat .h{
+      font-weight:950;
+      letter-spacing:.2px;
+      opacity:.92;
+    }
+    .bigStat .num{
+      font-weight:950;
+      font-size:34px;
+      line-height:1;
+      text-shadow: 0 12px 30px rgba(0,0,0,.35);
+    }
+    .bigStat .sub{
+      color: var(--muted);
+      font-size:12.5px;
+    }
+
+    .playBody{
+      position:relative;
+      flex:1 1 auto;
+      min-height:0;
+      overflow:hidden;
+      background:
+        radial-gradient(900px 600px at 50% 45%, rgba(61,255,139,.12), transparent 60%),
+        linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.18));
+    }
+
+    /* falling hearts layer */
+    .heartsLayer{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index:1;
+    }
+    .fallHeart{
+      position:absolute;
+      top:-40px;
+      font-size: 22px;
+      opacity:.75;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.25));
+      animation: fall linear forwards;
+    }
+    @keyframes fall{
+      to{
+        transform: translateY(calc(100vh + 120px)) rotate(160deg);
+        opacity:.0;
+      }
+    }
+
+    /* glow in center (just vibes) */
+    .glow{
+      position:absolute;
+      left:50%;
+      top:52%;
+      transform: translate(-50%,-50%);
+      width:min(520px, 70%);
+      aspect-ratio: 1/1;
+      border-radius:50%;
+      background: radial-gradient(circle, rgba(61,255,139,.18), transparent 65%);
+      filter: blur(1px);
+      z-index:0;
+    }
+
+    /* SIDE HEART CLICK BUTTON */
+    .sideHeart{
+      position:fixed;
+      right:18px;
+      top:50%;
+      transform: translateY(-50%);
+      z-index:3;
+      width:118px;
+      height:118px;
+      border-radius: 28px;
+      border:1px solid rgba(255,255,255,.16);
+      background:
+        radial-gradient(45px 45px at 30% 28%, rgba(255,255,255,.55), transparent 70%),
+        radial-gradient(90px 90px at 70% 78%, rgba(61,255,139,.40), transparent 62%),
+        linear-gradient(180deg, rgba(61,255,139,.30), rgba(255,255,255,.06));
+      box-shadow:
+        0 24px 90px rgba(0,0,0,.40),
+        inset 0 1px 0 rgba(255,255,255,.16);
+      cursor:pointer;
+      user-select:none;
+      display:grid;
+      place-items:center;
+      transition: transform .06s ease;
+    }
+    .sideHeart:active{ transform: translate(-50%,-50%) scale(.985); }
+    .sideHeart .ico{
+      font-size:54px;
+      filter: drop-shadow(0 14px 28px rgba(0,0,0,.22));
+    }
+    .sideHeart .tap{
+      position:absolute;
+      bottom:-34px;
+      left:50%;
+      transform: translateX(-50%);
+      font-size:12px;
+      color: rgba(255,255,255,.72);
+      white-space:nowrap;
+      text-shadow: 0 10px 18px rgba(0,0,0,.35);
+    }
+    @media (max-width: 980px){
+      .sideHeart{
+        position:fixed;
+        right:14px;
+        bottom:16px;
+        top:auto;
+        transform:none;
+        width:96px;
+        height:96px;
+        border-radius: 24px;
+      }
+      .sideHeart:active{ transform: scale(.985); }
+      .sideHeart .ico{ font-size:46px; }
+      .sideHeart .tap{ display:none; }
+    }
+
+    /* Center strip (full width, between play and shop on desktop -> on mobile it stays above shop) */
+    .centerStrip{
+      grid-column: 1 / -1;
+      border-radius: var(--radius);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      box-shadow: 0 16px 45px rgba(0,0,0,.35);
+    }
+    .stripTop{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:10px 14px;
+      background: linear-gradient(180deg, rgba(0,0,0,.35), rgba(255,255,255,.05));
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .stripTitle{
+      font-weight:950;
+      letter-spacing:.3px;
+      opacity:.92;
+    }
+    .stripHint{
+      font-size:12.5px;
+      opacity:.65;
+      white-space:nowrap;
+    }
+    .stripTrack{
+      position:relative;
+      height:92px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px) 0 0/18px 18px,
+        linear-gradient(0deg, rgba(255,255,255,.05) 1px, transparent 1px) 0 0/18px 18px,
+        radial-gradient(900px 120px at 50% 0%, rgba(61,255,139,.12), transparent 60%),
+        rgba(0,0,0,.16);
+    }
+    .stripTrack::before,
+    .stripTrack::after{
+      content:"";
+      position:absolute;
+      left:0; right:0;
+      height:10px;
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.25));
+      opacity:.85;
+    }
+    .stripTrack::before{ top:0; }
+    .stripTrack::after{ bottom:0; }
+    .trackRow{
+      height:100%;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 0 14px;
+      overflow:hidden;
+    }
+    .trackChip{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      white-space:nowrap;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+    }
+    .trackChip .ico{ font-size:22px; }
+    .trackChip .txt{ font-weight:950; font-size:14px; opacity:.92; }
+    .trackChip .lvl{ font-family: var(--mono); opacity:.65; font-size:12px; }
+
+    /* SHOP (Cookie-clicker-ish) */
+    .sideShop{
+      padding:0;
+      display:flex;
+      flex-direction:column;
+      min-height: 640px;
+    }
+
+    .shopHeader{
+      padding:14px 16px 12px;
+      text-align:center;
+      font-weight:950;
+      font-size:28px;
+      letter-spacing:.6px;
+      text-shadow: 0 6px 16px rgba(0,0,0,.55);
+      background:
+        radial-gradient(700px 140px at 50% 0%, rgba(255,255,255,.10), transparent 60%),
+        linear-gradient(180deg, rgba(0,0,0,.22), rgba(255,255,255,.03));
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+
+    .upBar{
+      padding:10px 12px 12px;
+      background: rgba(0,0,0,.22);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .upBarTitle{
+      font-size:12.5px;
+      color: rgba(255,255,255,.70);
+      margin-bottom:8px;
+    }
+    .upIcons{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .upIcon{
+      width:46px;
+      height:46px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+      display:grid;
+      place-items:center;
+      font-size:22px;
+      cursor:pointer;
+      position:relative;
+    }
+    .upIcon.locked{ filter: grayscale(1) brightness(.75); opacity:.65; cursor:default; }
+    .upIcon.owned{ outline: 2px solid rgba(61,255,139,.35); }
+
+    .shopControls{
+      padding:10px 12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      background: rgba(255,255,255,.05);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+
+    .modeTabs{ display:flex; gap:8px; align-items:center; font-weight:900; }
+    .modeTabs .tab{
+      border:1px solid transparent;
+      background: transparent;
+      color: rgba(255,255,255,.65);
+      font-weight:950;
+      padding:6px 8px;
+      border-radius:10px;
+      cursor:pointer;
+    }
+    .modeTabs .tab.active{
+      color: rgba(255,255,255,.92);
+      background: rgba(0,0,0,.25);
+      border-color: rgba(255,255,255,.10);
+    }
+
+    .qtyTabs{
+      display:flex; gap:10px; align-items:center;
+      font-family: var(--mono); font-weight:900;
+    }
+    .qtyTabs .q{
+      border:1px solid transparent;
+      background: transparent;
+      color: rgba(255,255,255,.65);
+      padding:6px 8px;
+      border-radius:10px;
+      cursor:pointer;
+    }
+    .qtyTabs .q.active{
+      color: rgba(255,255,255,.92);
+      background: rgba(0,0,0,.25);
+      border-color: rgba(255,255,255,.10);
+    }
+
+    .shopList{
+      flex:1 1 auto;
+      min-height:0;
+      overflow-y:auto;
+      overflow-x:hidden;
+      max-height: calc(92vh - 210px);
+      background:
+        radial-gradient(700px 600px at 80% 0%, rgba(61,255,139,.08), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.18));
+    }
+    .shopList::-webkit-scrollbar{ width:12px; }
+    .shopList::-webkit-scrollbar-thumb{
+      background: rgba(255,255,255,.16);
+      border-radius:999px;
+      border:3px solid rgba(0,0,0,.15);
+    }
+    .shopList::-webkit-scrollbar-track{ background: rgba(0,0,0,.10); }
+
+    .shopRow{
+      display:grid;
+      grid-template-columns: 62px 1fr 56px;
+      gap:10px;
+      align-items:center;
+      padding:10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      cursor:pointer;
+      position:relative;
+    }
+    .shopRow:hover{ background: rgba(255,255,255,.07); }
+
+    .shopRow.disabled{
+      opacity:.45;
+      filter: saturate(.55);
+    }
+    .shopRow.disabled:hover{
+      background: rgba(255,255,255,.04);
+    }
+
+    .shopRow.locked{ cursor:default; opacity:.72; filter: grayscale(.1); }
+
+    .shopRow.bought{ animation: boughtPulse .30s ease-out; }
+    @keyframes boughtPulse{
+      0%{ transform: scale(1); }
+      60%{ transform: scale(1.01); }
+      100%{ transform: scale(1); }
+    }
+
+    .shopIcon{
+      width:52px; height:52px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        radial-gradient(24px 24px at 30% 30%, rgba(255,255,255,.10), transparent 70%),
+        rgba(0,0,0,.20);
+      display:grid;
+      place-items:center;
+      font-size:26px;
+    }
+    .shopMain{ display:flex; flex-direction:column; gap:4px; }
+    .shopName{
+      font-weight:950;
+      font-size:22px;
+      line-height:1;
+      text-shadow: 0 4px 12px rgba(0,0,0,.35);
+    }
+    .shopCost{
+      font-family: var(--mono);
+      font-size:13px;
+      color: rgba(168,255,204,.90);
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .shopCost .c{ color: rgba(255,255,255,.55); }
+
+    .shopBonus{
+      font-family: var(--mono);
+      font-size:12px;
+      color: rgba(255,255,255,.62);
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .shopBonus b{ color: rgba(61,255,139,.92); }
+    .shopBonus .c{ color: rgba(255,255,255,.46); }
+
+    .shopRightLvl{
+      justify-self:end;
+      font-weight:950;
+      font-size:34px;
+      color: rgba(255,255,255,.22);
+      text-shadow: 0 10px 22px rgba(0,0,0,.45);
+    }
+
+    /* tooltip */
+    .tt{
+      position:fixed;
+      z-index:9999;
+      display:none;
+      max-width:min(340px, 86vw);
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.62);
+      backdrop-filter: blur(10px);
+      color: rgba(255,255,255,.92);
+      font-size:13px;
+      line-height:1.25;
+      box-shadow: 0 18px 50px rgba(0,0,0,.40);
+    }
+    .tt b{ color: rgba(255,255,255,.95); }
+
+    /* toast */
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      background: rgba(0,0,0,.55);
+      border:1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(12px);
+      color: rgba(255,255,255,.92);
+      padding:10px 12px;
+      border-radius: 14px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.35);
+      font-size:13px;
+      display:none;
+      max-width:min(720px, 92vw);
+      text-align:center;
+      z-index:999;
+    }
+    .toast.show{ display:block; animation: toastIn .15s ease-out; }
+    @keyframes toastIn{
+      from{transform:translateX(-50%) translateY(6px); opacity:0}
+      to{transform:translateX(-50%) translateY(0); opacity:1}
+    }
+
+    /* click pop */
+    .pop{
+      position:absolute;
+      pointer-events:none;
+      font-weight:950;
+      text-shadow: 0 12px 18px rgba(0,0,0,.25);
+      animation: floatUp .9s ease-out forwards;
+      white-space:nowrap;
+      font-size: 15.5px;
+      z-index:4;
+    }
+    @keyframes floatUp{
+      from { transform: translate(-50%, -10%) scale(1); opacity: 1; }
+      to   { transform: translate(-50%, -150%) scale(1.10); opacity: 0; }
+    }
+  
+    /* ===== Cookie-clicker-ish 3-column look ===== */
+    .centerStrip{ display:none; }
+    .panel{
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.16);
+      border-radius: 12px;
+      overflow:hidden;
+      box-shadow: 0 18px 60px rgba(0,0,0,.35);
+      position:relative;
+    }
+
+    .play{ min-height: 640px; }
+    .playHeader{
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(0,0,0,.35), rgba(255,255,255,.03));
+    }
+    .bigStat .h{ opacity:.8; font-weight:900; letter-spacing:.2px; }
+    .bigStat .num{ font-size: 34px; font-weight:1000; color: rgba(168,255,204,.95); text-shadow: 0 10px 24px rgba(0,0,0,.35); }
+    .bigStat .sub{ opacity:.8; }
+
+    .playBody{
+      position:relative;
+      min-height: 560px;
+      background:
+        radial-gradient(600px 420px at 50% 45%, rgba(61,255,139,.10), transparent 60%),
+        linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.20));
+    }
+
+    /* big click heart (center-left like cookie) */
+    .sideHeart{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform: translate(-50%,-50%);
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(120px 120px at 30% 30%, rgba(255,255,255,.55), transparent 65%),
+        radial-gradient(180px 180px at 70% 70%, rgba(61,255,139,.25), transparent 62%),
+        rgba(0,0,0,.18);
+      box-shadow: 0 24px 90px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.14);
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      user-select:none;
+      -webkit-user-select:none;
+      touch-action: manipulation;
+    }
+    .sideHeart .ico{ font-size: 96px; filter: drop-shadow(0 14px 22px rgba(0,0,0,.35)); }
+    .sideHeart:active{ transform: translate(-50%,-50%) scale(.985); }
+
+    /* cursors ring (visual like cookie clicker) */
+    .cursorRing{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform: translate(-50%,-50%);
+      width: 360px;
+      height: 360px;
+      pointer-events:none;
+      opacity:.95;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.25));
+    }
+    .cursorRing .cur{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform-origin: 0 0;
+      font-size: 18px;
+    }
+
+    /* WORLD panel */
+    .world{
+      min-height: 640px;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.24)),
+        radial-gradient(900px 700px at 50% 10%, rgba(168,255,204,.06), transparent 60%);
+    }
+    .worldTop{
+      padding: 10px 12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(0,0,0,.40), rgba(255,255,255,.02));
+    }
+    .worldMsg{
+      font-weight:900;
+      opacity:.88;
+      text-shadow: 0 8px 22px rgba(0,0,0,.40);
+    }
+    .worldSide{ display:flex; gap:10px; align-items:center; opacity:.75; font-size:12.5px; }
+    .worldMini{
+      padding:6px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.20);
+      white-space:nowrap;
+    }
+    .worldBody{
+      height: calc(100% - 48px);
+      overflow: hidden;
+      padding: 10px 10px 14px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .worldBody::-webkit-scrollbar{ width:12px; }
+    .worldBody::-webkit-scrollbar-thumb{
+      background: rgba(255,255,255,.16);
+      border-radius:999px;
+      border:3px solid rgba(0,0,0,.15);
+    }
+
+    .lane{
+      height: 108px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.10);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.22));
+      position:relative;
+      overflow:hidden;
+    }
+    .laneTop{
+      position:absolute;
+      left:10px;
+      top:8px;
+      font-weight:900;
+      font-size:13px;
+      opacity:.82;
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .laneTop .tag{
+      font-family: var(--mono);
+      font-size:12px;
+      opacity:.65;
+    }
+    .laneField{
+      position:absolute;
+      left:0; right:0;
+      top:30px; bottom:0;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 0 10px;
+      overflow:hidden;
+    }
+    .sprite{
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.20);
+      font-size: 22px;
+      flex: 0 0 auto;
+      opacity:.92;
+    }
+    .laneEmpty{
+      opacity:.55;
+      font-size:12.5px;
+      padding-left:8px;
+    }
+
+    /* === Center world polish === */
+    .laneStats{
+      position:absolute;
+      right:10px;
+      top:8px;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      font-family: var(--mono);
+      font-size:12px;
+      opacity:.85;
+    }
+    .laneStat{
+      padding:4px 8px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      white-space:nowrap;
+    }
+    .laneStat b{ font-weight:900; }
+    .laneStat span{ opacity:.75; margin-left:4px; }
+
+    .laneTitle{ display:flex; align-items:center; gap:8px; }
+    .laneIco{ font-size:16px; }
+
+    /* accents per lane */
+    .laneLike{ box-shadow: inset 0 0 0 1px rgba(92,255,170,.08); }
+    .laneComment{ box-shadow: inset 0 0 0 1px rgba(143,211,255,.08); }
+    .laneMinnie{ box-shadow: inset 0 0 0 1px rgba(255,170,210,.10); }
+    .laneYuqi{ box-shadow: inset 0 0 0 1px rgba(255,225,120,.10); }
+    .laneShuhua{ box-shadow: inset 0 0 0 1px rgba(210,210,255,.10); }
+    .laneSoyeon{ box-shadow: inset 0 0 0 1px rgba(255,215,120,.14); }
+
+    .laneLike::before, .laneComment::before, .laneMinnie::before, .laneYuqi::before, .laneShuhua::before, .laneSoyeon::before{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background: radial-gradient(closest-side at 20% 20%, rgba(92,255,170,.10), transparent 70%);
+      opacity:.0;
+      transition: opacity .18s ease;
+      pointer-events:none;
+    }
+    .laneComment::before{ background: radial-gradient(closest-side at 20% 20%, rgba(143,211,255,.10), transparent 70%); }
+    .laneMinnie::before{ background: radial-gradient(closest-side at 20% 20%, rgba(255,170,210,.12), transparent 70%); }
+    .laneYuqi::before{ background: radial-gradient(closest-side at 20% 20%, rgba(255,225,120,.12), transparent 70%); }
+    .laneShuhua::before{ background: radial-gradient(closest-side at 20% 20%, rgba(210,210,255,.12), transparent 70%); }
+    .laneSoyeon::before{ background: radial-gradient(closest-side at 20% 20%, rgba(255,215,120,.14), transparent 70%); }
+    .lane:hover::before{ opacity:1; }
+
+    /* sprites: less "grid", more alive */
+    .sprite{
+      transition: transform .12s ease, filter .12s ease;
+    }
+    .sprite.wiggle{ animation: wiggle 3.6s ease-in-out infinite; }
+    @keyframes wiggle{
+      0%,100%{ transform: translateY(0) rotate(0deg); }
+      25%{ transform: translateY(-1px) rotate(-2deg); }
+      50%{ transform: translateY(1px) rotate(2deg); }
+      75%{ transform: translateY(-1px) rotate(1deg); }
+    }
+    .sprite.pop{ animation: pop .28s ease-out 1; }
+    @keyframes pop{
+      0%{ transform: scale(.7); filter: brightness(1.15); }
+      70%{ transform: scale(1.08); }
+      100%{ transform: scale(1); }
+    }
+    .spriteMore{
+      font-family: var(--mono);
+      font-weight:900;
+      font-size:14px;
+      opacity:.85;
+      background: rgba(0,0,0,.28);
+    }
+
+
+  
+    /* === Center world lines (improved) === */
+    .worldLine{
+      margin: 10px 12px;
+      padding: 10px 12px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(420px 120px at 30% 0%, rgba(61,255,139,.16), transparent 60%),
+        rgba(0,0,0,.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+    }
+    .worldLineTop{
+      display:flex;
+      justify-content:space-between;
+      align-items:baseline;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .worldLineTitle{
+      font-weight:950;
+      letter-spacing:.2px;
+      color: rgba(255,255,255,.92);
+    }
+    .worldLineTitle .muted{ opacity:.65; font-weight:800; margin-left:8px; }
+    .worldLineStat{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; opacity:.85; }
+    .worldLineStat .muted{ opacity:.65; }
+
+    .worldUnits{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .worldUnits .unit{
+      width:38px;
+      height:38px;
+      display:grid;
+      place-items:center;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+      font-size:20px;
+    }
+    .worldUnits .icoW{
+      animation: wiggle 2.6s ease-in-out infinite;
+      transform-origin: 50% 80%;
+    }
+    @keyframes wiggle{
+      0%,100%{ transform: rotate(-2deg) translateY(0); }
+      50%{ transform: rotate(2deg) translateY(-1px); }
+    }
+    .unitMore{
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.25);
+      font-weight:950;
+      opacity:.85;
+    }
+
+    .lineGold{
+      background:
+        radial-gradient(420px 140px at 30% 0%, rgba(255,210,120,.18), transparent 60%),
+        rgba(0,0,0,.18);
+      border-color: rgba(255,210,120,.18);
+    }
+    .lineBlue{
+      background:
+        radial-gradient(420px 140px at 30% 0%, rgba(143,211,255,.16), transparent 60%),
+        rgba(0,0,0,.18);
+      border-color: rgba(143,211,255,.18);
+    }
+    .linePink{
+      background:
+        radial-gradient(420px 140px at 30% 0%, rgba(255,143,200,.14), transparent 60%),
+        rgba(0,0,0,.18);
+      border-color: rgba(255,143,200,.18);
+    }
+
+    /* placeholder in upgrades bar */
+    .upPlaceholder{
+      color: rgba(255,255,255,.68);
+      font-size: 12.5px;
+      padding: 10px 12px;
+      border:1px dashed rgba(255,255,255,.14);
+      border-radius: 12px;
+      background: rgba(0,0,0,.16);
+    }
+
+    /* Burst hearts on click */
+    .burstHeart{
+      position:absolute;
+      left:0;
+      top:0;
+      transform: translate(-50%,-50%);
+      pointer-events:none;
+      font-size:18px;
+      animation: burst 0.9s ease-out forwards;
+      z-index: 2;
+      filter: drop-shadow(0 10px 16px rgba(0,0,0,.35));
+    }
+    @keyframes burst{
+      0%{ opacity:1; transform: translate(-50%,-50%) scale(1); }
+      100%{ opacity:0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.6); }
+    }
+
+    /* pressed feedback */
+    .sideHeart.pressed{ transform: translate(-50%,-50%) scale(0.98); }
+
+  
+    /* === World FX (center ambience) === */
+    .world{ position:relative; overflow:hidden; }
+    .worldBody{ position:relative; }
+    .worldFX{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index:0;
+    }
+    .worldBody > *:not(.worldFX){ position:relative; z-index:1; }
+
+    .fxP{
+      position:absolute;
+      left: var(--x);
+      top: 110%;
+      font-size: var(--s);
+      opacity: var(--o);
+      filter: drop-shadow(0 10px 16px rgba(0,0,0,.25));
+      animation: fxRise var(--d) linear forwards;
+      will-change: transform, opacity;
+    }
+    @keyframes fxRise{
+      0%{ transform: translate(0,0) rotate(0deg); opacity: var(--o); }
+      85%{ opacity: var(--o); }
+      100%{ transform: translate(var(--dx), -120vh) rotate(var(--r)); opacity: 0; }
+    }
+
+    /* Make center lanes more "game-like" */
+    .worldLine{
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.35), rgba(255,255,255,.03)),
+        radial-gradient(520px 140px at 25% 0%, rgba(61,255,139,.18), transparent 60%),
+        rgba(0,0,0,.20);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.10),
+        0 14px 40px rgba(0,0,0,.30);
+    }
+    .worldUnits{
+      flex-wrap:nowrap;
+      overflow:hidden;
+      padding-bottom:2px;
+    }
+    .worldUnits .unit{
+      flex: 0 0 auto;
+    }
+    .unitMore{
+      flex: 0 0 auto;
+      background: rgba(0,0,0,.35);
+    }
+
+    /* Hide the small centerStrip "Лента прогресса" to declutter (optional) */
+    .centerStrip{ display:none; }
+
+
+    .unit.pop{ animation: popUnit .22s ease-out 1; }
+    @keyframes popUnit{ 0%{ transform: scale(.92); } 70%{ transform: scale(1.06);} 100%{ transform: scale(1);} }
+
+
+    /* ===== Chat in center (Miyeon x Neverland) ===== */
+    .worldBody{ position:relative; }
+    .chatWrap{
+      position:relative;
+      z-index:2;
+      width:100%;
+      height:100%;
+      min-height:0;
+      padding: 26px 36px 30px;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+      gap:12px;
+    }
+    .chatMsgs{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      width:100%;
+      flex: 1 1 auto;
+      justify-content:flex-end;
+    }
+    .msg{
+      display:flex;
+      gap:10px;
+      align-items:flex-end;
+      max-width: 100%;
+      animation: fadeUp .28s ease-out;
+    }
+    .msg.neverland{ align-self:flex-start; }
+    .msg.miyeon{ align-self:flex-end; flex-direction:row-reverse; }
+    .avatar{
+      width:34px; height:34px;
+      border-radius: 12px;
+      display:grid; place-items:center;
+      font-weight:950; font-size:12.5px;
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 10px 26px rgba(0,0,0,.25);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.90);
+      flex: 0 0 auto;
+    }
+    .msg.miyeon .avatar{
+      background: rgba(61,255,139,.18);
+      border-color: rgba(61,255,139,.35);
+      color: #eafff2;
+    }
+    .bubble{
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+      backdrop-filter: blur(10px);
+    
+      max-width: 70%; }
+    .msg.neverland .bubble{ background: rgba(255,255,255,.08); }
+    .msg.miyeon .bubble{
+      background: rgba(61,255,139,.16);
+      border-color: rgba(61,255,139,.30);
+    }
+    .name{
+      font-size:12px;
+      opacity:.75;
+      margin-bottom:6px;
+      font-weight:900;
+    }
+    .text{
+      font-size:15px;
+      line-height:1.35;
+      color: var(--text);
+    }
+
+    .typing{
+      display:none;
+      gap:10px;
+      align-items:flex-end;
+      max-width: 76%;
+      margin-top: 6px;
+    }
+    .typing.miyeon{ align-self:flex-end; flex-direction:row-reverse; }
+    .typing .bubble{ min-width: 170px; }
+    .dots{ display:flex; gap:6px; padding-top:2px; }
+    .dots span{
+      width:6px; height:6px; border-radius:999px;
+      background: rgba(255,255,255,.70);
+      opacity:.75;
+      animation: dot 0.9s infinite ease-in-out;
+    }
+    .dots span:nth-child(2){ animation-delay:.12s; }
+    .dots span:nth-child(3){ animation-delay:.24s; }
+    @keyframes dot{
+      0%,100%{ transform: translateY(0); opacity:.55; }
+      50%{ transform: translateY(-3px); opacity:.95; }
+    }
+/* ===== Hard lock: no scrollbars anywhere ===== */
+html, body { overflow: hidden !important; }
+
+/* ===== Keep heart stable on click (no drifting) ===== */
+.sideHeart { will-change: transform; }
+.sideHeart.pressed { transform: translate(-50%,-50%) scale(0.98) !important; }
+.sideHeart:active { transform: translate(-50%,-50%) scale(.985) !important; }
+
+/* ===== Give chat safe margins so bubbles/shadows never clip ===== */
+.chatWrap { padding: 26px 44px 34px !important; }
+
+  
+/* ===== Lock top stats pills: no swapping / no wrapping ===== */
+.stats{
+  display:flex !important;
+  flex-wrap:nowrap !important;
+  gap:10px !important;
+  align-items:center !important;
+}
+.pill{
+  flex:0 0 auto !important;
+  min-width:118px;
+  white-space:nowrap;
+}
+.pill .v{
+  display:inline-block;
+  min-width:64px;
+  text-align:right;
+  font-variant-numeric: tabular-nums;
+}
+/* explicit order */
+#pillTotal{order:1;}
+#pillPerClick{order:2;}
+#pillAuto{order:3;}
+#pillBest{order:4;}
+
+.reset-btn-top {
+  align-self: center;
+  margin-left: 12px;
+  padding: 6px 10px;
+  font-size: 12px;
+  background: transparent;
+  border: 1.5px solid #b94a48;
+  color: #b94a48;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.reset-btn-top:hover {
+  background: #b94a48;
+  color: #fff;
+}
+
+
+/* ===== Fan Meeting Event ===== */
+.eventBanner{
+  margin: 10px 14px 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.06);
+  border-radius: 14px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  box-shadow: 0 18px 60px rgba(0,0,0,.25);
+}
+.eventBanner.hidden{ display:none; }
+.eventBadge{
+  font-weight: 800;
+  letter-spacing: .08em;
+  font-size: 11px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.22);
+  background: rgba(255,255,255,.08);
+  color: rgba(255,255,255,.9);
+  white-space: nowrap;
+}
+.eventTitle{ font-weight: 800; }
+.eventSub{
+  margin-top: 2px;
+  color: rgba(255,255,255,.72);
+  font-size: 12px;
+}
+.eventTime{ margin-left: 8px; font-weight: 700; color: rgba(255,255,255,.92); }
+
+body.fanmeet .eventBanner{
+  border-color: rgba(255, 125, 202, .45);
+  box-shadow: 0 20px 70px rgba(255,125,202,.12), 0 18px 60px rgba(0,0,0,.25);
+}
+body.fanmeet .eventBadge{
+  border-color: rgba(255, 125, 202, .55);
+  background: rgba(255, 125, 202, .14);
+}
+
+
+/* ===== Cube Roulette Event ===== */
+body.cuberoulette .eventBanner{
+  border-color: rgba(160, 120, 255, .48);
+  box-shadow: 0 20px 70px rgba(160,120,255,.14), 0 18px 60px rgba(0,0,0,.25);
+}
+body.cuberoulette .eventBadge{
+  border-color: rgba(160, 120, 255, .58);
+  background: rgba(160, 120, 255, .16);
+}
+
+
+/* ===== Viral Moment Event ===== */
+body.viral .eventBanner{
+  border-color: rgba(255, 215, 0, .55);
+  box-shadow: 0 20px 70px rgba(255,215,0,.14), 0 18px 60px rgba(0,0,0,.25);
+}
+body.viral .eventBadge{
+  border-color: rgba(255, 215, 0, .65);
+  background: rgba(255, 215, 0, .16);
+}
+
+
+.ach-btn-top{
+  align-self:center;
+  margin-left:12px;
+  padding:6px 10px;
+  font-size:12px;
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,.22);
+  color: rgba(255,255,255,.86);
+  border-radius: 999px;
+  cursor:pointer;
+}
+.ach-btn-top:hover{ border-color: rgba(255,255,255,.35); }
+.ach-btn-top:active{ transform: translateY(1px); }
+
+.achOverlay{
+  position:fixed; inset:0;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(8px);
+  display:flex; align-items:center; justify-content:center;
+  padding: 18px;
+  z-index: 9999;
+}
+.achOverlay.hidden{ display:none; }
+
+.achModal{
+  width:min(560px, 92vw);
+  max-height: 82vh;
+  overflow:auto;
+  background: rgba(12,20,14,.86);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius: 18px;
+  box-shadow: 0 26px 80px rgba(0,0,0,.55);
+  padding: 14px 14px 12px;
+}
+.achHeader{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+.achTitle{ font-size:16px; font-weight:700; }
+.achClose{
+  background: transparent;
+  border:1px solid rgba(255,255,255,.18);
+  color: rgba(255,255,255,.85);
+  border-radius: 10px;
+  padding: 6px 10px;
+  cursor:pointer;
+}
+.achClose:hover{ border-color: rgba(255,255,255,.32); }
+
+.achList{ display:flex; flex-direction:column; gap:10px; }
+.achItem{
+  background: rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius: 14px;
+  padding: 10px 10px 9px;
+}
+.achRowTop{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.achMain{ display:flex; gap:10px; align-items:flex-start; }
+.achIcon{
+  width:34px; height:34px;
+  border-radius: 12px;
+  display:grid; place-items:center;
+  background: rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+  font-size:18px;
+  flex:0 0 auto;
+  margin-top:1px;
+}
+.achName{ font-weight:700; }
+.achDesc{ margin-top:2px; font-size:12px; color: rgba(255,255,255,.70); }
+.achBadge{
+  font-size:12px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border:1px solid rgba(255,255,255,.18);
+  color: rgba(255,255,255,.80);
+  white-space:nowrap;
+}
+.achBadge.done{
+  border-color: rgba(61,255,139,.55);
+  color: rgba(61,255,139,.95);
+}
+.achProg{
+  margin-top:8px;
+  height:8px;
+  border-radius:999px;
+  background: rgba(255,255,255,.10);
+  overflow:hidden;
+}
+.achProg > div{
+  height:100%;
+  width:0%;
+  background: rgba(61,255,139,.85);
+}
+.achFooter{
+  margin-top: 12px;
+  font-size: 12px;
+  color: rgba(255,255,255,.65);
+}
+
+/* Animations */
+  20%{transform:translateX(-6px)}
+  40%{transform:translateX(6px)}
+  60%{transform:translateX(-4px)}
+  80%{transform:translateX(4px)}
+}
+
+@keyframes floatHeart{
+  0%{transform:translateY(0) scale(1); opacity:1}
+  100%{transform:translateY(-70px) scale(1.15); opacity:0}
+}
+.fx-heart{
+  position:fixed;
+  left:var(--x); top:var(--y);
+  pointer-events:none;
+  font-size:18px;
+  animation:floatHeart .7s ease-out forwards;
+  filter:drop-shadow(0 6px 10px rgba(0,0,0,.35));
+}
+
+
+/* Upgrades bar toggle */
+.upBarTitle{
+  background:transparent;
+  border:none;
+  color:inherit;
+  font:inherit;
+  font-weight:800;
+  padding:0;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+}
+.upBarTitle .caret{
+  opacity:.75;
+  transform:translateY(1px);
+}
+.upBar.collapsed .upIcons{ display:none; }
+.upBar.collapsed .caret{ transform:rotate(-90deg) translateY(1px); }
+
+
+/* Click floating value */
+.clickFloat{
+  position:absolute;
+  pointer-events:none;
+  font-weight:800;
+  color:#6CFF9A;
+  text-shadow:0 2px 10px rgba(0,0,0,.4);
+  opacity:0;
+  transform:translateY(0);
+  transition:opacity .15s ease, transform .6s ease;
+}
+.clickFloat.show{
+  opacity:1;
+  transform:translateY(-28px);
+}
+
+
+/* Floating click gain */
+.clickPop{
+  position:fixed;
+  left:0;
+  top:0;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  font-weight:900;
+  font-size:16px;
+  color:rgba(108,255,154,1);
+  text-shadow:0 2px 10px rgba(0,0,0,.45);
+  opacity:0;
+  transition:opacity .12s ease, transform .7s ease;
+  z-index:1400;
+}
+.clickPop.show{
+  opacity:1;
+  transform:translate(-50%,-70%);
+}
+
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">💚</div>
+        <div class="title">
+          <b>Miyeon Birthday Clicker</b>
+          <span></span>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="pill" id="pillTotal"><span class="k">Любовь</span><span class="v" id="love">0</span></div>
+        <div class="pill" id="pillPerClick"><span class="k">За клик</span><span class="v" id="perClick">1</span></div>
+        <div class="pill" id="pillAuto"><span class="k">В сек.</span><span class="v" id="autoRate">0</span></div>
+        <div class="pill" id="pillBest"><span class="k">Рекорд</span><span class="v" id="best">0</span></div>
+      <button class="ach-btn-top" id="achBtn" title="Достижения">Достижения</button>
+      <button class="reset-btn-top" onclick="resetProgress()" title="Сбросить прогресс">Сброс</button>
+      </div>
+
+      <div class="eventBanner hidden" id="eventBanner" role="status" aria-live="polite">
+        <div class="eventBadge">ИВЕНТ</div>
+        <div class="eventText">
+          <div class="eventTitle" id="eventTitle">Фанмитинг с Миён</div>
+          <div class="eventSub" id="eventSub">60 сек: 💚 за клик ×2, 💚/сек ×1.5 <span class="eventTime" id="eventTime"></span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="main">
+      <!-- PLAYFIELD -->
+      <div class="panel play" id="playPanel">
+        <div class="playHeader">
+          <div class="bigStat">
+            <div class="h">Любовь фанатов:</div>
+            <div class="num" id="loveBig">0</div>
+            <div class="sub"><span id="autoBig">0</span> в секунду</div>
+          </div>
+
+          <div class="bigStat">
+            <div class="h">Подсказка</div>
+            <div class="sub">Жми на зелёное 💚</div>
+          </div>
+        </div>
+
+        <div class="playBody" id="arena">
+          <div class="glow"></div>
+          <div class="heartsLayer" id="heartsLayer"></div>
+
+          <!-- side heart clicker -->
+          <div class="cursorRing" id="cursorRing"></div>
+
+          <div class="sideHeart" id="sideHeart" aria-label="кликер">
+            <div class="ico">💚</div>
+            <div class="tap">тык-тык-тык</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CENTER STRIP -->
+      <div class="centerStrip">
+        <div class="stripTop">
+          <div class="stripTitle">Лента прогресса</div>
+          <div class="stripHint" id="stripHint">купишь подарок — он появится тут</div>
+        </div>
+        <div class="stripTrack">
+          <div class="trackRow" id="trackRow"></div>
+        </div>
+      </div>
+
+      
+      <!-- WORLD / PRODUCTION STRIPS -->
+      <div class="panel world" id="worldPanel">
+        <div class="worldTop">
+          <div class="worldMsg" id="worldMsg">Ваше 💚 стало популярно и в других странах.</div>
+          <div class="worldSide">
+            
+          </div>
+        </div>
+
+        <div class="worldBody" id="worldBody">
+          <div class="worldFX" id="worldFX" aria-hidden="true"></div>
+          <div class="chatWrap" id="chatWrap">
+            <div class="chatMsgs" id="chatMsgs"></div>
+            <div class="typing miyeon" id="typing" aria-hidden="true">
+              <div class="avatar">MY</div>
+              <div class="bubble">
+                <div class="name">Миён</div>
+                <div class="dots"><span></span><span></span><span></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+<!-- SHOP -->
+      <div class="panel sideShop">
+        <div class="shopHeader">Магазин</div>
+
+        <div class="upBar">
+          <button class="upBarTitle" id="upBarToggle" type="button">Улучшения <span class="caret" aria-hidden="true">▾</span></button>
+          <div class="upIcons" id="upgradeIcons"></div>
+        </div>
+
+        <div class="shopControls">
+          <div class="modeTabs">
+            <button class="tab active" data-mode="buy">Купить</button>
+            <button class="tab" data-mode="sell">Продать</button>
+          </div>
+
+          <div class="qtyTabs" id="qtyTabs">
+            <button class="q active" data-m="1">1</button>
+            <button class="q" data-m="10">10</button>
+            <button class="q" data-m="100">100</button>          </div>
+        </div>
+
+        <div class="shopList" id="shopList"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tt" id="tt"></div>
+  <div class="toast" id="toast"></div>
+
+  
+
+
+  <!-- ACHIEVEMENTS -->
+  <div class="achOverlay hidden" id="achOverlay" aria-hidden="true">
+    <div class="achModal" role="dialog" aria-modal="true" aria-label="Достижения">
+      <div class="achHeader">
+        <div class="achTitle">Достижения</div>
+        <button class="achClose" id="achClose" type="button">Закрыть</button>
+      </div>
+      <div class="achList" id="achList"></div>
+      <div class="achFooter" id="achFooter"></div>
+    </div>
+  
+
+<script>
+(() => {
+  "use strict";
+
+  /* =======================
+     CONFIG
+  ======================= */
+  const KEY = "miyeon_green_clicker_v2";
+
+    const ITEMS = [{ id:"like",    icon:"👍", name:"Лайки",        desc:"Неверленды ставят лайки. +1 💚/сек за уровень.",          baseCost:100,  costMult:1.15, add:1 },
+{ id:"comment", icon:"💬", name:"Комментарии",  desc:"Поздравления в честь Миён. +3 💚/сек за уровень.",          baseCost:500,  costMult:1.15, add:3 },
+{ id:"minnie",  icon:"🐭", name:"Минни",        desc:"Минни приносит тортик и праздник продолжается! +20 💚/сек.", baseCost:3000,  costMult:1.15, add:20 },
+{ id:"yuqi",    icon:"🐶", name:"Юци",          desc:"Юци с шариками поднимает настроение. +80 💚/сек.",          baseCost:10000, costMult:1.15, add:80 },
+{ id:"shuhua",  icon:"🐺", name:"Шухуа",        desc:"Шухуа взрывает хлопушки! +260 💚/сек.",                    baseCost:40000, costMult:1.15, add:260 },
+{ id:"soyeon",  icon:"🦁", name:"Соён",         desc:"Соён приносит букет. +900 💚/сек.",                          baseCost:200000, costMult:1.15, add:900 },
+{ id:"soojin",  icon:"🦊", name:"Суджин",       desc:"Тёплая поддержка сквозь года. +12 000 💚/сек.",             baseCost:25000000,  costMult:1.15, add:12000 },
+{ id:"cube",    icon:"🧊", name:"Cube Entertainment",
+      desc:"Работает нестабильно: каждые 10 секунд с 50% шансом даёт большой бонус 💚 (или ничего). Дополнительно: +5% ко всем автокликам за уровень.",
+      baseCost:1000000000, costMult:1.15, add:0 }];
+
+  const MESSAGES = [
+    "🎂 Сегодня день рождения Миён, Неверленд, поздравляем вместе!",
+    "💚 Неверленды собираются, чтобы устроить Миён праздник!",
+    "🎈 Шарики готовы? Тогда добавим ещё любви!",
+    "💐 Букет для Миён собран: осталось набрать побольше 💚",
+    "✨ Пусть этот день будет тёплым и сияющим, как Миён!",
+    "🥳 Праздничная вечеринка! Давайте накидаем поздравлений!",
+    "🧁 Ещё кусочек торта для Миён… и ещё один!",
+    "🎉 Хлопушки хлоп! Сердечки летят!",
+    "🫶 Поддержка от Неверлендов: лайки + комментарии = магия",
+    "🌿 Зелёная тема включена: копим 💚 для именинницы!",
+"💖 Сегодня весь мир говорит Миён тёплые слова",
+"🎂 Торт почти готов, добавим ещё любви",
+"🌸 Цветы распускаются для Миён",
+"💚 Сердечки копятся и день становится ярче",
+"🎈 Шарики взлетают, настроение тоже",
+"✨ Каждый клик делает праздник громче",
+"🫶 Неверленды рядом и это чувствуется",
+"🥰 Миён читает сообщения и улыбается",
+"🎉 Праздник продолжается, не останавливаемся",
+"💐 Букеты множатся от вашей поддержки",
+"🍰 Сладости и любовь сегодня без ограничений",
+"💫 Этот день запомнится надолго",
+"🎊 Сердца бьются в одном ритме",
+"🌷 Тёплые слова заполняют весь экран",
+"💖 Любовь фанатов растёт с каждым мгновением",
+"🥳 Сегодня можно всё ради Миён",
+"🧁 Ещё чуть чуть и торт станет идеальным",
+"✨ Магия Неверлендов работает",
+"💚 Кликаем и делаем день счастливее",
+"🎈 Радость витает в воздухе"
+  ];
+
+  /* =======================
+     STATE
+  ======================= */
+  const state = {
+    totalClicks: 0,
+    totalEarned: 0,
+    totalSpent: 0,
+    achievements: {},
+    eventSeen: {},
+        love: 0,
+    best: 0,
+    owned: {},          // itemId -> count
+    upgrades: {},       // itemId -> level (0..3)
+    revealedItems: {},  // itemId -> bool
+    boughtUpgrades: {}, // upgradeId -> bool
+    clickBase: 1,
+    clickLevel: 0,
+    clickCpsPct: 0,
+    lastSeen: Date.now(),
+    event: { type:null, endsAt:0, nextFanAt:0, nextCubeAt:0, nextViralCheckAt:0, viralBonus:0, cubeMode:null, cubeBonus:0 },
+    eventUpgrades: {}
+  };
+
+  function load(){
+    try{
+      const raw = localStorage.getItem(KEY);
+      if(!raw) return;
+      const s = JSON.parse(raw);
+      if(!s || typeof s !== "object") return;
+      Object.assign(state, s);
+      state.owned = state.owned || {};
+      state.upgrades = state.upgrades || {};
+      state.revealedItems = state.revealedItems || {};
+      state.boughtUpgrades = state.boughtUpgrades || {};
+      state.eventSeen = state.eventSeen || {};
+      state.eventUpgrades = state.eventUpgrades || {};
+      state.ui = state.ui || {};
+      state._lastTickTs = state._lastTickTs || Date.now();
+      state._autoFrac = state._autoFrac || 0;
+      state.lastSeen = state.lastSeen || Date.now();
+      if(typeof state.clickLevel !== 'number') state.clickLevel = 0;
+      if(typeof state.clickBase !== 'number') state.clickBase = 1;
+      if(typeof state.clickCpsPct !== 'number') state.clickCpsPct = 0;
+      state.event = state.event || { type:null, endsAt:0, nextFanAt:0, nextCubeAt:0, nextViralCheckAt:0, viralBonus:0, cubeMode:null, cubeBonus:0 };
+    }catch(_){}
+  }
+  function persist(){
+    try{
+      localStorage.setItem(KEY, JSON.stringify(state));
+    }catch(_){}
+  }
+
+  /* =======================
+     DOM
+  ======================= */
+  const $ = (id) => document.getElementById(id);
+
+  const loveEl     = $("love");
+  const perClickEl = $("perClick");
+  const autoRateEl = $("autoRate");
+  const bestEl     = $("best");
+
+  const loveBig = $("loveBig");
+  const autoBig = $("autoBig");
+
+  const sideHeart = $("sideHeart");
+  const cursorRing = $("cursorRing");
+
+  const worldMsg = $("worldMsg");
+  const worldAutoMini = $("worldAutoMini");
+  const worldBestMini = $("worldBestMini");
+  const chatMsgs = $("chatMsgs");
+  const typingEl = $("typing");
+
+  const trackRow = $("trackRow");
+  const stripHint = $("stripHint");
+
+  const shopList = $("shopList");
+  const upgradeIcons = $("upgradeIcons");
+  
+  const upBar = document.querySelector(".upBar");
+  const upBarToggle = $("upBarToggle");
+
+  function applyUpBarState(){
+    state.ui = state.ui || {};
+    const collapsed = !!state.ui.upBarCollapsed;
+    if(upBar) upBar.classList.toggle("collapsed", collapsed);
+    if(upBarToggle) upBarToggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
+  }
+
+  if(upBarToggle && upBar){
+    upBarToggle.addEventListener("click", ()=>{
+      state.ui = state.ui || {};
+      state._lastTickTs = state._lastTickTs || Date.now();
+      state._autoFrac = state._autoFrac || 0;
+      state.ui.upBarCollapsed = !state.ui.upBarCollapsed;
+      applyUpBarState();
+      save();
+    });
+  }
+const qtyTabs = $("qtyTabs");
+
+  const tt = $("tt");
+  const toastEl = $("toast");
+
+  const heartsLayer = $("heartsLayer");
+
+  /* =======================
+     UTILS
+  ======================= */
+  const fmt = (n) => {
+    if(!isFinite(n)) return "0";
+    const abs = Math.abs(n);
+    if(abs >= 1e9) return (n/1e9).toFixed(abs>=1e10?0:1) + "B";
+    if(abs >= 1e6) return (n/1e6).toFixed(abs>=1e7?0:1) + "M";
+    if(abs >= 1e3) return (n/1e3).toFixed(abs>=1e4?0:1) + "K";
+    return Math.floor(n).toLocaleString("ru-RU");
+  };
+
+  const getOwned = (id) => Math.max(0, state.owned[id] || 0);
+  const setOwned = (id, v) => { state.owned[id] = Math.max(0, Math.floor(v||0)); };
+
+  const isRevealed = (id) => !!state.revealedItems[id];
+  // returns true if this is the first time the item gets revealed
+  const revealItem = (id) => {
+    if(state.revealedItems[id]) return false;
+    state.revealedItems[id] = true;
+    return true;
+  };
+
+  function toastLong(msg){
+    if(!toastEl) return;
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    clearTimeout(toastLong._t);
+    toastLong._t = setTimeout(()=>toastEl.classList.remove("show"), 2600);
+  }
+
+  /* =======================
+     ACHIEVEMENTS
+  ======================= */
+  const ACHIEVEMENTS = [
+    // Visible (obvious)
+    { id:"first_click",  icon:"💚", name:"Первый тык", desc:"Нажми на большое сердечко 1 раз.", hidden:false,
+      prog:()=> ((state.totalClicks||state.clicks||0) >= 1 ? 1 : 0) },
+
+    { id:"first_unlock", icon:"🛒", name:"О! Новинка", desc:"Открой первый предмет в магазине.", hidden:false,
+      prog:()=> Math.min(1, Object.keys(state.revealedItems||{}).length / 1) },
+
+    { id:"first_buy",    icon:"🧾", name:"Первая покупка", desc:"Купи любой предмет в магазине.", hidden:false,
+      prog:()=> Math.min(1, (totalOwnedAll()) / 1) },
+
+    { id:"love_1k",      icon:"🎉", name:"1 000 любви", desc:"Достигни рекорда 1 000 💚.", hidden:false,
+      prog:()=> Math.min(1, (state.best||0) / 1000) },
+
+    { id:"auto_10",      icon:"🏭", name:"Фабрика любви", desc:"Доведи 💚/сек до 10.", hidden:false,
+      prog:()=> Math.min(1, autoRate() / 10) },
+
+    { id:"up_1",         icon:"✨", name:"Апгрейд!", desc:"Купи любое улучшение.", hidden:false,
+      prog:()=> Math.min(1, Object.keys(state.boughtUpgrades||{}).length / 1) },
+
+    // Hidden (secret)
+    { id:"love_10k",     icon:"🚀", name:"10 000 любви", desc:"Достигни рекорда 10 000 💚.", hidden:true,
+      prog:()=> Math.min(1, (state.best||0) / 10000) },
+
+    { id:"love_100k",    icon:"🌟", name:"100 000 любви", desc:"Достигни рекорда 100 000 💚.", hidden:true,
+      prog:()=> Math.min(1, (state.best||0) / 100000) },
+
+    { id:"love_1m",      icon:"💫", name:"1 000 000 любви", desc:"Достигни рекорда 1 000 000 💚.", hidden:true,
+      prog:()=> Math.min(1, (state.best||0) / 1000000) },
+
+    { id:"auto_1k",      icon:"⚙️", name:"Автопоток", desc:"Доведи 💚/сек до 1 000.", hidden:true,
+      prog:()=> Math.min(1, autoRate() / 1000) },
+
+    { id:"auto_10k",     icon:"🛰️", name:"Сердцепровод", desc:"Доведи 💚/сек до 10 000.", hidden:true,
+      prog:()=> Math.min(1, autoRate() / 10000) },
+
+    { id:"collector_25", icon:"📦", name:"Коллекционер", desc:"Купи суммарно 25 предметов.", hidden:true,
+      prog:()=> Math.min(1, totalOwnedAll() / 25) },
+
+    { id:"collector_100",icon:"📚", name:"Архив Неверленда", desc:"Купи суммарно 100 предметов.", hidden:true,
+      prog:()=> Math.min(1, totalOwnedAll() / 100) },
+
+    { id:"all_upgrades", icon:"🧠", name:"Максимальный буст", desc:"Купи все улучшения в игре.", hidden:true,
+      prog:()=> Math.min(1, (Object.keys(state.boughtUpgrades||{}).length) / totalUpgradesGoal()) },
+
+    { id:"click_monster",icon:"🖱️", name:"Клик как праздник", desc:"Доведи 💚 за клик до 50.", hidden:true,
+      prog:()=> Math.min(1, perClick() / 50) },
+
+    // i-dle squad
+    { id:"fan_minnie",   icon:"🐭", name:"Фанат Минни", desc:"Купи Минни 10 раз.", hidden:true,
+      prog:()=> Math.min(1, getOwned("minnie") / 10) },
+
+    { id:"fan_yuqi",     icon:"🐶", name:"Фанат Юци", desc:"Купи Юци 10 раз.", hidden:true,
+      prog:()=> Math.min(1, getOwned("yuqi") / 10) },
+
+    { id:"fan_shuhua",   icon:"🐺", name:"Фанат Шухуа", desc:"Купи Шухуа 10 раз.", hidden:true,
+      prog:()=> Math.min(1, getOwned("shuhua") / 10) },
+
+    { id:"fan_soyeon",   icon:"🦁", name:"Фанат Соён", desc:"Купи Соён 10 раз.", hidden:true,
+      prog:()=> Math.min(1, getOwned("soyeon") / 10) },
+
+    { id:"soojin_support",icon:"🦊", name:"Тёплая поддержка", desc:"Позови Суджин 1 раз.", hidden:true,
+      prog:()=> Math.min(1, getOwned("soojin") / 1) },
+
+    { id:"cube_installed",icon:"🧊", name:"Куб включён", desc:"Купи Cube Entertainment 1 раз.", hidden:true,
+      prog:()=> Math.min(1, getOwned("cube") / 1) },
+
+    { id:"idle_party",   icon:"🌈", name:"i-dle рядом", desc:"Купи Минни, Юци, Шухуа и Соён хотя бы по 1.", hidden:true,
+      prog:()=> {
+        const ok = (getOwned("minnie")>0) && (getOwned("yuqi")>0) && (getOwned("shuhua")>0) && (getOwned("soyeon")>0);
+        return ok ? 1 : 0;
+      } 
+    },
+
+    // Events (birthday vibes)
+    { id:"fanmeet_once", icon:"🎂", name:"Фанмитинг!", desc:"Поймай ивент Фанмитинг хотя бы 1 раз.", hidden:true,
+      prog:()=> (state.eventSeen && state.eventSeen.fanmeet) ? 1 : 0 },
+
+    { id:"viral_once",   icon:"✨", name:"Вирусный момент", desc:"Поймай ивент Вирусный момент хотя бы 1 раз.", hidden:true,
+      prog:()=> (state.eventSeen && state.eventSeen.viral) ? 1 : 0 },
+
+    { id:"cube_triple",  icon:"🎲", name:"Три лица Cube", desc:"В Cube Roulette получи хорошее, плохое и ничего.", hidden:true,
+      prog:()=> {
+        const s = state.eventSeen || {};
+        const ok = !!(s.cubeGood && s.cubeBad && s.cubeNothing);
+        return ok ? 1 : 0;
+      } 
+    },
+
+    { id:"cube_bonus",   icon:"💥", name:"Джекпот!", desc:"В Cube Roulette поймай мгновенный бонус.", hidden:true,
+      prog:()=> (state.eventSeen && state.eventSeen.cubeBonus) ? 1 : 0 },
+  
+    
+
+
+    
+
+
+];
+
+  function isAchDone(id){ return !!(state.achievements && state.achievements[id]); }
+
+  function totalOwnedAll(){
+    const o = state.owned || {};
+    let s = 0;
+    for(const k in o){ s += (+o[k]||0); }
+    return s;
+  }
+
+function totalUpgradesGoal(){
+    // 3 upgrades per shop item + 6 click-related upgrades (3 multipliers + 3 additive)
+    return (ITEMS.length * 3) + 6;
+  }
+
+  function unlockAch(id){
+    state.achievements = state.achievements || {};
+    if(state.achievements[id]) return false;
+    state.achievements[id] = Date.now();
+    persist();
+    const a = ACHIEVEMENTS.find(x=>x.id===id);
+    toastLong(`Достижение получено: ${a ? a.name : id} ✨`);
+    return true;
+  }
+
+  function checkAchievements(){
+    let changed = false;
+    for(const a of ACHIEVEMENTS){
+      if(isAchDone(a.id)) continue;
+      const p = Math.max(0, Math.min(1, (a.prog ? a.prog() : 0)));
+      if(p >= 1){ if(unlockAch(a.id)) changed = true; }
+    }
+    if(changed) renderAchievements();
+  }
+
+  /* UI */
+  const achBtn = $("achBtn");
+  const achOverlay = $("achOverlay");
+  const achClose = $("achClose");
+  const achList = $("achList");
+  const achFooter = $("achFooter");
+
+  function openAchievements(){
+    if(!achOverlay) return;
+    achOverlay.classList.remove("hidden");
+    achOverlay.setAttribute("aria-hidden","false");
+    renderAchievements();
+  }
+  function closeAchievements(){
+    if(!achOverlay) return;
+    achOverlay.classList.add("hidden");
+    achOverlay.setAttribute("aria-hidden","true");
+  }
+
+  function renderAchievements(){
+    if(!achList) return;
+    const done = (state.achievements && Object.keys(state.achievements).length) ? Object.keys(state.achievements).length : 0;
+    achList.innerHTML = "";
+    for(const a of ACHIEVEMENTS){
+      let p = Math.max(0, Math.min(1, a.prog ? a.prog() : 0));
+      // Скрытые достижения не показывают прогресс до получения
+      if(a.hidden && !isAchDone(a.id)) p = 0;
+      const row = document.createElement("div");
+      row.className = "achItem";
+      const badge = isAchDone(a.id) ? '<span class="achBadge done">Получено</span>' : `<span class="achBadge">${Math.floor(p*100)}%</span>`;
+      row.innerHTML = `
+        <div class="achRowTop">
+          <div class="achMain">
+            <div class="achIcon">${(isAchDone(a.id) || !a.hidden) ? (a.icon || "🏅") : "🔒"}</div>
+            <div>
+              <div class="achName">${(isAchDone(a.id) || !a.hidden) ? a.name : "Секретное достижение"}</div>
+              <div class="achDesc">${(isAchDone(a.id) || !a.hidden) ? a.desc : "Открой условие и получи награду"}</div>
+            </div>
+          </div>
+          ${badge}
+        </div>
+        <div class="achProg"><div style="width:${Math.floor(p*100)}%"></div></div>
+      `;
+      achList.appendChild(row);
+    }
+    if(achFooter) achFooter.textContent = `Получено: ${done}/${ACHIEVEMENTS.length}`;
+  }
+
+  if(achBtn) achBtn.addEventListener("click", openAchievements);
+  if(achClose) achClose.addEventListener("click", closeAchievements);
+  if(achOverlay) achOverlay.addEventListener("click", (e)=>{ if(e.target === achOverlay) closeAchievements(); });
+
+
+  function announceReveal(itemId){
+    const it = ITEMS.find(x=>x.id===itemId);
+    if(!it) return;
+    // show item description immediately even if user didn't click the heart
+    toastLong(`Открыт новый предмет: ${it.icon} ${it.name} — ${it.desc}`);
+    checkAchievements();
+  }
+
+  const upgradeLevel = (itemId) => Math.max(0, Math.min(6, state.upgrades[itemId] || 0));
+  const upgradeMult  = (itemId) => Math.pow(2, upgradeLevel(itemId)); // 1,2,4,8,16,32,64
+
+  function toast(msg){
+    if(!toastEl) return;
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(()=>toastEl.classList.remove("show"), 1200);
+  }
+
+  /* =======================
+     SHOP PRICES
+  ======================= */
+  function unitPrice(item){
+    const c = getOwned(item.id);
+    return Math.floor(item.baseCost * Math.pow(item.costMult, c));
+  }
+  function totalPrice(item, mult){
+    const c = getOwned(item.id);
+    const k = Math.max(1, mult|0);
+    const r = item.costMult;
+    const base = item.baseCost * Math.pow(r, c);
+    if(k === 1) return Math.floor(base);
+    const sum = base * (Math.pow(r, k) - 1) / (r - 1);
+    return Math.floor(sum);
+  }
+  function canAfford(cost){ return state.love >= cost; }
+
+  /* =======================
+     RATES
+  ======================= */
+  
+  
+  /* =======================
+     EVENTS
+     - clear UI banner + timer
+     - one event active at a time
+  ======================= */
+
+  // Fan Meeting: 60s buffs
+  const FANMEET = {
+    durationMs: 60000,
+    minGapMs: 6 * 60000,
+    maxGapMs: 10 * 60000,
+    clickMult: 2,
+    autoMult: 1.5
+  };
+
+  // Cube Roulette: 30s random chaos
+  // modes:
+  // 0 = Good mood: auto x2
+  // 1 = Bad mood:  auto x0.5
+  // 2 = Nothing:   no effect
+  // 3 = Bonus:     instant +love
+  const CUBEROULETTE = {
+    durationMs: 30000,
+    minGapMs: 9 * 60000,
+    maxGapMs: 14 * 60000
+  };
+
+  // Viral Moment: rare surprise
+  const VIRAL = {
+    durationMs: 60000,
+    autoMult: 1.5,
+    chancePerMinute: 0.02
+  };
+
+  function randInt(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
+
+  function eventGapFactor(key){
+    const lvl = (state.eventUpgrades && state.eventUpgrades[key]) ? state.eventUpgrades[key] : 0;
+    if(!lvl) return 1;
+    return Math.pow(0.5, lvl);
+  }
+
+  function ensureEventState(){
+    if(!state.event) state.event = { type:null, endsAt:0, nextFanAt:0, nextCubeAt:0, nextViralCheckAt:0, viralBonus:0, cubeMode:null, cubeBonus:0 };
+  }
+
+  function scheduleNextFanMeet(fromTs){
+    ensureEventState();
+    const base = (fromTs ?? Date.now());
+    const gap = Math.floor(randInt(FANMEET.minGapMs, FANMEET.maxGapMs) * eventGapFactor('fanmeet'));
+    state.event.nextFanAt = base + gap;
+  }
+
+  function scheduleNextCubeRoulette(fromTs){
+    ensureEventState();
+    const base = (fromTs ?? Date.now());
+    const gap = Math.floor(randInt(CUBEROULETTE.minGapMs, CUBEROULETTE.maxGapMs) * eventGapFactor('cube'));
+    state.event.nextCubeAt = base + gap;
+  }
+
+  function ensureSchedules(){
+    ensureEventState();
+    const now = Date.now();
+
+    if(!state.event.nextFanAt) scheduleNextFanMeet(now);
+    if(!state.event.nextCubeAt) scheduleNextCubeRoulette(now);
+
+    // Viral check (once per minute)
+    if(!state.event.nextViralCheckAt) state.event.nextViralCheckAt = now + 60000;
+
+    // Если ты поменяла интервалы в коде, а в сохранении остались старые "дальние" таймеры —
+    // подтягиваем расписание к новым настройкам, чтобы ивенты можно было быстро проверить.
+    if(state.event.nextFanAt - now > FANMEET.maxGapMs) scheduleNextFanMeet(now);
+    if(state.event.nextCubeAt - now > CUBEROULETTE.maxGapMs) scheduleNextCubeRoulette(now);
+
+    // if viral check was scheduled too far (e.g., old save), pull it closer
+    if(state.event.nextViralCheckAt - now > 60000) state.event.nextViralCheckAt = now + 60000;
+  }
+
+  function isEventActive(){
+    ensureEventState();
+    return state.event.type && Date.now() < (state.event.endsAt || 0);
+  }
+  function activeType(){ return isEventActive() ? state.event.type : null; }
+
+  function baseAutoRate(){
+    // autoRate without any event multiplier
+    let sum = 0;
+    for(const [id, n] of Object.entries(state.owned || {})){
+      const item = ITEMS.find(x => x.id === id);
+      if(!item) continue;
+      sum += (item.cps || 0) * (n||0);
+    }
+    return Math.max(0, Math.floor(sum * globalAutoMult()));
+  }
+
+  function startFanMeet(){
+    const now = Date.now();
+    state.eventSeen = state.eventSeen || {};
+    state.eventSeen.fanmeet = true;
+    state.event.type = "fanmeet";
+    state.event.endsAt = now + FANMEET.durationMs;
+    state.event.cubeMode = null;
+    state.event.cubeBonus = 0;
+    scheduleNextFanMeet(state.event.endsAt);
+  }
+
+  function startViral(){
+    const now = Date.now();
+    state.eventSeen = state.eventSeen || {};
+    state.eventSeen.viral = true;
+    state.event.type = "viral";
+    state.event.endsAt = now + VIRAL.durationMs;
+    state.event.cubeMode = null;
+    state.event.cubeBonus = 0;
+
+    // bonus scales with progress
+    const rate = baseAutoRate();
+    const bonus = Math.max(2000, rate * 40);
+    state.event.viralBonus = bonus;
+    state.love += bonus;
+    state.best = Math.max(state.best||0, Math.floor(state.love));
+
+    // next check in ~1 minute
+    state.event.nextViralCheckAt = now + 60000;
+  }
+
+  function startCubeRoulette(){
+    const now = Date.now();
+    state.event.type = "cuberoulette";
+    state.event.endsAt = now + CUBEROULETTE.durationMs;
+    // pick mode
+    const mode = randInt(0, 3);
+    state.event.cubeMode = mode;
+    state.event.cubeBonus = 0;
+
+    state.eventSeen = state.eventSeen || {};
+    if(mode === 0) state.eventSeen.cubeGood = true;
+    if(mode === 1) state.eventSeen.cubeBad = true;
+    if(mode === 2) state.eventSeen.cubeNothing = true;
+    if(mode === 3) state.eventSeen.cubeBonus = true;
+
+    if(mode === 3){
+      const rate = baseAutoRate();
+      const bonus = Math.max(1000, rate * 25); // scales with progress
+      state.event.cubeBonus = bonus;
+      state.love += bonus;
+      state.best = Math.max(state.best||0, Math.floor(state.love));
+    }
+
+    scheduleNextCubeRoulette(state.event.endsAt);
+  }
+
+  function maybeStartEvents(){
+    ensureSchedules();
+    const now = Date.now();
+
+    // If active ended, clear
+    if(state.event.type && now >= (state.event.endsAt || 0)){
+      state.event.type = null;
+      state.event.endsAt = 0;
+      state.event.cubeMode = null;
+      state.event.cubeBonus = 0;
+    }
+    if(isEventActive()) return;
+
+    // Priority: whichever is due first
+    const fanDue  = now >= state.event.nextFanAt;
+    const cubeDue = now >= state.event.nextCubeAt;
+
+    if(cubeDue && (!fanDue || state.event.nextCubeAt <= state.event.nextFanAt)){
+      startCubeRoulette();
+    }else if(fanDue){
+      startFanMeet();
+    }
+  }
+
+  function eventClickMult(){
+    return activeType()==="fanmeet" ? FANMEET.clickMult : 1;
+  }
+
+  function eventAutoMult(){
+    if(activeType()==="fanmeet") return FANMEET.autoMult;
+    if(activeType()==="viral") return VIRAL.autoMult;
+    if(activeType()==="cuberoulette"){
+      const mode = state.event.cubeMode;
+      if(mode===0) return 2;
+      if(mode===1) return 0.5;
+      return 1; // nothing or bonus-only
+    }
+    return 1;
+  }
+
+function perClick(){
+    const base = state.clickBase || 1;
+    const mult = clickMultFromLevel(state.clickLevel||0);
+
+    // Cookie-clicker-like: add a % of current production to each click (from upgrades)
+    const pct = Math.max(0, state.clickCpsPct || 0);
+    const fromProd = autoRate() * pct;
+
+    // total click gain gets affected by events and quiz multipliers
+    return (base * mult + fromProd) * eventClickMult();
+  } // base click + % of production, then multipliers
+
+
+  function baseAutoRate(){
+    let a = 0;
+    for(const it of ITEMS){
+      const c = getOwned(it.id);
+      if(c<=0) continue;
+      // cube doesn't generate by itself via add
+      a += (it.add || 0) * c * upgradeMult(it.id);
+    }
+    return Math.max(0, Math.floor(a));
+  }
+
+  function globalAutoMult(){
+    // Cube: +5% к автокликам за уровень
+    const c = getOwned("cube");
+    return Math.pow(1.05, c);
+  }
+
+  function autoRate(){
+    const base = baseAutoRate();
+    return Math.max(0, Math.floor(base * globalAutoMult() * eventAutoMult()));
+  }
+
+  /* =======================
+     UPGRADES (3 per item)
+     - disappear after purchase
+  ======================= */
+  function upgradeChain(item){
+    // Upgrades are expensive on purpose: player shouldn't buy them instantly.
+    // Costs scale from the base item price and grow steeply across the chain.
+    const base = Math.max(1000, Math.floor(item.baseCost * 10));
+    return [
+      { id:`${item.id}_u1`, itemId:item.id, icon:item.icon, name:`${item.name} I`,   desc:"Эффективность x2",             cost: base,        level:1, rarity:"common" },
+      { id:`${item.id}_u2`, itemId:item.id, icon:item.icon, name:`${item.name} II`,  desc:"Эффективность x2",             cost: base*6,      level:2, rarity:"rare",      prereq:`${item.id}_u1` },
+      { id:`${item.id}_u3`, itemId:item.id, icon:item.icon, name:`${item.name} III`, desc:"Эффективность x2",             cost: base*25,     level:3, rarity:"epic",      prereq:`${item.id}_u2` },
+      { id:`${item.id}_u4`, itemId:item.id, icon:item.icon, name:`${item.name} IV`,  desc:"Эффективность x2",            cost: base*80,     level:4, rarity:"epic",      prereq:`${item.id}_u3` },
+      { id:`${item.id}_u5`, itemId:item.id, icon:item.icon, name:`${item.name} V`,   desc:"Эффективность x2",            cost: base*250,    level:5, rarity:"legendary", prereq:`${item.id}_u4` },
+      { id:`${item.id}_u6`, itemId:item.id, icon:item.icon, name:`${item.name} VI`,  desc:"Эффективность x2",            cost: base*800,    level:6, rarity:"legendary", prereq:`${item.id}_u5` },
+    ];
+  }
+const UPGRADES = ITEMS.flatMap(upgradeChain);
+
+// Click upgrades (affect the player's own click)
+const CLICK_UPGRADES = [
+  { id:"click_u1", itemId:"__click", icon:"🖱️", name:"Сила клика I",  desc:"Клик сильнее: 💚 за клик ×2",                 cost: 3000,   level:1, rarity:"common" },
+  { id:"click_u2", itemId:"__click", icon:"🖱️", name:"Сила клика II", desc:"Ещё сильнее: 💚 за клик ×5 (в сумме)",        cost: 15000,   level:2, rarity:"epic", prereq:"click_u1" },
+  { id:"click_u3", itemId:"__click", icon:"🖱️", name:"Сила клика III",desc:"Легендарно: 💚 за клик ×12 (в сумме)",        cost: 80000,  level:3, rarity:"legendary", prereq:"click_u2" },
+];
+
+// merge
+UPGRADES.push(...CLICK_UPGRADES);
+
+// Additive click power upgrades (increase base click value)
+const CLICK_POWER = [
+  { id:"click_p1", itemId:"__click", icon:"➕", name:"Усиление клика I", desc:"+1 💚 за клик", cost: 500, add: 1, prereq:null },
+  { id:"click_p2", itemId:"__click", icon:"➕", name:"Усиление клика II", desc:"+3 💚 за клик", cost: 2500, add: 3, prereq:"click_p1" },
+  { id:"click_p3", itemId:"__click", icon:"➕", name:"Усиление клика III", desc:"+10 💚 за клик", cost: 12000, add: 10, prereq:"click_p2" },
+];
+
+UPGRADES.push(...CLICK_POWER);
+
+
+// Click scaling upgrades (Cookie Clicker style): each click adds % of current 💚/сек.
+// These upgrades unlock by the number of manual clicks (state.totalClicks).
+const CLICK_SCALE_UPGRADES = [
+  { id:"click_s1", itemId:"__click", icon:"🎂", name:"Birthday Click 💚 I",  desc:"Клик даёт +1% к вашему 💚/сек.",  cost: 1000,   pctAdd: 0.01, unlockClicks: 100,   prereq:null,        rarity:"common" },
+  { id:"click_s2", itemId:"__click", icon:"🎂", name:"Birthday Click 💚 II", desc:"Клик даёт ещё +1% к вашему 💚/сек.", cost: 10000,  pctAdd: 0.01, unlockClicks: 1000,  prereq:"click_s1",  rarity:"epic" },
+  { id:"click_s3", itemId:"__click", icon:"🎂", name:"Birthday Click 💚 III",desc:"Клик даёт ещё +1% к вашему 💚/сек.", cost: 100000, pctAdd: 0.01, unlockClicks: 10000, prereq:"click_s2",  rarity:"legendary" },
+  { id:"click_s4", itemId:"__click", icon:"🎂", name:"Birthday Click 💚 IV", desc:"Клик даёт ещё +1% к вашему 💚/сек.", cost: 1000000,pctAdd: 0.01, unlockClicks: 100000,prereq:"click_s3",  rarity:"legendary" },
+];
+UPGRADES.push(...CLICK_SCALE_UPGRADES);
+
+// Event frequency upgrades (events appear 2x more often)
+const EVENT_FREQ_UPGRADES = [
+  { id:"freq_fan",    eventKey:"fanmeet",itemId:"__event", icon:"🎂", name:"Фанмитинг чаще",   desc:"Фанмитинг появляется в 2 раза чаще.",          cost: 180000, rarity:"rare" },
+  { id:"freq_cube",   eventKey:"cube",   itemId:"__event", icon:"🎲", name:"Cube Roulette чаще", desc:"Cube Roulette появляется в 2 раза чаще.",     cost: 260000, rarity:"epic" },
+];
+UPGRADES.push(...EVENT_FREQ_UPGRADES);
+
+// Level-gated upgrades (per item): 1, 10, 25, 50, 100, 200, ...
+const LEVEL_MILESTONES = [1, 10, 25, 50, 100, 200, 300, 400, 500, 750, 1000];
+
+// Auto-assign unlockLevel for item-specific upgrades (excluding click/event upgrades).
+(function assignUpgradeLevels(){
+  const groups = {};
+  for (const u of UPGRADES){
+    if (!u || !u.itemId) continue;
+    if (u.itemId === "__click") continue;
+    if (u.eventKey) continue;
+    // Only for upgrades that are tied to a shop item level progression.
+    // If author already set unlockLevel explicitly, keep it.
+    groups[u.itemId] = groups[u.itemId] || [];
+    groups[u.itemId].push(u);
+  }
+  Object.keys(groups).forEach(itemId=>{
+    const arr = groups[itemId].slice().sort((a,b)=> (a.cost||0) - (b.cost||0));
+    for (let i=0;i<arr.length;i++){
+      if (arr[i].unlockLevel == null){
+        arr[i].unlockLevel = LEVEL_MILESTONES[Math.min(i, LEVEL_MILESTONES.length-1)];
+      }
+    }
+  });
+})();
+
+
+function clickMultFromLevel(lvl){
+  if(lvl>=3) return 12;
+  if(lvl==2) return 5;
+  if(lvl==1) return 2;
+  return 1;
+}
+
+
+  function hasBoughtUpgrade(upId){ return !!state.boughtUpgrades[upId]; }
+
+  function canShowUpgrade(u){    if(u.unlockLevel && getOwned(u.itemId) < u.unlockLevel) return false;
+
+    if(hasBoughtUpgrade(u.id)) return false; // disappears
+    if(u.prereq && !hasBoughtUpgrade(u.prereq)) return false;
+
+    // unlock by manual clicks (for click scaling upgrades)
+    if(typeof u.unlockClicks === "number" && (state.totalClicks||0) < u.unlockClicks) return false;
+
+    // require item at least 1 (except click upgrades and event upgrades)
+    if(!u.eventKey && u.itemId !== "__click" && getOwned(u.itemId) <= 0) return false;
+
+    return true;
+  }
+
+  function buyUpgrade(u){
+    if(hasBoughtUpgrade(u.id)) return false;
+    if(u.prereq && !hasBoughtUpgrade(u.prereq)) return false;
+    if(!u.eventKey && u.itemId !== "__click" && getOwned(u.itemId) <= 0) return false;
+    if(!canAfford(u.cost)) return false;
+
+    state.love -= u.cost;
+    state.totalSpent = (state.totalSpent||0) + u.cost;
+
+    // Apply upgrade effects
+    if(u.eventKey){
+      state.eventUpgrades = state.eventUpgrades || {};
+      state.ui = state.ui || {};
+      state._lastTickTs = state._lastTickTs || Date.now();
+      state._autoFrac = state._autoFrac || 0;
+      state.eventUpgrades[u.eventKey] = u.level || 1;
+    }
+    if(u.itemId === "__click"){
+      if(u.level) state.clickLevel = u.level;
+      if(u.add) state.clickBase += u.add;
+      if(u.pctAdd) state.clickCpsPct = (state.clickCpsPct || 0) + u.pctAdd;
+    }else{
+      state.upgrades[u.itemId] = u.level;
+    }
+    state.boughtUpgrades[u.id] = true;
+    persist();
+    checkAchievements();
+    toast("Улучшение куплено ✨");
+    return true;
+  }
+
+  /* =======================
+     TOOLTIP (hover + tap)
+  ======================= */
+  function showTT(html, x, y){
+    if(!tt) return;
+    tt.innerHTML = html;
+    tt.style.display = "block";
+    const pad = 14;
+    const w = tt.offsetWidth;
+    const h = tt.offsetHeight;
+    let left = x + 14;
+    let top = y + 14;
+    if(left + w + pad > window.innerWidth) left = x - w - 14;
+    if(top + h + pad > window.innerHeight) top = y - h - 14;
+    tt.style.left = left + "px";
+    tt.style.top = top + "px";
+  }
+  function hideTT(){ if(tt) tt.style.display = "none"; }
+  window.addEventListener("scroll", hideTT, {passive:true});
+  window.addEventListener("resize", hideTT);
+
+  /* =======================
+     HEARTS (background + burst)
+  ======================= */
+  function spawnFallingHeart(){
+    if(!heartsLayer) return;
+    const el = document.createElement("div");
+    el.className = "fallHeart";
+    el.textContent = "💚";
+    el.style.left = (Math.random()*100) + "%";
+    el.style.fontSize = (14 + Math.random()*18) + "px";
+    el.style.animationDuration = (4 + Math.random()*5) + "s";
+    el.style.opacity = (0.35 + Math.random()*0.55).toFixed(2);
+    heartsLayer.appendChild(el);
+    setTimeout(()=>el.remove(), 9000);
+  }
+
+  function burstHearts(x, y){
+    if(!heartsLayer) return;
+    const n = 10 + Math.floor(Math.random()*8);
+    for(let i=0;i<n;i++){
+      const p = document.createElement("div");
+      p.className = "burstHeart";
+      p.textContent = "💚";
+      const ang = Math.random()*Math.PI*2;
+      const dist = 40 + Math.random()*60;
+      p.style.left = x + "px";
+      p.style.top = y + "px";
+      p.style.setProperty("--dx", Math.cos(ang)*dist + "px");
+      p.style.setProperty("--dy", Math.sin(ang)*dist + "px");
+      heartsLayer.appendChild(p);
+      setTimeout(()=>p.remove(), 900);
+    }
+  }
+
+  setInterval(()=>{ spawnFallingHeart(); if(Math.random()<0.55) spawnFallingHeart(); if(Math.random()<0.25) spawnFallingHeart(); }, 380);
+
+  /* =======================
+     WORLD AMBIENCE (center particles)
+  ======================= */
+  const worldFX = document.getElementById("worldFX");
+  function spawnWorldParticle(){
+    if(!worldFX) return;
+
+    // choose type depending on what you own
+    const pool = ["💚","💚","💚"];
+    if(getOwned("yuqi")>0) pool.push("🎈");
+    if(getOwned("soyeon")>0) pool.push("🌸");
+    if(getOwned("shuhua")>0) pool.push("✨");
+
+    const el = document.createElement("div");
+    el.className = "fxP";
+    el.textContent = pool[Math.floor(Math.random()*pool.length)];
+
+    const x = Math.random()*100;
+    const s = 14 + Math.random()*18;
+    const o = (0.10 + Math.random()*0.25).toFixed(2);
+    const d = 6 + Math.random()*7;
+    const dx = (-40 + Math.random()*80).toFixed(1) + "px";
+    const r = (-40 + Math.random()*80).toFixed(1) + "deg";
+
+    el.style.setProperty("--x", x + "%");
+    el.style.setProperty("--s", s + "px");
+    el.style.setProperty("--o", o);
+    el.style.setProperty("--d", d + "s");
+    el.style.setProperty("--dx", dx);
+    el.style.setProperty("--r", r);
+
+    worldFX.appendChild(el);
+    setTimeout(()=>el.remove(), (d*1000)+250);
+  }
+  setInterval(()=>{ if(Math.random()<0.85) spawnWorldParticle(); }, 900);
+
+
+  /* =======================
+     CENTER PANEL (units)
+     - show up to 12 icons + +N
+     - wiggle + pop on purchase
+  ======================= */
+  function renderWorldLanes(){
+    // keep the top minis in sync, but do NOT wipe the chat from the center
+    if(worldAutoMini) worldAutoMini.textContent = `💚/сек: ${fmt(autoRate())}`;
+
+    const bought = ITEMS
+      .map(it => ({it, lvl:getOwned(it.id), mult:upgradeMult(it.id)}))
+      .filter(x => x.lvl > 0);
+
+    if(bought.length === 0){
+      return;
+    }
+
+    const top = bought.slice().sort((a,b)=> (b.it.add*b.lvl*b.mult) - (a.it.add*a.lvl*a.mult))[0];
+  }
+
+  /* =======================
+     CURSOR RING (likes -> cursors)
+  ======================= */
+  function renderCursorRing(){ /* removed */ }
+
+  /* =======================
+     SHOP UI
+  ======================= */
+  let buyMult = 1;
+  let shopMode = "buy"; // buy | sell
+
+  function renderUpgrades(){
+    if(!upgradeIcons) return;
+    upgradeIcons.innerHTML = "";
+
+    const avail = UPGRADES.filter(canShowUpgrade);
+    avail.sort((a,b)=> (a.cost||0) - (b.cost||0));
+
+    // If nothing is available, show subtle placeholder
+    if(avail.length === 0){
+      const ph = document.createElement("div");
+      ph.className = "upPlaceholder";
+      ph.textContent = "Улучшения появятся после первой покупки каждого подарка ✨ (клик-улучшения доступны сразу)";
+      upgradeIcons.appendChild(ph);
+      return;
+    }
+
+    for(const u of avail){
+      const revealed = true;
+      const d = document.createElement("div");
+      d.dataset.upgradeId = u.id;
+      const canBuy = canAfford(u.cost);
+      d.className = "upIcon " + ("rarity-" + (u.rarity || (u.level===3?"legendary":u.level===2?"epic":"common"))) + (canBuy ? "" : " locked");
+      d.textContent = revealed ? u.icon : "❓";
+
+      d.addEventListener("mouseenter", (e)=>{
+        const r = (u.rarity || (u.level===3?"legendary":u.level===2?"epic":"common"));
+        const rLabel = (r==="legendary"?"Легендарное":(r==="epic"?"Эпическое":"Обычное"));
+        showTT(`<b>${u.name}</b> <span style="opacity:.75">(${rLabel})</span><br>${u.desc}<br><span style="opacity:.85">Цена: <b>${fmt(u.cost)}</b> 💚</span>`, e.clientX, e.clientY);
+      });
+      d.addEventListener("mousemove", (e)=>{ if(tt && tt.style.display==="block") showTT(tt.innerHTML, e.clientX, e.clientY); });
+      d.addEventListener("mouseleave", hideTT);
+
+      d.addEventListener("click", ()=>{
+        if(!canAfford(u.cost)){ toast("Не хватает любви 💚"); return; }
+        if(buyUpgrade(u)){
+          // pop animation
+          d.classList.add("bought");
+          setTimeout(()=>d.remove(), 120);
+          renderAll();
+        }
+      });
+
+      upgradeIcons.appendChild(d);
+    }
+  }
+
+  function updateShopAffordability(){
+    if(!shopList) return;
+    const love = state.love || 0;
+
+    const rows = shopList.querySelectorAll(".shopRow");
+    rows.forEach(row => {
+      const id = row.dataset.id;
+      if(!id) return;
+      const item = ITEMS.find(x => x.id === id);
+      if(!item) return;
+
+      const owned = getOwned(id);
+      const cost1 = unitPrice(item);
+
+      // reveal when enough for 1st unit
+      if(love >= cost1){
+        if(revealItem(id)) announceReveal(id);
+      }
+      const revealed = isRevealed(id) || love >= cost1;
+
+      const priceN = totalPrice(item, buyMult);
+      const canAct = (shopMode === "buy") ? (revealed && love >= priceN) : (owned > 0);
+
+      // classes
+      row.classList.toggle("locked", !revealed);
+      row.classList.toggle("disabled", revealed && !canAct);
+
+      // update icon/name/cost text to match revealed state
+      const icon = row.querySelector(".shopIcon");
+      if(icon) icon.textContent = revealed ? item.icon : "❓";
+
+      const nameEl = row.querySelector(".shopName");
+      if(nameEl) nameEl.textContent = revealed ? item.name : "???";
+
+      const costEl = row.querySelector(".shopCost");
+      if(costEl){
+        costEl.innerHTML = revealed
+          ? `<span class="c">Стоимость x${buyMult}:</span> <b>${fmt(priceN)}</b> 💚`
+          : `<span class="c">Стоимость:</span> <b>${fmt(cost1)}</b> 💚`;
+      }
+
+      const lvl = row.querySelector(".shopRightLvl");
+      if(lvl) lvl.textContent = owned;
+    });
+
+    // update upgrade icons affordance (fix: passive income should unlock upgrades)
+    const upIcons = document.querySelectorAll(".upIcon");
+    upIcons.forEach(el => {
+      const uid = el.dataset.upgradeId;
+      if(!uid) return;
+      const u = UPGRADES.find(x => x.id === uid);
+      if(!u) return;
+      const can = canAfford(u.cost) && canShowUpgrade(u);
+      el.classList.toggle("locked", !can);
+    });
+  }
+
+  function renderShop(){
+    if(!shopList) return;
+    shopList.innerHTML = "";
+
+    for(const item of ITEMS){
+      const owned = getOwned(item.id);
+      const cost1 = unitPrice(item);
+
+      if(state.love >= cost1){
+        if(revealItem(item.id)) announceReveal(item.id);
+      }
+      const revealed = isRevealed(item.id) || state.love >= cost1;
+
+      const priceN = totalPrice(item, buyMult);
+      const canAct = (shopMode === "buy") ? (revealed && canAfford(priceN)) : (owned > 0);
+
+      const row = document.createElement("div");
+      row.dataset.id = item.id;
+      row.className = "shopRow" + (revealed ? "" : " locked") + ((revealed && !canAct) ? " disabled" : "");
+
+      const icon = document.createElement("div");
+      icon.className = "shopIcon";
+      icon.textContent = revealed ? item.icon : "❓";
+
+      const main = document.createElement("div");
+      main.className = "shopMain";
+
+      const name = document.createElement("div");
+      name.className = "shopName";
+      name.textContent = revealed ? item.name : "???";
+
+      const cost = document.createElement("div");
+      cost.className = "shopCost";
+      cost.innerHTML = revealed
+        ? `<span class="c">Стоимость x${buyMult}:</span> <b>${fmt(priceN)}</b> 💚`
+        : `<span class="c">Стоимость:</span> <b>${fmt(cost1)}</b> 💚`;
+
+      main.appendChild(name);
+      main.appendChild(cost);
+const lvl = document.createElement("div");
+      lvl.className = "shopRightLvl";
+      lvl.textContent = owned;
+
+      row.appendChild(icon);
+      row.appendChild(main);
+      row.appendChild(lvl);
+
+      // tooltip
+      row.addEventListener("mouseenter", (e)=>{
+        const tName = revealed ? item.name : "???";
+
+        const perLevelBase = revealed ? (item.add || 0) : 0;
+        const upMult = revealed ? upgradeMult(item.id) : 1;
+        const gMult = globalAutoMult();
+
+        const perLevelReal = revealed ? perLevelBase * upMult * gMult : 0;
+        const totalReal = revealed ? perLevelReal * owned : 0;
+
+        const tDesc = revealed
+          ? `${item.desc.split("+")[0]}+${fmt(perLevelReal)} 💚/сек за уровень.`
+          : "Собери нужную сумму, чтобы раскрыть предмет.";
+
+        const tRate = revealed
+          ? `Общий вклад: <b>+${fmt(totalReal)}</b> 💚/сек`
+          : "";
+
+        showTT(
+          `<b>${tName}</b><br>${tDesc}` +
+          `${tRate ? "<br><span style='opacity:.85'>"+tRate+"</span>" : ""}`,
+          e.clientX,
+          e.clientY
+        );
+      });
+row.addEventListener("mousemove", (e)=>{ if(tt && tt.style.display==="block") showTT(tt.innerHTML, e.clientX, e.clientY); });
+      row.addEventListener("mouseleave", hideTT);
+
+      row.addEventListener("click", ()=>{
+        if(!revealed) return;
+
+        if(shopMode === "buy"){
+          if(!canAfford(priceN)){
+            // buy as many as possible up to buyMult
+            let lo=1, hi=buyMult, best=0;
+            while(lo<=hi){
+              const mid=(lo+hi)>>1;
+              const costM = totalPrice(item, mid);
+              if(canAfford(costM)){ best=mid; lo=mid+1; } else { hi=mid-1; }
+            }
+            if(best<=0){ toast("Не хватает любви 💚"); return; }
+            const costM = totalPrice(item, best);
+            state.love -= costM;
+            state.totalSpent = (state.totalSpent||0) + costM;
+            setOwned(item.id, owned + best);
+            checkAchievements();
+            chatOnPurchase(item.id);
+            row.classList.add("bought");
+            setTimeout(()=>row.classList.remove("bought"), 280);
+            persist();
+            renderAll(true);
+            toast(`Куплено x${best}`);
+            return;
+          }
+          state.love -= priceN;
+          state.totalSpent = (state.totalSpent||0) + priceN;
+          setOwned(item.id, owned + buyMult);
+          checkAchievements();
+          chatOnPurchase(item.id);
+          // pop animation in center
+          row.classList.add("bought");
+          setTimeout(()=>row.classList.remove("bought"), 280);
+          persist();
+          renderAll(true);
+        } else {
+          if(owned <= 0){ toast("Нечего продавать"); return; }
+          const sellCount = Math.min(buyMult, owned);
+
+          // refund ~50% of last sellCount purchases
+          const r = item.costMult, base=item.baseCost;
+          const sumFor = (count) => count<=0 ? 0 : base * (Math.pow(r, count) - 1) / (r - 1);
+          const totalC = sumFor(owned);
+          const totalPrev = sumFor(owned - sellCount);
+          const lastBlock = Math.floor(totalC - totalPrev);
+          const refund = Math.floor(lastBlock * 0.5);
+
+          setOwned(item.id, owned - sellCount);
+          state.love += refund;
+          persist();
+          toast(`Продано x${sellCount} (+${fmt(refund)} 💚)`);
+          renderAll();
+        }
+      });
+
+      shopList.appendChild(row);
+    }
+  }
+
+  // qty tabs
+  if(qtyTabs){
+    qtyTabs.addEventListener("click", (e)=>{
+      const b = e.target.closest("button[data-m]");
+      if(!b) return;
+      buyMult = Number(b.dataset.m || 1);
+      [...qtyTabs.querySelectorAll("button")].forEach(x=>x.classList.toggle("active", x===b));
+      renderShop();
+    });
+  }
+
+  // mode buttons (if exist)
+  document.querySelectorAll(".modeTabs .tab").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      document.querySelectorAll(".modeTabs .tab").forEach(x=>x.classList.remove("active"));
+      btn.classList.add("active");
+      shopMode = btn.dataset.mode;
+      renderShop();
+    });
+  });
+
+  /* =======================
+     CLICK HANDLER (FIX)
+  ======================= */
+  
+function popClickValue(x, y, val){
+  const el = document.createElement("div");
+  el.className = "clickPop";
+  el.textContent = "+" + fmt(val);
+  el.style.left = (x || window.innerWidth/2) + "px";
+  el.style.top  = (y || window.innerHeight/2) + "px";
+  document.body.appendChild(el);
+  // animate
+  requestAnimationFrame(()=> el.classList.add("show"));
+  setTimeout(()=>{ el.classList.remove("show"); el.style.opacity = "0"; }, 520);
+  setTimeout(()=> el.remove(), 800);
+}
+
+function doClick(clientX, clientY){
+    const add = perClick();
+    popClickValue(clientX, clientY, add);
+    state.love += add;
+    state.best = Math.max(state.best, state.love);
+    state.totalClicks = (state.totalClicks||0) + 1;
+    state.totalEarned = (state.totalEarned||0) + add;
+    persist();
+    checkAchievements();
+
+    /* click burst disabled (no flying effects) */
+    renderTop();
+    // reveal items that become visible
+    renderShop();
+    renderUpgrades();
+  applyUpBarState();
+
+    renderWorldLanes();
+    /* renderCursorRing removed */
+  }
+
+  if(sideHeart){
+    sideHeart.addEventListener("pointerdown", (e)=>{
+      e.preventDefault();
+      sideHeart.classList.add("pressed");
+      sideHeart.classList.add("pulse");
+      setTimeout(()=>sideHeart.classList.remove("pressed"), 90);
+      setTimeout(()=>sideHeart.classList.remove("pulse"), 220);
+      doClick(e.clientX, e.clientY);
+    });
+    sideHeart.addEventListener("click", (e)=>e.preventDefault()); // avoid double on some browsers
+  }
+
+  /* =======================
+     CENTER MESSAGES ROTATION
+  ======================= */
+  let lastMsg = -1;
+  function rotateMsg(){
+    if(!worldMsg) return;
+    let idx = Math.floor(Math.random()*MESSAGES.length);
+    if(idx === lastMsg) idx = (idx+1) % MESSAGES.length;
+    lastMsg = idx;
+    worldMsg.textContent = MESSAGES[idx];
+  }
+  setInterval(rotateMsg, 4200);
+
+  
+  /* =======================
+     CUBE: unstable bonus
+     - каждые 10 секунд: 50% шанс дать бонус
+  ======================= */
+  let cubeTimer = 0;
+  function cubeBonusTick(){
+    const cubes = getOwned("cube");
+    if(cubes <= 0) return;
+
+    // 50% шанс на каждый тик (не на каждый куб, чтобы не спамило)
+    if(Math.random() > 0.5) return;
+
+    // бонус = 30 секунд базовой автогенерации * кол-во кубов
+    const base = baseAutoRate();
+    if(base <= 0) return;
+
+    const bonus = Math.floor(base * 30 * cubes);
+    state.love += bonus;
+    state.best = Math.max(state.best, state.love);
+    toast(`Cube неожиданно помог: +${fmt(bonus)} 💚`);
+  }
+  setInterval(cubeBonusTick, 10000);
+
+/* =======================
+     TICK LOOP (auto gain + offline)
+  ======================= */
+  function applyOffline(){
+    const now = Date.now();
+    const last = Number(state.lastSeen || now);
+    const deltaSec = Math.max(0, Math.min(3*60*60, (now - last)/1000)); // cap 3 hours when tab was closed
+    const rate = autoRate();
+    if(deltaSec > 2 && rate > 0){
+      const gain = Math.floor(rate * deltaSec);
+      state.love += gain;
+      state.best = Math.max(state.best, state.love);
+      toast(`Оффлайн: +${fmt(gain)} 💚`);
+    }
+    state.lastSeen = now;
+    state._lastTickTs = now;
+    state._autoFrac = 0;
+    persist();
+  }
+
+  function tick(){
+    // Tick uses real elapsed time, so it works even when the tab is hidden (timers may be throttled).
+    const now = Date.now();
+    const prev = state._lastTickTs || now;
+    const dt = Math.max(0, Math.min(5, (now - prev)/1000));
+    state._lastTickTs = now;
+
+    maybeStartEvents();
+    const rate = autoRate();
+    state._autoFrac = state._autoFrac || 0;
+    const gainF = rate * dt + state._autoFrac;
+    const gainI = Math.floor(gainF);
+    state._autoFrac = gainF - gainI;
+    state.love += gainI;
+    
+    // Sync shop availability even when love grows passively
+    try{ updateShopAffordability(); }catch(e){}
+state.best = Math.max(state.best, state.love);
+    state.lastSeen = Date.now();
+    // don't persist every tick
+  }
+
+  setInterval(()=>{
+    tick();
+    renderTop();
+  }, 100);
+
+  // Grant offline gain when user switches tabs / leaves and comes back (without reload).
+  document.addEventListener("visibilitychange", ()=>{
+    if(document.hidden){
+      state.lastSeen = Date.now();
+      persist();
+    } else {
+      applyOffline();
+      renderAll();
+    }
+  });
+
+  // Also save timestamp on navigation away.
+  window.addEventListener("pagehide", ()=>{
+    state.lastSeen = Date.now();
+    persist();
+  });
+
+  // persist occasionally
+  setInterval(()=>persist(), 1200);
+
+  /* =======================
+     RENDER
+  ======================= */
+  function renderTop(){
+    const love = Math.floor(state.love);
+    const rate = autoRate();
+    // Event UI
+    const type = activeType();
+    const active = !!type;
+
+    document.body.classList.toggle("fanmeet", type==="fanmeet");
+    document.body.classList.toggle("cuberoulette", type==="cuberoulette");
+    document.body.classList.toggle("viral", type==="viral");
+
+    const banner = document.getElementById("eventBanner");
+    const titleEl = document.getElementById("eventTitle");
+    const subEl = document.getElementById("eventSub");
+    const timeEl = document.getElementById("eventTime");
+
+    if(banner) banner.classList.toggle("hidden", !active);
+
+    if(active){
+      const left = Math.max(0, state.event.endsAt - Date.now());
+      if(timeEl) timeEl.textContent = `(${Math.ceil(left/1000)}с)`;
+
+      if(type==="fanmeet"){
+        if(titleEl) titleEl.textContent = "Фанмитинг с Миён";
+        if(subEl) subEl.innerHTML = `60 сек: 💚 за клик ×2, 💚/сек ×1.5 <span class="eventTime" id="eventTime">${Math.ceil(left/1000)}с</span>`;
+    // keep shop in sync with current love
+    try{ updateShopAffordability(); }catch(e){}
+  }else if(type==="viral"){
+        const desc = `✨ Вирусный момент! Все говорят о Миён — +${fmt(state.event.viralBonus || 0)} 💚 и 💚/сек ×1.5`;
+        if(titleEl) titleEl.textContent = "Вирусный момент ✨";
+        if(subEl) subEl.innerHTML = `${desc} <span class="eventTime" id="eventTime">${Math.ceil(left/1000)}с</span>`;
+      }else if(type==="cuberoulette"){
+        const mode = state.event.cubeMode;
+        let desc = "Сейчас что-то произойдёт…";
+        if(mode===0) desc = "30 сек: 💚/сек ×2 (хорошее настроение)";
+        if(mode===1) desc = "30 сек: 💚/сек ×0.5 (плохое настроение)";
+        if(mode===2) desc = "30 сек: ничего не произошло 🤡";
+        if(mode===3) desc = `Мгновенный бонус: +${fmt(state.event.cubeBonus)} 💚`;
+        if(titleEl) titleEl.textContent = "Cube Roulette 🎲";
+        if(subEl) subEl.innerHTML = `${desc} <span class="eventTime" id="eventTime">${Math.ceil(left/1000)}с</span>`;
+      }
+    }else{
+      if(timeEl) timeEl.textContent = "";
+    }
+
+    const ico = document.querySelector("#sideHeart .ico");
+    if(ico){
+      ico.textContent = type==="fanmeet" ? "🩷" : (type==="viral" ? "✨" : (type==="cuberoulette" ? "🎲" : "💚"));
+    }
+if(loveEl) loveEl.textContent = fmt(love);
+    if(perClickEl) perClickEl.textContent = fmt(perClick());
+    if(autoRateEl) autoRateEl.textContent = fmt(rate);
+    if(bestEl) bestEl.textContent = fmt(Math.floor(state.best));
+
+    if(loveBig) loveBig.textContent = fmt(love);
+    if(autoBig) autoBig.textContent = "+" + fmt(rate) + " 💚/сек";
+
+    if(worldAutoMini) worldAutoMini.textContent = fmt(rate) + " 💚/сек";
+    if(worldBestMini) worldBestMini.textContent = "Рекорд: " + fmt(Math.floor(state.best));
+  }
+
+  function renderAll(popNew=false){
+    renderTop();
+    renderUpgrades();
+    renderShop();
+    renderWorldLanes();
+    /* renderCursorRing removed */
+  }
+
+  
+  /* =======================
+     CHAT (Miyeon x Neverland)
+  ======================= */
+  const CHAT_REACTIONS = {
+    like: [
+      {who:"neverland", text:"Лайки летят! 👍💚"},
+      {who:"neverland", text:"Поддержка растёт, давай ещё! 💚"},
+      {who:"miyeon", text:"Я вижу ваши лайки… спасибо! 🥺💚"},
+      {who:"miyeon", text:"Ого, так много сердечек! 💚"},
+    ],
+    comment: [
+      {who:"neverland", text:"Пишем поздравления! 💬✨"},
+      {who:"neverland", text:"Ещё один тёплый комментарий для Миён 💚"},
+      {who:"miyeon", text:"Я читаю… и улыбаюсь. Спасибо 💬💚"},
+      {who:"miyeon", text:"Ваши слова делают меня счастливой 🥺"},
+    ],
+    minnie: [
+      {who:"neverland", text:"Минни принесла торт! 🐭🎂"},
+      {who:"neverland", text:"Праздник официально начался 🎂✨"},
+      {who:"miyeon", text:"Торт!! Это так мило 🥺🎂"},
+      {who:"miyeon", text:"Можно мне кусочек? 😄💚"},
+    ],
+    yuqi: [
+      {who:"neverland", text:"Юци с шариками врывается! 🐶🎈"},
+      {who:"neverland", text:"Смотри, как стало празднично 🎈"},
+      {who:"miyeon", text:"Шарикиии! 🎈💚"},
+      {who:"miyeon", text:"Теперь всё вокруг будто праздник 🌿✨"},
+    ],
+    shuhua: [
+      {who:"neverland", text:"Шухуа запускает хлопушки! 🐺🎉"},
+      {who:"neverland", text:"Конфетти повсюду! ✨"},
+      {who:"miyeon", text:"Хаха! Весь чат в конфетти 🎉💚"},
+      {who:"miyeon", text:"Это так весело, спасибо! 😄"},
+    ],
+    soyeon: [
+      {who:"neverland", text:"Соён принесла букет! 🦁💐"},
+      {who:"neverland", text:"Самый красивый подарок — для Миён 💐"},
+      {who:"miyeon", text:"Букет… я тронута 🥺💐"},
+      {who:"miyeon", text:"Спасибо… я чувствую вашу любовь 💚"},
+    ],
+  };
+
+  const CHAT_IDLE = [
+    // Neverland
+    {who:"neverland", text:"Neverland на связи 💚"},
+    {who:"neverland", text:"Сегодня мы делаем этот день особенным для Миён 🎂"},
+    {who:"neverland", text:"Я принес(ла) шарики… кто принёс торт? 🎈"},
+    {who:"neverland", text:"Напоминаю: не забываем писать поздравления в комментариях 💬"},
+    {who:"neverland", text:"Она заслуживает весь мир и ещё чуть-чуть 🌍✨"},
+    {who:"neverland", text:"Сколько любви мы уже накопили? 💚"},
+    {who:"neverland", text:"Включаю режим: закидываем Миён добротой!"},
+    {who:"neverland", text:"Пусть этот год будет для неё мягким и счастливым 🌿"},
+    {who:"neverland", text:"Я так люблю её голос… 🥺"},
+    {who:"neverland", text:"Давайте соберём самый тёплый букет 💐"},
+    // Miyeon
+    {who:"miyeon", text:"(читает чат) ... 🥺"},
+    {who:"miyeon", text:"Вы такие милые… спасибо, Neverland 💚"},
+    {who:"miyeon", text:"Я чувствую вашу поддержку, правда ✨"},
+    {who:"miyeon", text:"Хаха, шарики везде! 🎈"},
+    {who:"miyeon", text:"Можно ещё немного конфетти? 🎉"},
+    {who:"miyeon", text:"Я улыбаюсь, пока читаю ваши слова 💚"},
+    {who:"miyeon", text:"Сегодня давайте просто будем счастливы 🎂"},
+    {who:"miyeon", text:"Обещаю: я запомню этот день 🌸"},
+    {who:"miyeon", text:"Мне очень тепло от вас…"},
+    {who:"miyeon", text:"Все хорошо поспали и проснулись? 🥰"},
+    {who:"miyeon", text:"Мёни в последнее время усердно тренируется 🥰💕💕💕"},
+    {who:"miyeon", text:"Мёни теперь пора идти готовиться🥰💕💕"},
+    {who:"miyeon", text:"Оставшуюся часть дня тоже проведём счастливо🥰💕"},
+    {who:"miyeon", text:"Снова приду💕💕💕"},
+    {who:"miyeon", text:"Ску❤️ча❤️ю❤️по❤️вам💋✨✨✨✨"},
+    {who:"miyeon", text:"Файтин и сегодня💪🏻💋❤️🥰🍀"},
+    {who:"miyeon", text:"Хе вчера играла с Небобо и вырубилась"},
+    {who:"miyeon", text:"Моё новогоднее желание: быть счастливой вместе с Небобо🥰💕💕💕💕💕💕"},
+    {who:"miyeon", text:"Давайте в этом году тоже будем здоровыми и счастливыми, хорошо проведём его вместе"},
+    {who:"miyeon", text:"Уии, тронута🥹❤️"},
+    {who:"miyeon", text:"Сегодня с утра, как только пришла на работу, получила подарок дуцзонку и счастлива"},
+    {who:"miyeon", text:"Надо идтиㅠㅠㅠㅠㅠㅠ"},
+  ];
+
+  let chatQueue = [];
+  let chatHistory = [];
+  let chatBusy = false;
+
+  function chatRender(){
+    if(!chatMsgs) return;
+    const last = chatHistory.slice(-9);
+    chatMsgs.innerHTML = "";
+
+    for(const l of last){
+      const wrap = document.createElement("div");
+      wrap.className = "msg " + (l.who==="miyeon" ? "miyeon" : "neverland");
+
+      const av = document.createElement("div");
+      av.className = "avatar";
+      av.textContent = (l.who==="miyeon") ? "MY" : "NL";
+
+      const b = document.createElement("div");
+      b.className = "bubble";
+      const nm = (l.who==="miyeon") ? "Миён" : "Neverland";
+      b.innerHTML = `<div class="name">${nm}</div><div class="text">${l.text}</div>`;
+
+      wrap.appendChild(av);
+      wrap.appendChild(b);
+      chatMsgs.appendChild(wrap);
+    }
+  }
+
+  function chatTyping(on){
+    if(!typingEl) return;
+    typingEl.style.display = on ? "flex" : "none";
+  }
+
+  function chatPush(line){
+    chatQueue.push(line);
+    chatPump();
+  }
+
+  function chatPump(){
+    if(chatBusy) return;
+    if(chatQueue.length === 0) return;
+
+    chatBusy = true;
+    const line = chatQueue.shift();
+
+    if(line.who === "miyeon"){
+      chatTyping(true);
+      setTimeout(()=>{
+        chatTyping(false);
+        chatHistory.push(line);
+        chatRender();
+        chatBusy = false;
+        // continue if queue still has lines
+        if(chatQueue.length) setTimeout(chatPump, 50);
+      }, 500); // typing 0.5s
+    } else {
+      chatHistory.push(line);
+      chatRender();
+      chatBusy = false;
+      if(chatQueue.length) setTimeout(chatPump, 50);
+    }
+  }
+
+  function chatSeed(){
+    chatQueue = [];
+    chatHistory = [
+      {who:"neverland", text:"Миён, с днём рождения! 💚🎂"},
+      {who:"miyeon", text:"Спасибо, Neverland… вы такие тёплые 🥺💚"},
+    ];
+    chatRender();
+  }
+
+  function chatIdleTick(){
+    if(chatQueue.length) return;
+    const lastText = chatHistory[chatHistory.length-1]?.text || "";
+    let pick = CHAT_IDLE[Math.floor(Math.random()*CHAT_IDLE.length)];
+    if(CHAT_IDLE.length>1){
+      let guard=0;
+      while(pick.text===lastText && guard<6){
+        pick = CHAT_IDLE[Math.floor(Math.random()*CHAT_IDLE.length)];
+        guard++;
+      }
+    }
+    chatPush(pick);
+  }
+
+    function chatOnPurchase(itemId){
+    const pack = CHAT_REACTIONS[itemId];
+    if(!pack || pack.length === 0) return;
+    // one random reaction per purchase
+    const line = pack[Math.floor(Math.random()*pack.length)];
+    chatPush(line);
+  }
+  // ====== RESET PROGRESS (hard reset) ======
+  // Exposed for the header button's inline onclick.
+  window.resetProgress = function resetProgress(){
+    const firstConfirm = confirm("Вы уверены, что хотите сбросить прогресс?\nЭто действие нельзя отменить.");
+    if(!firstConfirm) return;
+
+    const secondConfirm = confirm("ПОСЛЕДНЕЕ ПРЕДУПРЕЖДЕНИЕ!\nВЕСЬ прогресс будет удалён навсегда.");
+    if(!secondConfirm) return;
+
+    // Удаляем только сохранение этой игры
+    try{ localStorage.removeItem(KEY); }catch(_){}
+
+    // Сбрасываем состояние до исходных значений
+    state.love = 0;
+    state.best = 0;
+    state.owned = {};
+    state.upgrades = {};
+    state.revealedItems = {};
+    state.boughtUpgrades = {};
+    state.eventSeen = {};
+    state.eventUpgrades = {};
+    state.clicks = 0;
+    state.totalClicks = 0;
+    state._lastTickTs = Date.now();
+    state._autoFrac = 0;
+    // сбрасываем достижения и связанные счётчики
+    state.achievements = {};
+    // сбрасываем усиления клика ("за клик") и число кликов/прокачку
+    state.clickBase = 1;
+    state.clickLevel = 0;
+    state.clickCpsPct = 0;
+    // сбрасываем состояние ивентов/таймеров
+    state.event = { type:null, endsAt:0, nextFanAt:0, nextCubeAt:0, nextViralCheckAt:0, viralBonus:0, cubeMode:null, cubeBonus:0 };
+    state.lastSeen = Date.now();
+
+    // Перерисовка + сохранение нулевого состояния
+    try{ persist(); }catch(_){}
+    try{ render(); }catch(_){}
+
+    // На всякий случай обновим страницу (чтобы не осталось хвостов таймеров)
+    location.reload();
+  };
+
+
+/* =======================
+     INIT
+  ======================= */
+  load();
+  applyOffline();
+  rotateMsg();
+  chatSeed();
+  setInterval(chatIdleTick, 4200);
+  renderAll();
+
+
+  
+
+function getClickValue(){
+  return state.clickValue || 1;
+}
+function showClickFloat(val){
+  const el = document.getElementById("clickFloat");
+  if(!el) return;
+  el.textContent = "+" + fmt(val);
+  el.classList.remove("show");
+  void el.offsetWidth;
+  el.classList.add("show");
+  setTimeout(()=>el.classList.remove("show"),600);
+}
+
+
+
+})();
+</script></div>
+
+  </body>
+</html>
+
+
