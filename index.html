@@ -2787,7 +2787,7 @@ body.cuberoulette .eventBadge{
       <div class="centerStrip">
         <div class="stripTop">
           <div class="stripTitle">Лента прогресса</div>
-          <div class="stripHint" id="stripHint">купишь подарок и он появится тут</div>
+          <div class="stripHint" id="stripHint">купишь подарок – он появится тут</div>
         </div>
         <div class="stripTrack">
           <div class="trackRow" id="trackRow"></div>
@@ -3719,7 +3719,7 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
         quizOptions.appendChild(b);
       });
     }
-    if(quizHintQ) quizHintQ.textContent = "Один вариант правильный ✨";
+    if(quizHintQ) quizHintQ.textContent = "Один вариант – правильный ✨";
 
     setQuizPhase("question");
   }
@@ -3748,7 +3748,7 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
       {
         id: "x300_10s",
         title: "🔥 ×300 к кликам на 10 сек",
-        desc: "Временное усиление кликов ×300 на 10 секунд",
+        desc: "Временное усиление кликов ×300 на 10 секунд. Можно брать неограниченно – таймер обновляется.",
         isUnlocked: () => true,
         apply: () => {
           state.buffs = state.buffs || { clickMult: 1, clickMultUntil: 0, shopDiscountLeft: 0, freePurchase: false };
@@ -3781,13 +3781,13 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
       state.quizStats = state.quizStats || { started:0, answered:0, correct:0, streak:0, bestStreak:0, lastStartedIdx:-1, bonusPick:{ perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 } };
       state.quizStats.bonusPick = state.quizStats.bonusPick || { perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 };
           state.buffs.freePurchase = true;
-          toastLong("🎁 Следующая покупка открытого предмета бесплатная!");
+          toastLong("🎁 Следующая покупка открытого предмета – бесплатно!");
         }
       },
       {
         id: "discount10x",
-        title: "🏷️ Скидка –10% на 10 покупок",
-        desc: "Снижает цены в магазине на 10% только на 10 покупок.",
+        title: "🏷️ Скидка −10% на 10 покупок",
+        desc: "Снижает цены в магазине на 10% на 10 покупок. Не суммируется – при повторном выборе обновляет до 10.",
         isUnlocked: () => clicks >= 1500,
         apply: () => {
           state.buffs = state.buffs || { clickMult: 1, clickMultUntil: 0, shopDiscountLeft: 0, freePurchase: false };
@@ -3904,9 +3904,13 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
     closeQuiz();
   });
   if(quizNo) quizNo.addEventListener("click", ()=>{
-    // snooze invite by 10 clicks (only in ready phase)
+    // Skip this quiz iteration; show the next one only at the next threshold
     state.quiz = state.quiz || { idx: 0, nextAt: (QUIZ_THRESHOLDS[0]||40), used: {}, snoozeUntil: 0};
-    state.quiz.snoozeUntil = Number(state.totalClicks||0) + 10;
+
+    const nextIdx = Number(state.quiz.idx||0) + 1;
+    state.quiz.idx = nextIdx;
+    state.quiz.snoozeUntil = 0;
+    state.quiz.nextAt = (QUIZ_THRESHOLDS[nextIdx] != null) ? QUIZ_THRESHOLDS[nextIdx] : 1e18;
     persist();
 
     quizYesLocked = false;
@@ -3914,7 +3918,6 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
     currentQuiz = null;
 
     closeQuiz();
-    toast("Окей, позже 🙂");
   });
   if(quizYes) quizYes.addEventListener("click", ()=>{
     if(quizYesLocked) return;
@@ -4017,6 +4020,8 @@ function gainLove(amount){
     if(!state.event.nextFanAt) scheduleNextFanMeet(now);
     if(!state.event.nextCubeAt) scheduleNextCubeRoulette(now);
 
+    // Если ты поменяла интервалы в коде, а в сохранении остались старые "дальние" таймеры –
+    // подтягиваем расписание к новым настройкам, чтобы ивенты можно было быстро проверить.
     if(state.event.nextFanAt - now > FANMEET.maxGapMs) scheduleNextFanMeet(now);
     if(state.event.nextCubeAt - now > CUBEROULETTE.maxGapMs) scheduleNextCubeRoulette(now);
   }
@@ -4066,6 +4071,14 @@ function gainLove(amount){
     const now = Date.now();
     state.event.type = "cuberoulette";
 
+    // Cube Roulette: раз в 5–10 минут, упор на ручные клики
+    // modes:
+    // tiny   – ×15 (10с)
+    // long   – ×60 (18с)
+    // sprint – ×120 (12с)
+    // ultra  – ×300 (8с)
+    // jackpot– мгновенный бонус (от силы клика) + ×450 (6с)
+    // error  – авто=0, но ×600 (15с)
     const roll = Math.random();
     let mode = "tiny";
     if(roll < 0.30) mode = "tiny";
@@ -4097,6 +4110,7 @@ function gainLove(amount){
     if(mode==="jackpot") state.eventSeen.cubeBonus = true;
 
     if(mode==="jackpot"){
+      // jackpot – мгновенный бонус, завязан на силу клика (не на буст зданий)
       const base = state.clickBase || 1;
       const mult = clickMultFromLevel(state.clickLevel||0);
       const pct = Math.max(0, state.clickCpsPct || 0);
@@ -5023,7 +5037,7 @@ if(loveEl) loveEl.textContent = fmt(love);
     ],
     soyeon: [
       {who:"neverland", text:"Соён принесла букет! 🦁💐"},
-      {who:"neverland", text:"Самый красивый подарок для Миён 💐"},
+      {who:"neverland", text:"Самый красивый подарок – для Миён 💐"},
       {who:"miyeon", text:"Букет… я тронута 🥺💐"},
       {who:"miyeon", text:"Спасибо… я чувствую вашу любовь 💚"},
     ]};
@@ -5222,6 +5236,9 @@ if(loveEl) loveEl.textContent = fmt(love);
   setInterval(chatIdleTick, 4200);
   renderAll();
 
+
+  
+
 function getClickValue(){
   return state.clickValue || 1;
 }
@@ -5234,6 +5251,8 @@ function showClickFloat(val){
   el.classList.add("show");
   setTimeout(()=>el.classList.remove("show"),600);
 }
+
+
 
 })();
 </script></div>
