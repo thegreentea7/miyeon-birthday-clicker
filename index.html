@@ -27,6 +27,8 @@
     }
 
     *{ box-sizing:border-box; }
+    /* Generic helper (used across modals/steps) */
+    .hidden{ display:none !important; }
     html,body{ height:100%; overflow:hidden; }
     body{
       margin:0;
@@ -2341,7 +2343,7 @@ html, body { overflow: hidden !important; }
   align-items: center;
   box-shadow: 0 18px 60px rgba(0,0,0,.25);
 }
-.eventBanner.hidden{ display:none; }
+.eventBanner.hidden{ display:none !important; }
 .eventBadge{
   font-weight: 800;
   letter-spacing: .08em;
@@ -2420,7 +2422,7 @@ body.cuberoulette .eventBadge{
   padding: 18px;
   z-index: 9999;
 }
-.statsOverlay.hidden{ display:none; }
+.statsOverlay.hidden{ display:none !important; }
 
 .statsModal{
   width:min(560px, 92vw);
@@ -2481,7 +2483,7 @@ body.cuberoulette .eventBadge{
   padding: 18px;
   z-index: 9999;
 }
-.achOverlay.hidden{ display:none; }
+.achOverlay.hidden{ display:none !important; }
 
 .achModal{
   width:min(560px, 92vw);
@@ -2556,6 +2558,92 @@ body.cuberoulette .eventBadge{
   font-size: 12px;
   color: rgba(255,255,255,.65);
 }
+
+/* QUIZ */
+.quizOverlay{
+  position:fixed; inset:0;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(8px);
+  display:flex; align-items:center; justify-content:center;
+  padding: 18px;
+  z-index: 10000;
+}
+.quizOverlay.hidden{ display:none !important; }
+
+.quizModal{
+  width:min(560px, 92vw);
+  max-height: 82vh;
+  overflow:auto;
+  background: rgba(12,20,14,.90);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius: 18px;
+  box-shadow: 0 26px 80px rgba(0,0,0,.55);
+  padding: 14px 14px 12px;
+}
+
+.quizHeader{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+.quizTitle{ font-size:16px; font-weight:800; letter-spacing:.2px; }
+.quizClose{
+  background: transparent;
+  border:1px solid rgba(255,255,255,.18);
+  color: rgba(255,255,255,.85);
+  border-radius: 10px;
+  padding: 6px 10px;
+  cursor:pointer;
+}
+.quizClose:hover{ border-color: rgba(255,255,255,.32); }
+
+.quizBody{ display:flex; flex-direction:column; gap:10px; }
+.quizText{
+  background: rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius: 14px;
+  padding: 12px 12px 11px;
+  color: rgba(255,255,255,.90);
+  line-height:1.35;
+}
+.quizActions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+.quizBtn{
+  border-radius: 14px;
+  padding: 10px 12px;
+  border:1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.92);
+  cursor:pointer;
+  font-weight:800;
+}
+.quizBtn:hover{ border-color: rgba(255,255,255,.32); }
+.quizBtn.primary{
+  border-color: rgba(61,255,139,.55);
+  background: linear-gradient(180deg, rgba(61,255,139,.22), rgba(255,255,255,.05));
+}
+.quizQ{
+  font-weight:900;
+  letter-spacing:.2px;
+}
+.quizOptions{ display:flex; flex-direction:column; gap:10px; }
+.quizOpt{
+  text-align:left;
+  width:100%;
+  border-radius: 14px;
+  padding: 12px 12px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.05);
+  color: rgba(255,255,255,.92);
+  cursor:pointer;
+  font-weight:700;
+}
+.quizOpt:hover{ border-color: rgba(255,255,255,.30); }
+.quizOpt.correct{ border-color: rgba(61,255,139,.70); }
+.quizOpt.wrong{ border-color: rgba(255,120,120,.70); }
+
+.quizFoot{
+  margin-top: 8px;
+  color: rgba(255,255,255,.70);
+  font-size:12.5px;
+}
+
+
 
 /* Animations */
   20%{transform:translateX(-6px)}
@@ -2699,7 +2787,7 @@ body.cuberoulette .eventBadge{
       <div class="centerStrip">
         <div class="stripTop">
           <div class="stripTitle">Лента прогресса</div>
-          <div class="stripHint" id="stripHint">купишь подарок — он появится тут</div>
+          <div class="stripHint" id="stripHint">купишь подарок и он появится тут</div>
         </div>
         <div class="stripTrack">
           <div class="trackRow" id="trackRow"></div>
@@ -2796,11 +2884,46 @@ body.cuberoulette .eventBadge{
         <div class="statRow"><div class="statLabel">Потрачено любви</div><div class="statValue" id="statSpent">0</div></div>
 
         <div class="statRow"><div class="statLabel">Куплено уникальных предметов в магазине</div><div class="statValue" id="statPurchases">0</div></div>
-        <div class="statRow"><div class="statLabel">Самый популярный предмет</div><div class="statValue" id="statTopItem">—</div></div>
+        <div class="statRow"><div class="statLabel">Самый популярный предмет</div><div class="statValue" id="statTopItem">–</div></div>
         <div class="statRow"><div class="statLabel">Время в игре</div><div class="statValue" id="statPlayTime">00:00:00</div></div>
       </div>
 
       <div class="statsFooter" id="statsFooter"></div>
+    </div>
+  </div>
+
+
+  <!-- QUIZ -->
+  <div class="quizOverlay hidden" id="quizOverlay" aria-hidden="true">
+    <div class="quizModal" role="dialog" aria-modal="true" aria-label="Квиз">
+      <div class="quizHeader">
+        <div class="quizTitle">Квиз про Миён</div>
+        <button class="quizClose" id="quizClose" type="button">Закрыть</button>
+      </div>
+
+      <div class="quizBody" id="quizStepReady">
+        <div class="quizText">
+          Ты набрала нужное количество кликов 💚<br/>
+          Готова испытать удачу и ответить на 1 вопрос про Миён?
+        </div>
+        <div class="quizActions">
+          <button class="quizBtn" id="quizNo" type="button">Не сейчас</button>
+          <button class="quizBtn primary" id="quizYes" type="button">Да!</button>
+        </div>
+        <div class="quizFoot" id="quizHintReady"></div>
+      </div>
+
+      <div class="quizBody hidden" id="quizStepQ">
+        <div class="quizText quizQ" id="quizQuestion">Вопрос…</div>
+        <div class="quizOptions" id="quizOptions"></div>
+        <div class="quizFoot" id="quizHintQ"></div>
+      </div>
+      <div class="quizBody hidden" id="quizStepBonus">
+        <div class="quizText quizQ" id="quizBonusTitle">Выбери награду 🎁</div>
+        <div class="quizOptions" id="quizBonusOptions"></div>
+        <div class="quizFoot" id="quizHintBonus"></div>
+      </div>
+
     </div>
   </div>
 
@@ -2815,14 +2938,15 @@ body.cuberoulette .eventBadge{
 
     const ITEMS = [{ id:"like",    icon:"👍", name:"Лайки",        desc:"Неверленды ставят лайки. +1 💚/сек за уровень.",          baseCost:100,  costMult:1.15, add:1 },
 { id:"comment", icon:"💬", name:"Комментарии",  desc:"Поздравления в честь Миён. +3 💚/сек за уровень.",          baseCost:500,  costMult:1.15, add:3 },
-{ id:"minnie",  icon:"🐭", name:"Минни",        desc:"Минни приносит тортик и праздник продолжается! +20 💚/сек.", baseCost:3000,  costMult:1.15, add:20 },
-{ id:"yuqi",    icon:"🐶", name:"Юци",          desc:"Юци с шариками поднимает настроение. +80 💚/сек.",          baseCost:10000, costMult:1.15, add:80 },
-{ id:"shuhua",  icon:"🐺", name:"Шухуа",        desc:"Шухуа взрывает хлопушки! +260 💚/сек.",                    baseCost:40000, costMult:1.15, add:260 },
-{ id:"soyeon",  icon:"🦁", name:"Соён",         desc:"Соён приносит букет. +900 💚/сек.",                          baseCost:200000, costMult:1.15, add:900 },
-{ id:"soojin",  icon:"🦊", name:"Суджин",       desc:"Тёплая поддержка сквозь года. +12 000 💚/сек.",             baseCost:25000000,  costMult:1.15, add:12000 },
+{ id:"yg",      icon:"🏢", name:"Стажировка в YG", desc:"Сладкие воспоминания о прошлом. +8 💚/сек за уровень.",  baseCost:1500, costMult:1.15, add:8 },
+{ id:"minnie",  icon:"🐭", name:"Минни",        desc:"Минни приносит тортик и праздник продолжается! +20 💚/сек.", baseCost:5000,  costMult:1.15, add:20 },
+{ id:"yuqi",    icon:"🐶", name:"Юци",          desc:"Юци с шариками поднимает настроение. +80 💚/сек.",          baseCost:15000, costMult:1.15, add:80 },
+{ id:"shuhua",  icon:"🐺", name:"Шухуа",        desc:"Шухуа взрывает хлопушки! +260 💚/сек.",                    baseCost:60000, costMult:1.15, add:260 },
+{ id:"soyeon",  icon:"🦁", name:"Соён",         desc:"Соён приносит букет. +900 💚/сек.",                          baseCost:300000, costMult:1.15, add:900 },
+{ id:"soojin",  icon:"🦊", name:"Суджин",       desc:"Тёплая поддержка сквозь года. +12 000 💚/сек.",             baseCost:35000000,  costMult:1.15, add:12000 },
 { id:"cube",    icon:"🧊", name:"Cube Entertainment",
       desc:"Работает нестабильно: каждые 10 секунд с 50% шансом даёт большой бонус 💚 (или ничего). Дополнительно: +5% ко всем автокликам за уровень.",
-      baseCost:1000000000, costMult:1.15, add:0 }];
+      baseCost:1500000000, costMult:1.15, add:0 }];
 
   const MESSAGES = [
     "🎂 Сегодня день рождения Миён, Неверленд, поздравляем вместе!",
@@ -2860,7 +2984,9 @@ body.cuberoulette .eventBadge{
   /* =======================
      STATE
   ======================= */
-  const state = {
+  const QUIZ_THRESHOLDS = [40,90,160,260,400,600,850,1150,1500,1900,2400,3000,3700,4500,5400];
+
+const state = {
     totalClicks: 0,
     totalEarned: 0,
     totalSpent: 0,
@@ -2879,7 +3005,10 @@ body.cuberoulette .eventBadge{
     clickCpsPct: 0,
     lastSeen: Date.now(),
     event: { type:null, endsAt:0, nextFanAt:0, nextCubeAt:0, cubeMode:null, cubeBonus:0 },
-    eventUpgrades: {}
+    eventUpgrades: {},
+    quiz: { idx: 0, nextAt: (QUIZ_THRESHOLDS[0]||40), used: {}, snoozeUntil: 0},
+    quizActive: false,
+    buffs: { clickMult: 1, clickMultUntil: 0, shopDiscountLeft: 0, freePurchase: false }
   };
 
   function load(){
@@ -2905,6 +3034,37 @@ body.cuberoulette .eventBadge{
       if(typeof state.clickBase !== 'number') state.clickBase = 1;
       if(typeof state.clickCpsPct !== 'number') state.clickCpsPct = 0;
       state.event = state.event || { type:null, endsAt:0, nextFanAt:0, nextCubeAt:0, cubeMode:null, cubeBonus:0 };
+
+      // quiz defaults
+      state.quiz = state.quiz || { idx: 0, nextAt: (QUIZ_THRESHOLDS[0]||40), used: {}, snoozeUntil: 0};
+      state.quiz.used = state.quiz.used || {};
+      // migrate / validate quiz thresholds
+      if(typeof state.quiz.idx !== "number" || state.quiz.idx < 0) state.quiz.idx = 0;
+
+      // If older saves had only nextAt, map it into idx based on thresholds
+      if(typeof state.quiz.nextAt === "number" && (state.quiz.nextAt > 0) && (!("idx" in state.quiz) || state.quiz.idx === 0)){
+        const oldNext = state.quiz.nextAt;
+        const mapped = QUIZ_THRESHOLDS.findIndex(t=>t >= oldNext);
+        state.quiz.idx = (mapped === -1) ? QUIZ_THRESHOLDS.length : mapped;
+      }
+
+      const next = (state.quiz.idx < QUIZ_THRESHOLDS.length) ? QUIZ_THRESHOLDS[state.quiz.idx] : Number.POSITIVE_INFINITY;
+      state.quiz.nextAt = next;
+      if(typeof state.quiz.snoozeUntil !== "number") state.quiz.snoozeUntil = 0;
+      state.quizActive = false; // always start closed on load
+
+      // buffs defaults
+      state.buffs = state.buffs || { clickMult: 1, clickMultUntil: 0, shopDiscountLeft: 0, freePurchase: false };
+      state.quizStats = state.quizStats || { started:0, answered:0, correct:0, streak:0, bestStreak:0, lastStartedIdx:-1, bonusPick:{ perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 } };
+      state.quizStats.bonusPick = state.quizStats.bonusPick || { perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 };
+      if(typeof state.buffs.clickMult !== "number") state.buffs.clickMult = 1;
+      if(typeof state.buffs.clickMultUntil !== "number") state.buffs.clickMultUntil = 0;
+      state.buffs.shopDiscountLeft = Number.isFinite(state.buffs.shopDiscountLeft) ? Math.max(0, Math.floor(state.buffs.shopDiscountLeft)) : 0;
+      state.buffs.freePurchase = !!state.buffs.freePurchase;
+      // never carry temporary buffs across full reload if already expired
+      if(Date.now() > state.buffs.clickMultUntil){ state.buffs.clickMult = 1; state.buffs.clickMultUntil = 0; }
+
+
     }catch(_){}
   }
   function persist(){
@@ -2968,6 +3128,26 @@ const qtyTabs = $("qtyTabs");
 
   const heartsLayer = $("heartsLayer");
 
+  // Quiz
+  const quizOverlay = $("quizOverlay");
+  const quizClose   = $("quizClose");
+  const quizYes     = $("quizYes");
+  const quizNo      = $("quizNo");
+  const quizStepReady = $("quizStepReady");
+  const quizStepQ     = $("quizStepQ");
+  const quizStepBonus = $("quizStepBonus");
+  const quizBonusTitle = $("quizBonusTitle");
+  const quizBonusOptions = $("quizBonusOptions");
+  const quizHintBonus = $("quizHintBonus");
+  const quizQuestion  = $("quizQuestion");
+  const quizOptions   = $("quizOptions");
+  const quizHintReady = $("quizHintReady");
+  const quizHintQ     = $("quizHintQ");
+
+  // Ensure quiz overlay never blocks clicks on load
+  if(quizOverlay){ quizOverlay.classList.add("hidden"); quizOverlay.setAttribute("aria-hidden","true"); }
+
+
   /* =======================
      UTILS
   ======================= */
@@ -2978,6 +3158,14 @@ const qtyTabs = $("qtyTabs");
     if(abs >= 1e6) return (n/1e6).toFixed(abs>=1e7?0:1) + "M";
     if(abs >= 1e3) return (n/1e3).toFixed(abs>=1e4?0:1) + "K";
     return Math.floor(n).toLocaleString("ru-RU");
+  };
+
+  const shuffleInPlace = (arr) => {
+    for(let i = arr.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
   };
 
   const getOwned = (id) => Math.max(0, state.owned[id] || 0);
@@ -3013,7 +3201,21 @@ const qtyTabs = $("qtyTabs");
     { id:"first_buy",    icon:"🧾", name:"Первая покупка", desc:"Купи любой предмет в магазине.", hidden:false,
       prog:()=> Math.min(1, (totalOwnedAll()) / 1) },
 
-    { id:"love_1k",      icon:"🎉", name:"1 000 любви", desc:"Достигни рекорда 1 000 💚.", hidden:false,
+{ id:"idle_together", icon:"🩵", name:"(G)I‑DLE снова вместе", desc:"Купи Минни, Шухуа, Юци, Соён и Суджин.", hidden:false,
+      prog:()=> {
+        const ids = ["minnie","shuhua","yuqi","soyeon","soojin"];
+        const have = ids.filter(id => getOwned(id) > 0).length;
+        return Math.min(1, have / ids.length);
+      } },
+
+    
+    { id:"yg_first", icon:"🏢", name:"Сладкие воспоминания", desc:"Купи «Стажировку в YG» 1 раз.", hidden:false,
+      prog:()=> Math.min(1, getOwned("yg") / 1) },
+
+    { id:"yg_lvl5",  icon:"🕰️", name:"Прошлое, которое не забыть", desc:"Прокачай «Стажировку в YG» до 5 уровня.", hidden:false,
+      prog:()=> Math.min(1, getOwned("yg") / 5) },
+
+{ id:"love_1k",      icon:"🎉", name:"1 000 любви", desc:"Достигни рекорда 1 000 💚.", hidden:false,
       prog:()=> Math.min(1, (state.best||0) / 1000) },
 
     { id:"auto_10",      icon:"🏭", name:"Фабрика любви", desc:"Доведи 💚/сек до 10.", hidden:false,
@@ -3096,6 +3298,44 @@ const qtyTabs = $("qtyTabs");
 
     
 
+
+
+    /* Quiz achievements */
+    { id:"quiz_first", icon:"❓", name:"Первый квиз", desc:"Ответь на вопрос в квизе хотя бы 1 раз.", hidden:false,
+      prog:()=> Math.min(1, ((state.quizStats&&state.quizStats.answered)||0) / 1) },
+
+    { id:"quiz_3_correct", icon:"🧠", name:"Умница", desc:"Дай 3 правильных ответа в квизах.", hidden:false,
+      prog:()=> Math.min(1, ((state.quizStats&&state.quizStats.correct)||0) / 3) },
+
+    { id:"quiz_10_correct", icon:"🌟", name:"Миён в сердце", desc:"Дай 10 правильных ответов в квизах.", hidden:true,
+      prog:()=> Math.min(1, ((state.quizStats&&state.quizStats.correct)||0) / 10) },
+
+    { id:"quiz_10_total", icon:"🏁", name:"Квиз‑марафон", desc:"Ответь на 10 вопросов в квизах.", hidden:true,
+      prog:()=> Math.min(1, ((state.quizStats&&state.quizStats.answered)||0) / 10) },
+
+    { id:"quiz_streak_5", icon:"🔥", name:"Безошибочно", desc:"Сделай серию из 5 правильных ответов подряд.", hidden:true,
+      prog:()=> Math.min(1, ((state.quizStats&&state.quizStats.bestStreak)||0) / 5) },
+
+    { id:"bonus_perm", icon:"💚", name:"Постоянный буст", desc:"Выбери награду «+5% к клику навсегда» хотя бы 1 раз.", hidden:true,
+      prog:()=> Math.min(1, (((state.quizStats&&state.quizStats.bonusPick)||{}).perm05||0) / 1) },
+
+    { id:"bonus_x300", icon:"⚡", name:"Турбо‑режим", desc:"Выбери награду «×300 к кликам на 10 сек» хотя бы 1 раз.", hidden:true,
+      prog:()=> Math.min(1, (((state.quizStats&&state.quizStats.bonusPick)||{}).x300_10s||0) / 1) },
+
+    { id:"bonus_plus50", icon:"💖", name:"Лавина любви", desc:"Выбери награду «+50% 💚 сразу» хотя бы 1 раз.", hidden:true,
+      prog:()=> Math.min(1, (((state.quizStats&&state.quizStats.bonusPick)||{}).plus50pct||0) / 1) },
+
+    { id:"bonus_freebuy", icon:"🎁", name:"Шопинг‑босс", desc:"Выбери награду «Бесплатная покупка» хотя бы 1 раз.", hidden:true,
+      prog:()=> Math.min(1, (((state.quizStats&&state.quizStats.bonusPick)||{}).freebuy||0) / 1) },
+
+    { id:"bonus_discount", icon:"🏷️", name:"Скидка дня", desc:"Выбери награду «Скидка −10% на 10 покупок» хотя бы 1 раз.", hidden:true,
+      prog:()=> Math.min(1, (((state.quizStats&&state.quizStats.bonusPick)||{}).discount10x||0) / 1) },
+
+    { id:"quiz_5400", icon:"🏔️", name:"Дошла до 5400", desc:"Дойди до порога квиза 5400 кликов.", hidden:true,
+      prog:()=> Math.min(1, (Number(state.totalClicks||0) >= 5400 ? 1 : 0)) },
+
+    { id:"quiz_all", icon:"🏆", name:"Квиз‑легенда", desc:"Пройди все квизы по порогам (15/15).", hidden:true,
+      prog:()=> Math.min(1, ((state.quiz && Number(state.quiz.idx)||0) / QUIZ_THRESHOLDS.length)) },
 
 ];
 
@@ -3209,11 +3449,11 @@ function getTopItemLabel(){
       const n = Math.floor((state.owned && state.owned[it.id]) || 0);
       if(n > bestN){ bestN = n; bestId = it.id; }
     }
-    if(!bestId || bestN<=0) return "—";
+    if(!bestId || bestN<=0) return "–";
     const it = (typeof ITEMS !== "undefined" ? ITEMS : []).find(x=>x.id===bestId);
     return `${it ? it.name : bestId} ×${bestN}`;
   }catch(_){
-    return "—";
+    return "–";
   }
 }
 
@@ -3277,7 +3517,7 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
     const it = ITEMS.find(x=>x.id===itemId);
     if(!it) return;
     // show item description immediately even if user didn't click the heart
-    toastLong(`Открыт новый предмет: ${it.icon} ${it.name} — ${it.desc}`);
+    toastLong(`Открыт новый предмет: ${it.icon} ${it.name} – ${it.desc}`);
     checkAchievements();
   }
 
@@ -3292,21 +3532,414 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
     toast._t = setTimeout(()=>toastEl.classList.remove("show"), 1200);
   }
 
+
   /* =======================
+     QUIZ (by manual clicks)
+  ======================= */
+  const QUIZ_POOL = [
+    { id:"q01", q:"Какой цвет Миён называет своим любимым?", a:["Голубой","Розовый","Зелёный","Белый"], correct:2 },
+    { id:"q02", q:"Какое время года Миён любит больше всего?", a:["Весну","Осень","Зиму","Лето"], correct:3 },
+    { id:"q03", q:"Как переводится прозвище «Чо Мисоль»?", a:["Свет и гармония","Музыка и голос","Искусство и улыбка","Танец и энергия"], correct:2 },
+    { id:"q04", q:"Какая особенность отличает Миён от большинства айдолов?", a:["Она амбидекстр","Она левша","Она пишет правой, но рисует левой","Она переученная правша"], correct:1 },
+    { id:"q05", q:"Есть ли у Миён братья или сёстры?", a:["Старший брат","Младшая сестра","Два брата","Нет, она единственный ребёнок"], correct:3 },
+    { id:"q06", q:"К какой кухне у Миён особая любовь?", a:["Корейской","Японской","Тайской","Итальянской"], correct:2 },
+    { id:"q07", q:"Какой напиток Миён особенно любит?", a:["Американо","Матча","Чай с молоком","Лимонад"], correct:2 },
+    { id:"q08", q:"Какие закуски Миён любит больше всего?", a:["Чипсы","Латиао","Токпокки","Орехи"], correct:1 },
+    { id:"q09", q:"Какую лапшу Миён предпочитает?", a:["Острую с морепродуктами","С говядиной","Из чёрной фасоли","Холодную лапшу"], correct:2 },
+    { id:"q10", q:"Какую еду Миён НЕ любит?", a:["Красную фасоль","Сыр","Рыбу","Рис"], correct:0 },
+    { id:"q11", q:"Какой вкус шоколада Миён не переносит?", a:["Апельсиновый","Ореховый","Мятный","Карамельный"], correct:2 },
+    { id:"q12", q:"На каких инструментах умеет играть Миён?", a:["Только фортепиано","Гитара и ударные","Скрипка, фортепиано и гитара","Скрипка и виолончель"], correct:2 },
+    { id:"q13", q:"Какое творческое умение также есть у Миён?", a:["Скульптура","Фотография","Рисование","Каллиграфия"], correct:2 },
+    { id:"q14", q:"С кем из айдолов Миён дружит?", a:["С Чонгуком","С Кариной","С Саной","С Айю"], correct:2 },
+    { id:"q15", q:"В какой компании Миён стажировалась дольше всего?", a:["SM Entertainment","JYP Entertainment","YG Entertainment","Cube Entertainment"], correct:2 },
+    { id:"q16", q:"С кем Миён пришла в YG Entertainment в одно время?", a:["С Лисой","С Джису","С Розэ","С Дженни"], correct:3 },
+    { id:"q17", q:"Почему Миён не дебютировала в BLACKPINK?", a:["Не прошла финальный отбор","Ушла по собственному желанию","Закончился контракт","Получила травму"], correct:1 },
+    { id:"q18", q:"В каком возрасте Миён впервые прошла прослушивание?", a:["В начальной школе","В средней школе","В старшей школе","В университете"], correct:1 },
+    { id:"q19", q:"Как Миён относится ко сну?", a:["Спит мало","Часто просыпается","Легко встаёт рано","Очень любит спать"], correct:3 },
+    { id:"q20", q:"Что почти невозможно сделать, пока Миён спит?", a:["Разбудить её голосом","Разбудить будильником","Разбудить светом","Разбудить музыкой"], correct:1 },
+    { id:"q21", q:"Кто убедил Миён получить водительские права?", a:["Отец","Соён","Менеджер","Мама"], correct:3 },
+    { id:"q22", q:"Кем Миён приняли другие участницы при первой встрече в Cube?", a:["Новый менеджер","Стилиста","Хореографом","Переводчика"], correct:2 },
+    { id:"q23", q:"В каком году Миён дебютировала с (G)I-DLE?", a:["2016","2017","2018","2019"], correct:2 },
+    { id:"q24", q:"С какой песней состоялся дебют (G)I-DLE?", a:["Hann","Oh My God","Latata","Uh-Oh"], correct:2 },
+    { id:"q25", q:"Какую героиню озвучивает Миён в K/DA?", a:["Эвелинн","Акали","Ари","Кай’Са"], correct:2 },
+    { id:"q26", q:"Какая песня была заглавкой в сольном дебютном альбоме My?", a:["Rose","Drive","Te Amo","Rain"], correct:1 },
+    { id:"q27", q:"В каком году вышел сольный мини-альбом My?", a:["2020","2021","2022","2023"], correct:2 },
+    { id:"q28", q:"Какой виртуальной группе принадлежит песня «POP/STARS», в которой участвовала Миён?", a:["aespa","K/DA","Heartsteel","True Damage"], correct:1 },
+    { id:"q29", q:"С каким участником (G)I-DLE Миён исполнила OST «We Already Fell In Love»?", a:["Соён","Юци","Минни","Шуахуа"], correct:2 },
+    { id:"q30", q:"В каком шоу Миён выступала в образе «варёного яйца»?", a:["Queendom","Weekly Idol","King of Mask Singer","Immortal Songs"], correct:2 },
+    { id:"q31", q:"Как называется второй сольный мини-альбом Миён, вышедший в 2025 году?", a:["Lover","My Again","My, Lover","Blooming"], correct:2 },
+    { id:"q32", q:"С каким артистом Миён выпустила трек «Side Effect»?", a:["Gray","Raiden","Loco","DPR LIVE"], correct:1 }
+  ];
+
+  // quiz runtime guards + state machine
+  let lastQuizInviteClick = -1;
+  let quizYesLocked = false;
+  let quizInBonusChoice = false;
+
+  // Phases: "ready" -> "question" -> "bonus"
+  let quizPhase = "ready";
+  let currentQuiz = null; // { qobj, options }
+
+  function setQuizPhase(phase){
+    quizPhase = phase;
+    // Visibility
+    if(quizStepReady) quizStepReady.classList.toggle("hidden", phase !== "ready");
+    if(quizStepQ)     quizStepQ.classList.toggle("hidden", phase !== "question");
+    if(quizStepBonus) quizStepBonus.classList.toggle("hidden", phase !== "bonus");
+
+    // Controls
+    if(quizNo)  quizNo.disabled  = (phase !== "ready");
+    if(quizYes) quizYes.disabled = (phase !== "ready") || quizYesLocked;
+
+    // Close behaviour: cannot close during bonus choice (bonus must be chosen immediately)
+    if(quizClose) quizClose.disabled = (phase === "bonus");
+  }
+
+  function openQuizReady(){
+    if(!quizOverlay) return;
+
+    // Reset transient runtime state each time quiz opens
+    quizYesLocked = false;
+    quizInBonusChoice = false;
+    currentQuiz = null;
+    if(quizYes) quizYes.disabled = false;
+
+    state.quizActive = true;
+    quizOverlay.classList.remove("hidden");
+    quizOverlay.setAttribute("aria-hidden","false");
+
+    setQuizPhase("ready");
+  }
+
+  function closeQuiz(){
+    if(!quizOverlay) return;
+    quizOverlay.classList.add("hidden");
+    quizOverlay.setAttribute("aria-hidden","true");
+    state.quizActive = false;
+
+    quizInBonusChoice = false;
+    quizYesLocked = false;
+    currentQuiz = null;
+    setQuizPhase("ready");
+  }
+
+  function pickQuizQuestion(){
+    const used = (state.quiz && state.quiz.used) ? state.quiz.used : {};
+    const available = QUIZ_POOL.filter(x=>!used[x.id]);
+    if(available.length === 0) return null;
+    return available[Math.floor(Math.random()*available.length)];
+  }
+
+  function prepareQuestion(qobj){
+    // Prepare shuffled answers once, keep correct mapping
+    const options = qobj.a.map((label, i)=>({ label, isCorrect: i === qobj.correct }));
+    shuffleInPlace(options);
+    return { qobj, options };
+  }
+
+  function advanceQuizThreshold(){
+    state.quiz = state.quiz || { idx: 0, nextAt: (QUIZ_THRESHOLDS[0]||40), used: {}, snoozeUntil: 0};
+    state.quiz.used = state.quiz.used || {};
+
+    state.quiz.idx = (Number.isFinite(state.quiz.idx) ? state.quiz.idx : 0) + 1;
+    state.quiz.nextAt = (state.quiz.idx < QUIZ_THRESHOLDS.length) ? QUIZ_THRESHOLDS[state.quiz.idx] : Number.POSITIVE_INFINITY;
+    state.quiz.snoozeUntil = 0;
+  }
+
+  function startQuizQuestion(){
+    if(!quizOverlay) return;
+
+    // quiz stats (for achievements): count once per threshold when question actually starts
+    state.quizStats = state.quizStats || { started:0, answered:0, correct:0, streak:0, bestStreak:0, lastStartedIdx:-1, bonusPick:{ perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 } };
+    if(state.quiz && Number.isFinite(state.quiz.idx) && state.quizStats.lastStartedIdx !== state.quiz.idx){
+      state.quizStats.started += 1;
+      state.quizStats.lastStartedIdx = state.quiz.idx;
+      persist();
+      checkAchievements();
+    }
+
+    // Choose ONE question for this quiz, and mark it used immediately
+    if(!currentQuiz){
+      const qobj = pickQuizQuestion();
+      if(!qobj){
+        toast("Вопросы закончились 🙂");
+        closeQuiz();
+        return;
+      }
+      currentQuiz = prepareQuestion(qobj);
+
+      // Mark used as soon as we show the question (unique, never repeats)
+      state.quiz = state.quiz || { idx: 0, nextAt: (QUIZ_THRESHOLDS[0]||40), used: {}, snoozeUntil: 0};
+      state.quiz.used = state.quiz.used || {};
+      state.quiz.used[qobj.id] = true;
+      persist();
+    }
+
+    // Render question
+    if(quizQuestion) quizQuestion.textContent = currentQuiz.qobj.q;
+    if(quizOptions){
+      quizOptions.innerHTML = "";
+      currentQuiz.options.forEach((opt)=>{
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "quizOpt";
+        b.textContent = opt.label;
+
+        b.addEventListener("click", ()=>{
+          // lock all
+          [...quizOptions.querySelectorAll("button.quizOpt")].forEach(x=>x.disabled=true);
+
+          // quiz stats: answered + streak
+          state.quizStats = state.quizStats || { started:0, answered:0, correct:0, streak:0, bestStreak:0, lastStartedIdx:-1, bonusPick:{ perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 } };
+          state.quizStats.answered = (state.quizStats.answered||0) + 1;
+
+          if(opt.isCorrect){
+            b.classList.add("correct");
+            state.quizStats.correct = (state.quizStats.correct||0) + 1;
+            state.quizStats.streak = (state.quizStats.streak||0) + 1;
+            state.quizStats.bestStreak = Math.max(state.quizStats.bestStreak||0, state.quizStats.streak||0);
+            persist();
+            checkAchievements();
+            openQuizBonusChoice();
+          }else{
+            b.classList.add("wrong");
+            state.quizStats.streak = 0;
+            persist();
+            checkAchievements();
+            toastLong("Попробуй в следующий раз");
+
+            // finish this quiz, go to next threshold
+            advanceQuizThreshold();
+            persist();
+            renderAll(true);
+            setTimeout(closeQuiz, 650);
+          }
+        });
+
+        quizOptions.appendChild(b);
+      });
+    }
+    if(quizHintQ) quizHintQ.textContent = "Один вариант правильный ✨";
+
+    setQuizPhase("question");
+  }
+
+  // === Quiz bonus system (player chooses immediately) ===
+  function unlockedQuizBonuses(){
+    const clicks = Number(state.totalClicks||0);
+
+    // Unlock rules (by totalClicks at the moment of choosing):
+    // 40+:  perm +5% (always),  ×300 for 10s (always, unlimited)
+    // 260+: +50% hearts instantly
+    // 850+: free purchase (+1 item) on next buy (only revealed items)
+    // 1500+: shop discount -10% for next 10 purchases (not stacking; resets to 10)
+
+    const list = [
+      {
+        id: "perm05",
+        title: "💚 +5% к клику навсегда",
+        desc: "Навсегда увеличивает силу клика на 5%. Можно брать много раз – эффект складывается.",
+        isUnlocked: () => true,
+        apply: () => {
+          state.clickBase = (state.clickBase || 1) * 1.05;
+          toastLong(`💚 +5% к клику навсегда • Сила клика сейчас: ${Math.floor(perClick()).toLocaleString("ru-RU")} 💚/клик`);
+        }
+      },
+      {
+        id: "x300_10s",
+        title: "🔥 ×300 к кликам на 10 сек",
+        desc: "Временное усиление кликов ×300 на 10 секунд",
+        isUnlocked: () => true,
+        apply: () => {
+          state.buffs = state.buffs || { clickMult: 1, clickMultUntil: 0, shopDiscountLeft: 0, freePurchase: false };
+      state.quizStats = state.quizStats || { started:0, answered:0, correct:0, streak:0, bestStreak:0, lastStartedIdx:-1, bonusPick:{ perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 } };
+      state.quizStats.bonusPick = state.quizStats.bonusPick || { perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 };
+          state.buffs.clickMult = 300;
+          state.buffs.clickMultUntil = Date.now() + 10000;
+          toastLong("🔥 ×300 к кликам на 10 секунд!");
+        }
+      },
+      {
+        id: "plus50pct",
+        title: "💖 +50% 💚 сразу",
+        desc: "Мгновенно добавляет +50% от текущего количества любви.",
+        isUnlocked: () => clicks >= 260,
+        apply: () => {
+          const cur = Math.floor(Number(state.love||0));
+          const add = Math.floor(cur * 0.5);
+          gainLove(add);
+          toastLong(`💖 +${fmt(add)} 💚 (50% от текущего)`);
+        }
+      },
+      {
+        id: "freebuy",
+        title: "🎁 Бесплатная покупка",
+        desc: "Следующий ОТКРЫТЫЙ предмет можно купить бесплатно (1 раз).",
+        isUnlocked: () => clicks >= 850,
+        apply: () => {
+          state.buffs = state.buffs || { clickMult: 1, clickMultUntil: 0, shopDiscountLeft: 0, freePurchase: false };
+      state.quizStats = state.quizStats || { started:0, answered:0, correct:0, streak:0, bestStreak:0, lastStartedIdx:-1, bonusPick:{ perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 } };
+      state.quizStats.bonusPick = state.quizStats.bonusPick || { perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 };
+          state.buffs.freePurchase = true;
+          toastLong("🎁 Следующая покупка открытого предмета бесплатная!");
+        }
+      },
+      {
+        id: "discount10x",
+        title: "🏷️ Скидка –10% на 10 покупок",
+        desc: "Снижает цены в магазине на 10% только на 10 покупок.",
+        isUnlocked: () => clicks >= 1500,
+        apply: () => {
+          state.buffs = state.buffs || { clickMult: 1, clickMultUntil: 0, shopDiscountLeft: 0, freePurchase: false };
+      state.quizStats = state.quizStats || { started:0, answered:0, correct:0, streak:0, bestStreak:0, lastStartedIdx:-1, bonusPick:{ perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 } };
+      state.quizStats.bonusPick = state.quizStats.bonusPick || { perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 };
+          state.buffs.shopDiscountLeft = 10; // reset, not stack
+          toastLong("🏷️ Скидка −10% активна на 10 покупок!");
+        }
+      }
+    ];
+
+    return list.filter(x=>x.isUnlocked());
+  }
+
+  function openQuizBonusChoice(){
+    if(!quizStepBonus || !quizBonusOptions || !quizBonusTitle) return;
+
+    quizInBonusChoice = true;
+    quizYesLocked = true;
+
+    quizBonusTitle.textContent = "✅ Правильно! Выбери награду 🎁";
+    if(quizHintBonus){
+      const clicks = Number(state.totalClicks||0);
+      quizHintBonus.textContent = `Доступные бонусы зависят от кликов (у тебя: ${fmt(clicks)}).`;
+    }
+
+    const bonuses = unlockedQuizBonuses();
+    quizBonusOptions.innerHTML = "";
+
+    bonuses.forEach((bns)=>{
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "quizOpt";
+      btn.textContent = bns.title;
+      btn.title = bns.desc;
+
+      btn.addEventListener("click", ()=>{
+        // lock buttons
+        [...quizBonusOptions.querySelectorAll("button")].forEach(x=>x.disabled=true);
+
+        // quiz stats: chosen bonus
+        state.quizStats = state.quizStats || { started:0, answered:0, correct:0, streak:0, bestStreak:0, lastStartedIdx:-1, bonusPick:{ perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 } };
+        state.quizStats.bonusPick = state.quizStats.bonusPick || { perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 };
+        if(state.quizStats.bonusPick[bns.id] !== undefined){
+          state.quizStats.bonusPick[bns.id] = (state.quizStats.bonusPick[bns.id]||0) + 1;
+        }
+        persist();
+        checkAchievements();
+
+        // apply
+        bns.apply();
+
+        // finish this quiz, go to next threshold
+        advanceQuizThreshold();
+
+        persist();
+        renderAll(true);
+        setTimeout(closeQuiz, 650);
+      });
+
+      quizBonusOptions.appendChild(btn);
+    });
+
+    setQuizPhase("bonus");
+  }
+
+  /* =======================
+     QUIZ TRIGGER
+  ======================= */
+  function forceMaybeTriggerQuiz(){
+    if(!quizOverlay) return;
+
+    state.quiz = state.quiz || { idx: 0, nextAt: (QUIZ_THRESHOLDS[0]||40), used: {}, snoozeUntil: 0};
+    state.quiz.used = state.quiz.used || {};
+
+    // Normalize idx
+    let idx = Number.isFinite(state.quiz.idx) ? state.quiz.idx : 0;
+    if(idx < 0) idx = 0;
+    if(idx >= QUIZ_THRESHOLDS.length) return;
+
+    const nextAt = QUIZ_THRESHOLDS[idx];
+    state.quiz.idx = idx;
+    state.quiz.nextAt = nextAt;
+
+    const nowClicks = Number(state.totalClicks||0);
+    const snoozeUntil = Number.isFinite(state.quiz.snoozeUntil) ? state.quiz.snoozeUntil : 0;
+
+    if(state.quizActive) return;
+    if(nowClicks < snoozeUntil) return;
+    if(nowClicks < nextAt) return;
+
+    // Do not duplicate invite on the same click
+    if(lastQuizInviteClick === nowClicks) return;
+    lastQuizInviteClick = nowClicks;
+
+    openQuizReady();
+  }
+
+  function maybeTriggerQuizByClicks(){
+    forceMaybeTriggerQuiz();
+  }
+
+  // Quiz UI handlers
+  if(quizOverlay){
+    quizOverlay.addEventListener("pointerdown", (e)=>{
+      if(e.target === quizOverlay){
+        if(quizPhase === "bonus"){ toast("Выбери награду 🎁"); return; }
+        closeQuiz();
+      }
+    });
+  }
+  if(quizClose) quizClose.addEventListener("click", ()=>{
+    if(quizPhase === "bonus"){ toast("Выбери награду 🎁"); return; }
+    closeQuiz();
+  });
+  if(quizNo) quizNo.addEventListener("click", ()=>{
+    // snooze invite by 10 clicks (only in ready phase)
+    state.quiz = state.quiz || { idx: 0, nextAt: (QUIZ_THRESHOLDS[0]||40), used: {}, snoozeUntil: 0};
+    state.quiz.snoozeUntil = Number(state.totalClicks||0) + 10;
+    persist();
+
+    quizYesLocked = false;
+    if(quizYes) quizYes.disabled = false;
+    currentQuiz = null;
+
+    closeQuiz();
+    toast("Окей, позже 🙂");
+  });
+  if(quizYes) quizYes.addEventListener("click", ()=>{
+    if(quizYesLocked) return;
+    quizYesLocked = true;
+    if(quizYes) quizYes.disabled = true;
+
+    startQuizQuestion();
+  });
+
+
+/* =======================
      SHOP PRICES
   ======================= */
   function unitPrice(item){
     const c = getOwned(item.id);
-    return Math.floor((item.baseCost * Math.pow(item.costMult, c)) * fanmeetShopDiscount());
+    return Math.floor((item.baseCost * Math.pow(item.costMult, c)) * fanmeetShopDiscount() * quizShopDiscount());
   }
   function totalPrice(item, mult){
     const c = getOwned(item.id);
     const k = Math.max(1, mult|0);
     const r = item.costMult;
     const base = item.baseCost * Math.pow(r, c);
-    if(k === 1) return Math.floor(base * fanmeetShopDiscount());
+    if(k === 1) return Math.floor(base * fanmeetShopDiscount() * quizShopDiscount());
     const sum = base * (Math.pow(r, k) - 1) / (r - 1);
-    return Math.floor(sum * fanmeetShopDiscount());
+    return Math.floor(sum * fanmeetShopDiscount() * quizShopDiscount());
   }
   function canAfford(cost){ return state.love >= cost; }
 
@@ -3384,8 +4017,6 @@ function gainLove(amount){
     if(!state.event.nextFanAt) scheduleNextFanMeet(now);
     if(!state.event.nextCubeAt) scheduleNextCubeRoulette(now);
 
-    // Если ты поменяла интервалы в коде, а в сохранении остались старые "дальние" таймеры —
-    // подтягиваем расписание к новым настройкам, чтобы ивенты можно было быстро проверить.
     if(state.event.nextFanAt - now > FANMEET.maxGapMs) scheduleNextFanMeet(now);
     if(state.event.nextCubeAt - now > CUBEROULETTE.maxGapMs) scheduleNextCubeRoulette(now);
   }
@@ -3435,14 +4066,6 @@ function gainLove(amount){
     const now = Date.now();
     state.event.type = "cuberoulette";
 
-    // Cube Roulette: раз в 5–10 минут, упор на ручные клики
-    // modes:
-    // tiny   — ×15 (10с)
-    // long   — ×60 (18с)
-    // sprint — ×120 (12с)
-    // ultra  — ×300 (8с)
-    // jackpot— мгновенный бонус (от силы клика) + ×450 (6с)
-    // error  — авто=0, но ×600 (15с)
     const roll = Math.random();
     let mode = "tiny";
     if(roll < 0.30) mode = "tiny";
@@ -3474,7 +4097,6 @@ function gainLove(amount){
     if(mode==="jackpot") state.eventSeen.cubeBonus = true;
 
     if(mode==="jackpot"){
-      // jackpot — мгновенный бонус, завязан на силу клика (не на буст зданий)
       const base = state.clickBase || 1;
       const mult = clickMultFromLevel(state.clickLevel||0);
       const pct = Math.max(0, state.clickCpsPct || 0);
@@ -3549,6 +4171,10 @@ function fanmeetShopDiscount(){
   return (activeType()==="fanmeet" && fanmeetVariant()===2) ? 0.95 : 1;
 }
 
+function quizShopDiscount(){
+  return (state.buffs && (state.buffs.shopDiscountLeft||0) > 0) ? 0.90 : 1;
+}
+
 function perClick(){
     const base = state.clickBase || 1;
     const mult = clickMultFromLevel(state.clickLevel||0);
@@ -3558,7 +4184,8 @@ function perClick(){
     const fromProd = autoRate() * pct;
 
     // total click gain gets affected by events and quiz multipliers
-    return (base * mult + fromProd) * eventClickMult();
+    const tmpMult = (state.buffs && Date.now() < (state.buffs.clickMultUntil||0)) ? (state.buffs.clickMult||1) : 1;
+    return (base * mult + fromProd) * eventClickMult() * tmpMult;
   } // base click + % of production, then multipliers
 
 
@@ -4044,8 +4671,21 @@ row.addEventListener("mousemove", (e)=>{ if(tt && tt.style.display==="block") sh
             state.totalSpent = (state.totalSpent||0) + costM;
             state.totalPurchases = (state.totalPurchases||0) + 1;
             setOwned(item.id, owned + best);
+            if(state.buffs && state.buffs.freePurchase){
+              setOwned(item.id, getOwned(item.id) + 1);
+              state.buffs.freePurchase = false;
+              toastLong(`🎁 Бесплатная покупка: +1 к "${item.name}"`);
+            }
             checkAchievements();
             chatOnPurchase(item.id);
+            if(state.buffs && (state.buffs.shopDiscountLeft||0) > 0){
+              state.buffs.shopDiscountLeft = Math.max(0, Math.floor((state.buffs.shopDiscountLeft||0) - 1));
+              if(state.buffs.shopDiscountLeft === 0){
+                toastLong("🏷️ Скидка −10% закончилась");
+              }else{
+                toastLong(`🏷️ Скидка −10%: осталось покупок ${state.buffs.shopDiscountLeft}/10`);
+              }
+            }
             row.classList.add("bought");
             setTimeout(()=>row.classList.remove("bought"), 280);
             persist();
@@ -4057,8 +4697,21 @@ row.addEventListener("mousemove", (e)=>{ if(tt && tt.style.display==="block") sh
           state.totalSpent = (state.totalSpent||0) + priceN;
           state.totalPurchases = (state.totalPurchases||0) + 1;
           setOwned(item.id, owned + buyMult);
+            if(state.buffs && state.buffs.freePurchase){
+              setOwned(item.id, getOwned(item.id) + 1);
+              state.buffs.freePurchase = false;
+              toastLong(`🎁 Бесплатная покупка: +1 к "${item.name}"`);
+            }
           checkAchievements();
           chatOnPurchase(item.id);
+            if(state.buffs && (state.buffs.shopDiscountLeft||0) > 0){
+              state.buffs.shopDiscountLeft = Math.max(0, Math.floor((state.buffs.shopDiscountLeft||0) - 1));
+              if(state.buffs.shopDiscountLeft === 0){
+                toastLong("🏷️ Скидка −10% закончилась");
+              }else{
+                toastLong(`🏷️ Скидка −10%: осталось покупок ${state.buffs.shopDiscountLeft}/10`);
+              }
+            }
           // pop animation in center
           row.classList.add("bought");
           setTimeout(()=>row.classList.remove("bought"), 280);
@@ -4131,6 +4784,7 @@ function doClick(clientX, clientY){
     popClickValue(clientX, clientY, add);
     gainLove(add);
     state.totalClicks = (state.totalClicks||0) + 1;
+    forceMaybeTriggerQuiz();
     persist();
     checkAchievements();
 
@@ -4369,11 +5023,10 @@ if(loveEl) loveEl.textContent = fmt(love);
     ],
     soyeon: [
       {who:"neverland", text:"Соён принесла букет! 🦁💐"},
-      {who:"neverland", text:"Самый красивый подарок — для Миён 💐"},
+      {who:"neverland", text:"Самый красивый подарок для Миён 💐"},
       {who:"miyeon", text:"Букет… я тронута 🥺💐"},
       {who:"miyeon", text:"Спасибо… я чувствую вашу любовь 💚"},
-    ],
-  };
+    ]};
 
   const CHAT_IDLE = [
     // Neverland
@@ -4528,6 +5181,14 @@ if(loveEl) loveEl.textContent = fmt(love);
     state.eventUpgrades = {};
     state.clicks = 0;
     state.totalClicks = 0;
+    // сбрасываем квиз
+    state.quiz = { idx: 0, nextAt: (QUIZ_THRESHOLDS[0]||40), used: {}, snoozeUntil: 0};
+    state.quizActive = false;
+    state._quizCurrent = null;
+    // квиз-статистика (для ачивок)
+    state.quizStats = { started:0, answered:0, correct:0, streak:0, bestStreak:0, lastStartedIdx:-1, bonusPick:{ perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 } };
+    // бафы
+    state.buffs = { clickMult: 1, clickMultUntil: 0, shopDiscountLeft: 0, freePurchase: false };
     state.totalPurchases = 0;
     state.playTimeMs = 0;
     state._lastTickTs = Date.now();
@@ -4561,9 +5222,6 @@ if(loveEl) loveEl.textContent = fmt(love);
   setInterval(chatIdleTick, 4200);
   renderAll();
 
-
-  
-
 function getClickValue(){
   return state.clickValue || 1;
 }
@@ -4577,12 +5235,8 @@ function showClickFloat(val){
   setTimeout(()=>el.classList.remove("show"),600);
 }
 
-
-
 })();
 </script></div>
 
   </body>
 </html>
-
-
