@@ -2508,6 +2508,22 @@ body.cuberoulette .eventBadge{
 .achClose:hover{ border-color: rgba(255,255,255,.32); }
 
 .achList{ display:flex; flex-direction:column; gap:10px; }
+
+.achSectionTitle{
+  margin-top: 6px;
+  padding: 10px 10px 8px;
+  border-radius: 14px;
+  border:1px solid rgba(255,255,255,.14);
+  background: linear-gradient(180deg, rgba(61,255,139,.10), rgba(255,255,255,.03));
+  font-weight: 900;
+  letter-spacing: .2px;
+}
+.achSectionSub{
+  margin-top: 3px;
+  font-size: 12px;
+  color: rgba(255,255,255,.70);
+  font-weight: 600;
+}
 .achItem{
   background: rgba(255,255,255,.05);
   border:1px solid rgba(255,255,255,.12);
@@ -3192,16 +3208,16 @@ const qtyTabs = $("qtyTabs");
   ======================= */
   const ACHIEVEMENTS = [
     // Visible (obvious)
-    { id:"first_click",  icon:"💚", name:"Первый тык", desc:"Нажми на большое сердечко 1 раз.", hidden:false,
+    { id:"first_click",  icon:"💚", name:"Первый тык", desc:"Нажми на большое сердечко 1 раз.", hidden:false, cat:"Клик-клик",
       prog:()=> ((state.totalClicks||state.clicks||0) >= 1 ? 1 : 0) },
 
-    { id:"first_unlock", icon:"🛒", name:"О! Новинка", desc:"Открой первый предмет в магазине.", hidden:false,
+    { id:"first_unlock", icon:"🛒", name:"О! Новинка", desc:"Открой первый предмет в магазине.", hidden:false, cat:"Клик-клик",
       prog:()=> Math.min(1, Object.keys(state.revealedItems||{}).length / 1) },
 
-    { id:"first_buy",    icon:"🧾", name:"Первая покупка", desc:"Купи любой предмет в магазине.", hidden:false,
+    { id:"first_buy",    icon:"🧾", name:"Первая покупка", desc:"Купи любой предмет в магазине.", hidden:false, cat:"Клик-клик",
       prog:()=> Math.min(1, (totalOwnedAll()) / 1) },
 
-{ id:"idle_together", icon:"🩵", name:"(G)I‑DLE снова вместе", desc:"Купи Минни, Шухуа, Юци, Соён и Суджин.", hidden:false,
+{ id:"idle_together", icon:"🩵", name:"(G)I‑DLE снова вместе", desc:"Купи Минни, Шухуа, Юци, Соён и Суджин.", hidden:true, cat:"Neverland",
       prog:()=> {
         const ids = ["minnie","shuhua","yuqi","soyeon","soojin"];
         const have = ids.filter(id => getOwned(id) > 0).length;
@@ -3209,69 +3225,69 @@ const qtyTabs = $("qtyTabs");
       } },
 
     
-    { id:"yg_first", icon:"🏢", name:"Сладкие воспоминания", desc:"Купи «Стажировку в YG» 1 раз.", hidden:false,
+    { id:"yg_first", icon:"🏢", name:"Сладкие воспоминания", desc:"Купи «Стажировку в YG» 1 раз.", hidden:false, cat:"Neverland",
       prog:()=> Math.min(1, getOwned("yg") / 1) },
 
-    { id:"yg_lvl5",  icon:"🕰️", name:"Прошлое, которое не забыть", desc:"Прокачай «Стажировку в YG» до 5 уровня.", hidden:false,
+    { id:"yg_lvl5",  icon:"🕰️", name:"Прошлое, которое не забыть", desc:"Прокачай «Стажировку в YG» до 5 уровня.", hidden:false, cat:"Neverland",
       prog:()=> Math.min(1, getOwned("yg") / 5) },
 
-{ id:"love_1k",      icon:"🎉", name:"1 000 любви", desc:"Достигни рекорда 1 000 💚.", hidden:false,
+{ id:"love_1k",      icon:"🎉", name:"1 000 любви", desc:"Достигни рекорда 1 000 💚.", hidden:false, cat:"Клик-клик",
       prog:()=> Math.min(1, (state.best||0) / 1000) },
 
-    { id:"auto_10",      icon:"🏭", name:"Фабрика любви", desc:"Доведи 💚/сек до 10.", hidden:false,
+    { id:"auto_10",      icon:"🏭", name:"Фабрика любви", desc:"Доведи 💚/сек до 10.", hidden:false, cat:"Клик-клик",
       prog:()=> Math.min(1, autoRate() / 10) },
 
-    { id:"up_1",         icon:"✨", name:"Апгрейд!", desc:"Купи любое улучшение.", hidden:false,
+    { id:"up_1",         icon:"✨", name:"Апгрейд!", desc:"Купи любое улучшение.", hidden:false, cat:"Клик-клик",
       prog:()=> Math.min(1, Object.keys(state.boughtUpgrades||{}).length / 1) },
 
     // Hidden (secret)
-    { id:"love_10k",     icon:"🚀", name:"10 000 любви", desc:"Достигни рекорда 10 000 💚.", hidden:true,
+    { id:"love_10k",     icon:"🚀", name:"10 000 любви", desc:"Достигни рекорда 10 000 💚.", hidden:false, cat:"Клик-клик",
       prog:()=> Math.min(1, (state.best||0) / 10000) },
 
-    { id:"love_100k",    icon:"🌟", name:"100 000 любви", desc:"Достигни рекорда 100 000 💚.", hidden:true,
+    { id:"love_100k",    icon:"🌟", name:"100 000 любви", desc:"Достигни рекорда 100 000 💚.", hidden:false, cat:"Клик-клик",
       prog:()=> Math.min(1, (state.best||0) / 100000) },
 
-    { id:"love_1m",      icon:"💫", name:"1 000 000 любви", desc:"Достигни рекорда 1 000 000 💚.", hidden:true,
+    { id:"love_1m",      icon:"💫", name:"1 000 000 любви", desc:"Достигни рекорда 1 000 000 💚.", hidden:false, cat:"Клик-клик",
       prog:()=> Math.min(1, (state.best||0) / 1000000) },
 
-    { id:"auto_1k",      icon:"⚙️", name:"Автопоток", desc:"Доведи 💚/сек до 1 000.", hidden:true,
+    { id:"auto_1k",      icon:"⚙️", name:"Автопоток", desc:"Доведи 💚/сек до 1 000.", hidden:false, cat:"Клик-клик",
       prog:()=> Math.min(1, autoRate() / 1000) },
 
-    { id:"auto_10k",     icon:"🛰️", name:"Сердцепровод", desc:"Доведи 💚/сек до 10 000.", hidden:true,
+    { id:"auto_10k",     icon:"🛰️", name:"Сердцепровод", desc:"Доведи 💚/сек до 10 000.", hidden:false, cat:"Клик-клик",
       prog:()=> Math.min(1, autoRate() / 10000) },
 
-    { id:"collector_25", icon:"📦", name:"Коллекционер", desc:"Купи суммарно 25 предметов.", hidden:true,
+    { id:"collector_25", icon:"📦", name:"Коллекционер", desc:"Купи суммарно 25 предметов.", hidden:false, cat:"Клик-клик",
       prog:()=> Math.min(1, totalOwnedAll() / 25) },
 
-    { id:"collector_100",icon:"📚", name:"Архив Неверленда", desc:"Купи суммарно 100 предметов.", hidden:true,
+    { id:"collector_100",icon:"📚", name:"Архив Неверленда", desc:"Купи суммарно 100 предметов.", hidden:false, cat:"Клик-клик",
       prog:()=> Math.min(1, totalOwnedAll() / 100) },
 
-    { id:"all_upgrades", icon:"🧠", name:"Максимальный буст", desc:"Купи все улучшения в игре.", hidden:true,
-      prog:()=> Math.min(1, (Object.keys(state.boughtUpgrades||{}).length) / totalUpgradesGoal()) },
+    { id:"all_upgrades", icon:"🧠", name:"Максимальный буст", desc:"Купи по одному улучшению каждого типа (предметы, множитель клика, усиление клика, Birthday Click).", hidden:false, cat:"Клик-клик",
+      prog:()=> Math.min(1, upgradeKindsBought() / 4) },
 
-    { id:"click_monster",icon:"🖱️", name:"Клик как праздник", desc:"Доведи 💚 за клик до 50.", hidden:true,
-      prog:()=> Math.min(1, perClick() / 50) },
+    { id:"click_monster",icon:"🖱️", name:"Клик как праздник", desc:"Доведи 💚 за клик до 50.", hidden:false, cat:"Клик-клик",
+      prog:()=> Math.min(1, perClickStable() / 50) },
 
     // i-dle squad
-    { id:"fan_minnie",   icon:"🐭", name:"Фанат Минни", desc:"Купи Минни 10 раз.", hidden:true,
+    { id:"fan_minnie",   icon:"🐭", name:"Фанат Минни", desc:"Купи Минни 10 раз.", hidden:true, cat:"Neverland",
       prog:()=> Math.min(1, getOwned("minnie") / 10) },
 
-    { id:"fan_yuqi",     icon:"🐶", name:"Фанат Юци", desc:"Купи Юци 10 раз.", hidden:true,
+    { id:"fan_yuqi",     icon:"🐶", name:"Фанат Юци", desc:"Купи Юци 10 раз.", hidden:true, cat:"Neverland",
       prog:()=> Math.min(1, getOwned("yuqi") / 10) },
 
-    { id:"fan_shuhua",   icon:"🐺", name:"Фанат Шухуа", desc:"Купи Шухуа 10 раз.", hidden:true,
+    { id:"fan_shuhua",   icon:"🐺", name:"Фанат Шухуа", desc:"Купи Шухуа 10 раз.", hidden:true, cat:"Neverland",
       prog:()=> Math.min(1, getOwned("shuhua") / 10) },
 
-    { id:"fan_soyeon",   icon:"🦁", name:"Фанат Соён", desc:"Купи Соён 10 раз.", hidden:true,
+    { id:"fan_soyeon",   icon:"🦁", name:"Фанат Соён", desc:"Купи Соён 10 раз.", hidden:true, cat:"Neverland",
       prog:()=> Math.min(1, getOwned("soyeon") / 10) },
 
-    { id:"soojin_support",icon:"🦊", name:"Тёплая поддержка", desc:"Позови Суджин 1 раз.", hidden:true,
+    { id:"soojin_support",icon:"🦊", name:"Тёплая поддержка", desc:"Позови Суджин 1 раз.", hidden:true, cat:"Neverland",
       prog:()=> Math.min(1, getOwned("soojin") / 1) },
 
     { id:"cube_installed",icon:"🧊", name:"Куб включён", desc:"Купи Cube Entertainment 1 раз.", hidden:true,
       prog:()=> Math.min(1, getOwned("cube") / 1) },
 
-    { id:"idle_party",   icon:"🌈", name:"i-dle рядом", desc:"Купи Минни, Юци, Шухуа и Соён хотя бы по 1.", hidden:true,
+    { id:"idle_party",   icon:"🌈", name:"i-dle рядом", desc:"Купи Минни, Юци, Шухуа и Соён хотя бы по 1.", hidden:true, cat:"Neverland",
       prog:()=> {
         const ok = (getOwned("minnie")>0) && (getOwned("yuqi")>0) && (getOwned("shuhua")>0) && (getOwned("soyeon")>0);
         return ok ? 1 : 0;
@@ -3279,10 +3295,10 @@ const qtyTabs = $("qtyTabs");
     },
 
     // Events (birthday vibes)
-    { id:"fanmeet_once", icon:"🎂", name:"Фанмитинг!", desc:"Поймай ивент Фанмитинг хотя бы 1 раз.", hidden:true,
+    { id:"fanmeet_once", icon:"🎂", name:"Фанмитинг!", desc:"Поймай ивент Фанмитинг хотя бы 1 раз.", hidden:true, cat:"Ивенты",
       prog:()=> (state.eventSeen && state.eventSeen.fanmeet) ? 1 : 0 },
 
-    { id:"cube_triple",  icon:"🎲", name:"Три лица Cube", desc:"В Cube Roulette получи хорошее, плохое и ничего.", hidden:true,
+    { id:"cube_triple",  icon:"🎲", name:"Три лица Cube", desc:"В Cube Roulette получи хорошее, плохое и ничего.", hidden:false, cat:"Ивенты",
       prog:()=> {
         const s = state.eventSeen || {};
         const ok = !!(s.cubeGood && s.cubeBad && s.cubeNothing);
@@ -3290,7 +3306,7 @@ const qtyTabs = $("qtyTabs");
       } 
     },
 
-    { id:"cube_bonus",   icon:"💥", name:"Джекпот!", desc:"В Cube Roulette поймай мгновенный бонус.", hidden:true,
+    { id:"cube_bonus",   icon:"💥", name:"Джекпот!", desc:"В Cube Roulette поймай мгновенный бонус.", hidden:true, cat:"Ивенты",
       prog:()=> (state.eventSeen && state.eventSeen.cubeBonus) ? 1 : 0 },
   
     
@@ -3301,40 +3317,40 @@ const qtyTabs = $("qtyTabs");
 
 
     /* Quiz achievements */
-    { id:"quiz_first", icon:"❓", name:"Первый квиз", desc:"Ответь на вопрос в квизе хотя бы 1 раз.", hidden:false,
+    { id:"quiz_first", icon:"❓", name:"Первый квиз", desc:"Ответь на вопрос в квизе хотя бы 1 раз.", hidden:false, cat:"Квизы",
       prog:()=> Math.min(1, ((state.quizStats&&state.quizStats.answered)||0) / 1) },
 
-    { id:"quiz_3_correct", icon:"🧠", name:"Умница", desc:"Дай 3 правильных ответа в квизах.", hidden:false,
+    { id:"quiz_3_correct", icon:"🧠", name:"Умница", desc:"Дай 3 правильных ответа в квизах.", hidden:false, cat:"Квизы",
       prog:()=> Math.min(1, ((state.quizStats&&state.quizStats.correct)||0) / 3) },
 
-    { id:"quiz_10_correct", icon:"🌟", name:"Миён в сердце", desc:"Дай 10 правильных ответов в квизах.", hidden:true,
+    { id:"quiz_10_correct", icon:"🌟", name:"Миён в сердце", desc:"Дай 10 правильных ответов в квизах.", hidden:true, cat:"Квизы",
       prog:()=> Math.min(1, ((state.quizStats&&state.quizStats.correct)||0) / 10) },
 
-    { id:"quiz_10_total", icon:"🏁", name:"Квиз‑марафон", desc:"Ответь на 10 вопросов в квизах.", hidden:true,
+    { id:"quiz_10_total", icon:"🏁", name:"Квиз‑марафон", desc:"Ответь на 10 вопросов в квизах.", hidden:true, cat:"Квизы",
       prog:()=> Math.min(1, ((state.quizStats&&state.quizStats.answered)||0) / 10) },
 
-    { id:"quiz_streak_5", icon:"🔥", name:"Безошибочно", desc:"Сделай серию из 5 правильных ответов подряд.", hidden:true,
+    { id:"quiz_streak_5", icon:"🔥", name:"Безошибочно", desc:"Сделай серию из 5 правильных ответов подряд.", hidden:true, cat:"Квизы",
       prog:()=> Math.min(1, ((state.quizStats&&state.quizStats.bestStreak)||0) / 5) },
 
-    { id:"bonus_perm", icon:"💚", name:"Постоянный буст", desc:"Выбери награду «+5% к клику навсегда» хотя бы 1 раз.", hidden:true,
+    { id:"bonus_perm", icon:"💚", name:"Постоянный буст", desc:"Выбери награду «+5% к клику навсегда» хотя бы 1 раз.", hidden:true, cat:"Квизы",
       prog:()=> Math.min(1, (((state.quizStats&&state.quizStats.bonusPick)||{}).perm05||0) / 1) },
 
-    { id:"bonus_x300", icon:"⚡", name:"Турбо‑режим", desc:"Выбери награду «×300 к кликам на 10 сек» хотя бы 1 раз.", hidden:true,
+    { id:"bonus_x300", icon:"⚡", name:"Турбо‑режим", desc:"Выбери награду «×300 к кликам на 10 сек» хотя бы 1 раз.", hidden:true, cat:"Квизы",
       prog:()=> Math.min(1, (((state.quizStats&&state.quizStats.bonusPick)||{}).x300_10s||0) / 1) },
 
-    { id:"bonus_plus50", icon:"💖", name:"Лавина любви", desc:"Выбери награду «+50% 💚 сразу» хотя бы 1 раз.", hidden:true,
+    { id:"bonus_plus50", icon:"💖", name:"Лавина любви", desc:"Выбери награду «+50% 💚 сразу» хотя бы 1 раз.", hidden:true, cat:"Квизы",
       prog:()=> Math.min(1, (((state.quizStats&&state.quizStats.bonusPick)||{}).plus50pct||0) / 1) },
 
-    { id:"bonus_freebuy", icon:"🎁", name:"Шопинг‑босс", desc:"Выбери награду «Бесплатная покупка» хотя бы 1 раз.", hidden:true,
+    { id:"bonus_freebuy", icon:"🎁", name:"Шопинг‑босс", desc:"Выбери награду «Бесплатная покупка» хотя бы 1 раз.", hidden:true, cat:"Квизы", cat:"Квизы",
       prog:()=> Math.min(1, (((state.quizStats&&state.quizStats.bonusPick)||{}).freebuy||0) / 1) },
 
-    { id:"bonus_discount", icon:"🏷️", name:"Скидка дня", desc:"Выбери награду «Скидка −10% на 10 покупок» хотя бы 1 раз.", hidden:true,
+    { id:"bonus_discount", icon:"🏷️", name:"Скидка дня", desc:"Выбери награду «Скидка −10% на 10 покупок» хотя бы 1 раз.", hidden:true, cat:"Квизы", cat:"Квизы",
       prog:()=> Math.min(1, (((state.quizStats&&state.quizStats.bonusPick)||{}).discount10x||0) / 1) },
 
-    { id:"quiz_5400", icon:"🏔️", name:"Дошла до 5400", desc:"Дойди до порога квиза 5400 кликов.", hidden:true,
+    { id:"quiz_5400", icon:"🏔️", name:"Дошла до 5400", desc:"Дойди до порога квиза 5400 кликов.", hidden:true, cat:"Квизы",
       prog:()=> Math.min(1, (Number(state.totalClicks||0) >= 5400 ? 1 : 0)) },
 
-    { id:"quiz_all", icon:"🏆", name:"Квиз‑легенда", desc:"Пройди все квизы по порогам (15/15).", hidden:true,
+    { id:"quiz_all", icon:"🏆", name:"Квиз‑легенда", desc:"Пройди все квизы по порогам (15/15).", hidden:true, cat:"Квизы", cat:"Квизы",
       prog:()=> Math.min(1, ((state.quiz && Number(state.quiz.idx)||0) / QUIZ_THRESHOLDS.length)) },
 
 ];
@@ -3346,6 +3362,32 @@ const qtyTabs = $("qtyTabs");
     let s = 0;
     for(const k in o){ s += (+o[k]||0); }
     return s;
+  }
+
+  function upgradeKindsBought(){
+    // Count whether player has at least ONE upgrade of each upgrade-kind.
+    // Kinds:
+    // 1) Shop item upgrades: "<item>_uN" (for any shop item)
+    // 2) Click multiplier upgrades: click_u*
+    // 3) Click power (additive) upgrades: click_p*
+    // 4) Click scaling (% of cps) upgrades: click_s*
+    const bought = state.boughtUpgrades || {};
+    let shop = false, clickMult = false, clickPower = false, clickScale = false;
+
+    for(const id of Object.keys(bought)){
+      if(!bought[id]) continue;
+      if(/^click_u\d+$/i.test(id)) clickMult = true;
+      else if(/^click_p\d+$/i.test(id)) clickPower = true;
+      else if(/^click_s\d+$/i.test(id)) clickScale = true;
+      else if(/_u\d+$/i.test(id)) shop = true;
+      if(shop && clickMult && clickPower && clickScale) break;
+    }
+    let c = 0;
+    if(shop) c++;
+    if(clickMult) c++;
+    if(clickPower) c++;
+    if(clickScale) c++;
+    return c;
   }
 
 function totalUpgradesGoal(){
@@ -3393,33 +3435,121 @@ function totalUpgradesGoal(){
   }
 
   function renderAchievements(){
+    function isAchVisible(a){
+      // Visible if not hidden, already earned, or revealed by unlocking the related system.
+      if(!a.hidden) return true;
+      if(isAchDone(a.id)) return true;
+
+      const cat = a.cat || "";
+      // Quiz achievements reveal after the very first quiz answer.
+      if(cat === "Квизы"){
+        return !!(((state.quizStats||{}).answered||0) >= 1);
+      }
+      // Event achievements reveal after seeing any event once.
+      if(cat === "Ивенты"){
+        const s = state.eventSeen || {};
+        return !!(s.fanmeet || s.cubeGood || s.cubeBad || s.cubeNothing || s.cubeBonus);
+      }
+      // Neverland achievements reveal per member
+      if(cat === "Neverland"){
+        // Map achievement id to member
+        const map = {
+          fan_minnie: "minnie",
+          fan_yuqi: "yuqi",
+          fan_shuhua: "shuhua",
+          fan_soyeon: "soyeon",
+          fan_soojin: "soojin",
+          idle_party: null,      // revealed when any 4 main members owned
+          idle_together: null,   // revealed when all members owned
+          yg_first: null,
+          yg_lvl5: null
+        };
+
+        if(map[a.id]){
+          return getOwned(map[a.id]) > 0;
+        }
+
+        if(a.id === "idle_party"){
+          return ["minnie","yuqi","shuhua","soyeon"].every(m => getOwned(m)>0);
+        }
+
+        if(a.id === "idle_together"){
+          return ["minnie","yuqi","shuhua","soyeon","soojin"].every(m => getOwned(m)>0);
+        }
+
+        // YG achievements reveal when YG item bought
+        if(a.id === "yg_first" || a.id === "yg_lvl5"){
+          return getOwned("yg") > 0;
+        }
+
+        return false;
+      }
+
+      return false;
+    }
+
     if(!achList) return;
+
     const done = (state.achievements && Object.keys(state.achievements).length) ? Object.keys(state.achievements).length : 0;
     achList.innerHTML = "";
-    let achNum = 0;
-    for(const a of ACHIEVEMENTS){
-      achNum++;
-      let p = Math.max(0, Math.min(1, a.prog ? a.prog() : 0));
-      // Скрытые достижения не показывают прогресс до получения
-      if(a.hidden && !isAchDone(a.id)) p = 0;
-      const row = document.createElement("div");
-      row.className = "achItem";
-      const badge = isAchDone(a.id) ? '<span class="achBadge done">Получено</span>' : `<span class="achBadge">${Math.floor(p*100)}%</span>`;
-      row.innerHTML = `
-        <div class="achRowTop">
-          <div class="achMain">
-            <div class="achIcon">${isAchDone(a.id) ? (a.icon || "🏅") : "🔒"}</div>
-            <div>
-              <div class="achName">${isAchDone(a.id) ? a.name : `Секретное достижение №${achNum}`}</div>
-              <div class="achDesc">${isAchDone(a.id) ? a.desc : ""}</div>
-            </div>
-          </div>
-          ${badge}
-        </div>
-        <div class="achProg"><div style="width:${Math.floor(p*100)}%"></div></div>
-      `;
-      achList.appendChild(row);
+
+    // Group achievements by category (subsections)
+    const groups = new Map();
+
+    ACHIEVEMENTS.forEach((a, idx)=>{
+      let cat = a.cat || "Другое";
+      // Hard category routing (safety net)
+      if(a.id.startsWith("cube_") || a.id === "fanmeet_once") cat = "Ивенты";
+      if(a.id.startsWith("quiz_") || a.id.startsWith("bonus_")) cat = "Квизы";
+      if(a.id.startsWith("fan_") || a.id === "idle_party" || a.id === "idle_together" || a.id === "soojin_support" || a.id.startsWith("yg_")) cat = "Neverland";
+      if(["first_click","first_unlock","first_buy","up_1","love_1k","love_10k","love_100k","love_1m","auto_10","auto_1k","auto_10k","click_monster","collector_25","collector_100","all_upgrades"].includes(a.id)) cat = "Клик-клик";
+      if(!groups.has(cat)) groups.set(cat, []);
+      groups.get(cat).push({ a, idx });
+    });
+
+    const order = [];
+    if(groups.has("Клик-клик")) order.push("Клик-клик");
+    if(groups.has("Neverland")) order.push("Neverland");
+    if(groups.has("Ивенты")) order.push("Ивенты");
+    if(groups.has("Квизы")) order.push("Квизы");
+    for(const k of Array.from(groups.keys()).filter(k=>!["Клик-клик","Neverland","Ивенты","Квизы"].includes(k)).sort((a,b)=>a.localeCompare(b,"ru"))){
+      order.push(k);
     }
+
+    for(const cat of order){
+      const header = document.createElement("div");
+      header.className = "achSectionTitle";
+      header.innerHTML = `<div>${cat}</div>` + (cat==="Клик-клик" ? `<div class="achSectionSub">Кликай, собирай любовь и ускоряйся ✨</div>` : (cat==="Neverland" ? `<div class="achSectionSub">Семья, с которой Миён расцвела</div>` : (cat==="Ивенты" ? `<div class="achSectionSub">Случайные моменты и удача ✨</div>` : (cat==="Квизы" ? `<div class="achSectionSub">Проверим, насколько ты знаешь Миён? 🩵</div>` : ``))));
+      achList.appendChild(header);
+
+      for(const item of (groups.get(cat)||[])){
+        const a = item.a;
+        const achNum = item.idx + 1;
+
+        let p = Math.max(0, Math.min(1, a.prog ? a.prog() : 0));
+        // Скрытые достижения не показывают прогресс до получения
+        if(a.hidden && !isAchDone(a.id) && !isAchVisible(a)) p = 0;
+
+        const row = document.createElement("div");
+        row.className = "achItem";
+        const badge = isAchDone(a.id) ? '<span class="achBadge done">Получено</span>' : `<span class="achBadge">${Math.floor(p*100)}%</span>`;
+        row.innerHTML = `
+          <div class="achRowTop">
+            <div class="achMain">
+              <div class="achIcon">${isAchVisible(a) ? (a.icon || "🏅") : "🔒"}</div>
+              <div>
+                <div class="achName">${isAchVisible(a) ? a.name : `Секретное достижение №${achNum}`}</div>
+                <div class="achDesc">${isAchVisible(a) ? a.desc : ""}</div>
+              </div>
+            </div>
+            ${badge}
+          </div>
+          <div class="achProg"><div style="width:${Math.floor(p*100)}%"></div></div>
+        `;
+        achList.appendChild(row);
+      }
+    }
+
     if(achFooter) achFooter.textContent = `Получено: ${done}/${ACHIEVEMENTS.length}`;
   }
 
@@ -4189,7 +4319,19 @@ function quizShopDiscount(){
   return (state.buffs && (state.buffs.shopDiscountLeft||0) > 0) ? 0.90 : 1;
 }
 
-function perClick(){
+function perClickStable(){
+    // Permanent click value WITHOUT temporary event/quiz multipliers
+    const base = state.clickBase || 1;
+    const mult = clickMultFromLevel(state.clickLevel||0);
+
+    // Use base (non-event) production for the % production add-on
+    const pct = Math.max(0, state.clickCpsPct || 0);
+    const fromProd = baseAutoRate() * pct;
+
+    return (base * mult + fromProd);
+  }
+
+  function perClick(){
     const base = state.clickBase || 1;
     const mult = clickMultFromLevel(state.clickLevel||0);
 
@@ -4881,7 +5023,6 @@ function doClick(clientX, clientY){
   }
 
   function tick(){
-    // Tick uses real elapsed time, so it works even when the tab is hidden (timers may be throttled).
     const now = Date.now();
     const prev = state._lastTickTs || now;
     const dt = Math.max(0, Math.min(5, (now - prev)/1000));
@@ -4897,11 +5038,9 @@ function doClick(clientX, clientY){
     state._autoFrac = gainF - gainI;
     gainLove(gainI);
     
-    // Sync shop availability even when love grows passively
     try{ updateShopAffordability(); }catch(e){}
 state.best = Math.max(state.best, state.love);
     state.lastSeen = Date.now();
-    // don't persist every tick
   }
 
   setInterval(()=>{
@@ -4909,7 +5048,6 @@ state.best = Math.max(state.best, state.love);
     renderTop();
   }, 100);
 
-  // Grant offline gain when user switches tabs / leaves and comes back (without reload).
   document.addEventListener("visibilitychange", ()=>{
     if(document.hidden){
       state.lastSeen = Date.now();
@@ -4920,22 +5058,18 @@ state.best = Math.max(state.best, state.love);
     }
   });
 
-  // Also save timestamp on navigation away.
+
   window.addEventListener("pagehide", ()=>{
     state.lastSeen = Date.now();
     persist();
   });
 
-  // persist occasionally
   setInterval(()=>persist(), 1200);
 
-  /* =======================
-     RENDER
-  ======================= */
+
   function renderTop(){
     const love = Math.floor(state.love);
     const rate = autoRate();
-    // Event UI
     const type = activeType();
     const active = !!type;
 
@@ -4997,13 +5131,8 @@ if(loveEl) loveEl.textContent = fmt(love);
     renderUpgrades();
     renderShop();
     renderWorldLanes();
-    /* renderCursorRing removed */
   }
 
-  
-  /* =======================
-     CHAT (Miyeon x Neverland)
-  ======================= */
   const CHAT_REACTIONS = {
     like: [
       {who:"neverland", text:"Лайки летят! 👍💚"},
@@ -5043,7 +5172,6 @@ if(loveEl) loveEl.textContent = fmt(love);
     ]};
 
   const CHAT_IDLE = [
-    // Neverland
     {who:"neverland", text:"Neverland на связи 💚"},
     {who:"neverland", text:"Сегодня мы делаем этот день особенным для Миён 🎂"},
     {who:"neverland", text:"Я принес(ла) шарики… кто принёс торт? 🎈"},
@@ -5054,7 +5182,6 @@ if(loveEl) loveEl.textContent = fmt(love);
     {who:"neverland", text:"Пусть этот год будет для неё мягким и счастливым 🌿"},
     {who:"neverland", text:"Я так люблю её голос… 🥺"},
     {who:"neverland", text:"Давайте соберём самый тёплый букет 💐"},
-    // Miyeon
     {who:"miyeon", text:"(читает чат) ... 🥺"},
     {who:"miyeon", text:"Вы такие милые… спасибо, Neverland 💚"},
     {who:"miyeon", text:"Я чувствую вашу поддержку, правда ✨"},
@@ -5131,9 +5258,8 @@ if(loveEl) loveEl.textContent = fmt(love);
         chatHistory.push(line);
         chatRender();
         chatBusy = false;
-        // continue if queue still has lines
         if(chatQueue.length) setTimeout(chatPump, 50);
-      }, 500); // typing 0.5s
+      }, 500); 
     } else {
       chatHistory.push(line);
       chatRender();
@@ -5168,12 +5294,10 @@ if(loveEl) loveEl.textContent = fmt(love);
     function chatOnPurchase(itemId){
     const pack = CHAT_REACTIONS[itemId];
     if(!pack || pack.length === 0) return;
-    // one random reaction per purchase
     const line = pack[Math.floor(Math.random()*pack.length)];
     chatPush(line);
   }
-  // ====== RESET PROGRESS (hard reset) ======
-  // Exposed for the header button's inline onclick.
+
   window.resetProgress = function resetProgress(){
     const firstConfirm = confirm("Вы уверены, что хотите сбросить прогресс?\nЭто действие нельзя отменить.");
     if(!firstConfirm) return;
@@ -5181,10 +5305,8 @@ if(loveEl) loveEl.textContent = fmt(love);
     const secondConfirm = confirm("ПОСЛЕДНЕЕ ПРЕДУПРЕЖДЕНИЕ!\nВЕСЬ прогресс будет удалён навсегда.");
     if(!secondConfirm) return;
 
-    // Удаляем только сохранение этой игры
     try{ localStorage.removeItem(KEY); }catch(_){}
 
-    // Сбрасываем состояние до исходных значений
     state.love = 0;
     state.best = 0;
     state.owned = {};
@@ -5195,49 +5317,34 @@ if(loveEl) loveEl.textContent = fmt(love);
     state.eventUpgrades = {};
     state.clicks = 0;
     state.totalClicks = 0;
-    // сбрасываем квиз
     state.quiz = { idx: 0, nextAt: (QUIZ_THRESHOLDS[0]||40), used: {}, snoozeUntil: 0};
     state.quizActive = false;
     state._quizCurrent = null;
-    // квиз-статистика (для ачивок)
     state.quizStats = { started:0, answered:0, correct:0, streak:0, bestStreak:0, lastStartedIdx:-1, bonusPick:{ perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 } };
-    // бафы
     state.buffs = { clickMult: 1, clickMultUntil: 0, shopDiscountLeft: 0, freePurchase: false };
     state.totalPurchases = 0;
     state.playTimeMs = 0;
     state._lastTickTs = Date.now();
     state._autoFrac = 0;
-    // сбрасываем достижения и связанные счётчики
     state.achievements = {};
-    // сбрасываем усиления клика ("за клик") и число кликов/прокачку
     state.clickBase = 1;
     state.clickLevel = 0;
     state.clickCpsPct = 0;
-    // сбрасываем состояние ивентов/таймеров
     state.event = { type:null, endsAt:0, nextFanAt:0, nextCubeAt:0, cubeMode:null, cubeBonus:0, cubeClickMult:1, cubeAutoOff:false };
     state.lastSeen = Date.now();
 
-    // Перерисовка + сохранение нулевого состояния
     try{ persist(); }catch(_){}
     try{ render(); }catch(_){}
 
-    // На всякий случай обновим страницу (чтобы не осталось хвостов таймеров)
     location.reload();
   };
 
-
-/* =======================
-     INIT
-  ======================= */
   load();
   applyOffline();
   rotateMsg();
   chatSeed();
   setInterval(chatIdleTick, 4200);
   renderAll();
-
-
-  
 
 function getClickValue(){
   return state.clickValue || 1;
@@ -5251,8 +5358,6 @@ function showClickFloat(val){
   el.classList.add("show");
   setTimeout(()=>el.classList.remove("show"),600);
 }
-
-
 
 })();
 </script></div>
