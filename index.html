@@ -27,7 +27,7 @@
     }
 
     *{ box-sizing:border-box; }
-    /* Generic helper (used across modals/steps) */
+
     .hidden{ display:none !important; }
     html,body{ height:100%; overflow:hidden; }
     body{
@@ -41,8 +41,7 @@
       overflow:hidden;
     }
 
-    /* FULL WIDTH LAYOUT */
-    .page{
+     .page{
       width:100vw;
       height:100vh;
       display:grid;
@@ -112,7 +111,6 @@
       white-space:nowrap;
     }
     .pill .k{ color: var(--muted); }
-    /* make changing numbers not "jump" in width */
     .pill .v{
       font-weight:950;
       font-family: var(--mono);
@@ -123,7 +121,6 @@
       text-align:right;
     }
 
-    /* MAIN GRID: playfield + shop */
     .main{
       width:100%;
       display:grid;
@@ -148,8 +145,7 @@
       position:relative;
       min-height: 0;
     }
-
-    /* PLAYFIELD */
+    
     .play{
       position:relative;
       display:flex;
@@ -204,7 +200,6 @@
         linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.18));
     }
 
-    /* falling hearts layer */
     .heartsLayer{
       position:fixed;
       inset:0;
@@ -227,7 +222,6 @@
       }
     }
 
-    /* glow in center (just vibes) */
     .glow{
       position:absolute;
       left:50%;
@@ -241,7 +235,6 @@
       z-index:0;
     }
 
-    /* SIDE HEART CLICK BUTTON */
     .sideHeart{
       position:fixed;
       right:18px;
@@ -295,8 +288,7 @@
       .sideHeart .ico{ font-size:46px; }
       .sideHeart .tap{ display:none; }
     }
-
-    /* Center strip (full width, between play and shop on desktop -> on mobile it stays above shop) */
+    
     .centerStrip{
       grid-column: 1 / -1;
       border-radius: var(--radius);
@@ -367,7 +359,6 @@
     .trackChip .txt{ font-weight:950; font-size:14px; opacity:.92; }
     .trackChip .lvl{ font-family: var(--mono); opacity:.65; font-size:12px; }
 
-    /* SHOP (Cookie-clicker-ish) */
     .sideShop{
       padding:0;
       display:flex;
@@ -422,7 +413,7 @@
     }
     .upIcon.locked{ filter: grayscale(1) brightness(.75); opacity:.65; cursor:default; }
     .upIcon.owned{ outline: 2px solid rgba(61,255,139,.35); }
-    /* Upgrade rarities */
+
     .upIcon.rarity-common{
       border-color: rgba(220,220,220,.38);
       background: linear-gradient(180deg, rgba(220,220,220,.14), rgba(255,255,255,.04));
@@ -581,7 +572,6 @@
       text-shadow: 0 10px 22px rgba(0,0,0,.45);
     }
 
-    /* tooltip */
     .tt{
       position:fixed;
       z-index:9999;
@@ -599,7 +589,6 @@
     }
     .tt b{ color: rgba(255,255,255,.95); }
 
-    /* toast */
     .toast{
       position:fixed;
       left:50%;
@@ -624,7 +613,6 @@
       to{transform:translateX(-50%) translateY(0); opacity:1}
     }
 
-    /* click pop */
     .pop{
       position:absolute;
       pointer-events:none;
@@ -640,7 +628,6 @@
       to   { transform: translate(-50%, -150%) scale(1.10); opacity: 0; }
     }
   
-    /* ===== Cookie-clicker-ish 3-column look ===== */
     .centerStrip{ display:none; }
     .panel{
       border: 1px solid rgba(255,255,255,.10);
@@ -669,7 +656,6 @@
         linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.20));
     }
 
-    /* big click heart (center-left like cookie) */
     .sideHeart{
       position:absolute;
       left:50%;
@@ -694,7 +680,6 @@
     .sideHeart .ico{ font-size: 96px; filter: drop-shadow(0 14px 22px rgba(0,0,0,.35)); }
     .sideHeart:active{ transform: translate(-50%,-50%) scale(.985); }
 
-    /* cursors ring (visual like cookie clicker) */
     .cursorRing{
       position:absolute;
       left:50%;
@@ -714,7 +699,6 @@
       font-size: 18px;
     }
 
-    /* WORLD panel */
     .world{
       min-height: 640px;
       background:
@@ -814,7 +798,6 @@
       padding-left:8px;
     }
 
-    /* === Center world polish === */
     .laneStats{
       position:absolute;
       right:10px;
@@ -839,7 +822,6 @@
     .laneTitle{ display:flex; align-items:center; gap:8px; }
     .laneIco{ font-size:16px; }
 
-    /* accents per lane */
     .laneLike{ box-shadow: inset 0 0 0 1px rgba(92,255,170,.08); }
     .laneComment{ box-shadow: inset 0 0 0 1px rgba(143,211,255,.08); }
     .laneMinnie{ box-shadow: inset 0 0 0 1px rgba(255,170,210,.10); }
@@ -863,7 +845,6 @@
     .laneSoyeon::before{ background: radial-gradient(closest-side at 20% 20%, rgba(255,215,120,.14), transparent 70%); }
     .lane:hover::before{ opacity:1; }
 
-    /* sprites: less "grid", more alive */
     .sprite{
       transition: transform .12s ease, filter .12s ease;
     }
@@ -888,9 +869,6 @@
       background: rgba(0,0,0,.28);
     }
 
-
-  
-    /* === Center world lines (improved) === */
     .worldLine{
       margin: 10px 12px;
       padding: 10px 12px 12px;
@@ -970,7 +948,6 @@
       border-color: rgba(255,143,200,.18);
     }
 
-    /* placeholder in upgrades bar */
     .upPlaceholder{
       color: rgba(255,255,255,.68);
       font-size: 12.5px;
@@ -980,7 +957,6 @@
       background: rgba(0,0,0,.16);
     }
 
-    /* Burst hearts on click */
     .burstHeart{
       position:absolute;
       left:0;
@@ -997,11 +973,8 @@
       100%{ opacity:0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.6); }
     }
 
-    /* pressed feedback */
     .sideHeart.pressed{ transform: translate(-50%,-50%) scale(0.98); }
 
-  
-    /* === World FX (center ambience) === */
     .world{ position:relative; overflow:hidden; }
     .worldBody{ position:relative; }
     .worldFX{
@@ -1029,7 +1002,6 @@
       100%{ transform: translate(var(--dx), -120vh) rotate(var(--r)); opacity: 0; }
     }
 
-    /* Make center lanes more "game-like" */
     .worldLine{
       background:
         linear-gradient(180deg, rgba(0,0,0,.35), rgba(255,255,255,.03)),
@@ -1052,15 +1024,11 @@
       background: rgba(0,0,0,.35);
     }
 
-    /* Hide the small centerStrip "Лента прогресса" to declutter (optional) */
     .centerStrip{ display:none; }
-
 
     .unit.pop{ animation: popUnit .22s ease-out 1; }
     @keyframes popUnit{ 0%{ transform: scale(.92); } 70%{ transform: scale(1.06);} 100%{ transform: scale(1);} }
 
-
-    /* ===== Chat in center (Miyeon x Neverland) ===== */
     .worldBody{ position:relative; }
     .chatWrap{
       position:relative;
@@ -1155,15 +1123,13 @@
       0%,100%{ transform: translateY(0); opacity:.55; }
       50%{ transform: translateY(-3px); opacity:.95; }
     }
-/* ===== Hard lock: no scrollbars anywhere ===== */
+    
 html, body { overflow: hidden !important; }
 
-/* ===== Keep heart stable on click (no drifting) ===== */
 .sideHeart { will-change: transform; }
 .sideHeart.pressed { transform: translate(-50%,-50%) scale(0.98) !important; }
 .sideHeart:active { transform: translate(-50%,-50%) scale(.985) !important; }
 
-/* ===== Give chat safe margins so bubbles/shadows never clip ===== */
 .chatWrap { padding: 26px 44px 34px !important; }
 
 
@@ -1200,7 +1166,6 @@ html, body { overflow: hidden !important; }
       overflow:hidden;
     }
 
-    /* FULL WIDTH LAYOUT */
     .page{
       width:100vw;
       height:100vh;
@@ -1351,7 +1316,6 @@ html, body { overflow: hidden !important; }
         linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.18));
     }
 
-    /* falling hearts layer */
     .heartsLayer{
       position:fixed;
       inset:0;
@@ -1374,7 +1338,6 @@ html, body { overflow: hidden !important; }
       }
     }
 
-    /* glow in center (just vibes) */
     .glow{
       position:absolute;
       left:50%;
@@ -1388,7 +1351,6 @@ html, body { overflow: hidden !important; }
       z-index:0;
     }
 
-    /* SIDE HEART CLICK BUTTON */
     .sideHeart{
       position:fixed;
       right:18px;
@@ -1443,7 +1405,6 @@ html, body { overflow: hidden !important; }
       .sideHeart .tap{ display:none; }
     }
 
-    /* Center strip (full width, between play and shop on desktop -> on mobile it stays above shop) */
     .centerStrip{
       grid-column: 1 / -1;
       border-radius: var(--radius);
@@ -1514,7 +1475,6 @@ html, body { overflow: hidden !important; }
     .trackChip .txt{ font-weight:950; font-size:14px; opacity:.92; }
     .trackChip .lvl{ font-family: var(--mono); opacity:.65; font-size:12px; }
 
-    /* SHOP (Cookie-clicker-ish) */
     .sideShop{
       padding:0;
       display:flex;
@@ -1706,7 +1666,6 @@ html, body { overflow: hidden !important; }
       text-shadow: 0 10px 22px rgba(0,0,0,.45);
     }
 
-    /* tooltip */
     .tt{
       position:fixed;
       z-index:9999;
@@ -1724,7 +1683,6 @@ html, body { overflow: hidden !important; }
     }
     .tt b{ color: rgba(255,255,255,.95); }
 
-    /* toast */
     .toast{
       position:fixed;
       left:50%;
@@ -1749,7 +1707,6 @@ html, body { overflow: hidden !important; }
       to{transform:translateX(-50%) translateY(0); opacity:1}
     }
 
-    /* click pop */
     .pop{
       position:absolute;
       pointer-events:none;
@@ -1765,7 +1722,6 @@ html, body { overflow: hidden !important; }
       to   { transform: translate(-50%, -150%) scale(1.10); opacity: 0; }
     }
   
-    /* ===== Cookie-clicker-ish 3-column look ===== */
     .centerStrip{ display:none; }
     .panel{
       border: 1px solid rgba(255,255,255,.10);
@@ -1794,7 +1750,6 @@ html, body { overflow: hidden !important; }
         linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.20));
     }
 
-    /* big click heart (center-left like cookie) */
     .sideHeart{
       position:absolute;
       left:50%;
@@ -1819,7 +1774,6 @@ html, body { overflow: hidden !important; }
     .sideHeart .ico{ font-size: 96px; filter: drop-shadow(0 14px 22px rgba(0,0,0,.35)); }
     .sideHeart:active{ transform: translate(-50%,-50%) scale(.985); }
 
-    /* cursors ring (visual like cookie clicker) */
     .cursorRing{
       position:absolute;
       left:50%;
@@ -1839,7 +1793,6 @@ html, body { overflow: hidden !important; }
       font-size: 18px;
     }
 
-    /* WORLD panel */
     .world{
       min-height: 640px;
       background:
@@ -1936,7 +1889,6 @@ html, body { overflow: hidden !important; }
       padding-left:8px;
     }
 
-    /* === Center world polish === */
     .laneStats{
       position:absolute;
       right:10px;
@@ -1961,7 +1913,6 @@ html, body { overflow: hidden !important; }
     .laneTitle{ display:flex; align-items:center; gap:8px; }
     .laneIco{ font-size:16px; }
 
-    /* accents per lane */
     .laneLike{ box-shadow: inset 0 0 0 1px rgba(92,255,170,.08); }
     .laneComment{ box-shadow: inset 0 0 0 1px rgba(143,211,255,.08); }
     .laneMinnie{ box-shadow: inset 0 0 0 1px rgba(255,170,210,.10); }
@@ -1985,7 +1936,6 @@ html, body { overflow: hidden !important; }
     .laneSoyeon::before{ background: radial-gradient(closest-side at 20% 20%, rgba(255,215,120,.14), transparent 70%); }
     .lane:hover::before{ opacity:1; }
 
-    /* sprites: less "grid", more alive */
     .sprite{
       transition: transform .12s ease, filter .12s ease;
     }
@@ -2010,9 +1960,6 @@ html, body { overflow: hidden !important; }
       background: rgba(0,0,0,.28);
     }
 
-
-  
-    /* === Center world lines (improved) === */
     .worldLine{
       margin: 10px 12px;
       padding: 10px 12px 12px;
@@ -2092,7 +2039,6 @@ html, body { overflow: hidden !important; }
       border-color: rgba(255,143,200,.18);
     }
 
-    /* placeholder in upgrades bar */
     .upPlaceholder{
       color: rgba(255,255,255,.68);
       font-size: 12.5px;
@@ -2102,7 +2048,6 @@ html, body { overflow: hidden !important; }
       background: rgba(0,0,0,.16);
     }
 
-    /* Burst hearts on click */
     .burstHeart{
       position:absolute;
       left:0;
@@ -2119,11 +2064,8 @@ html, body { overflow: hidden !important; }
       100%{ opacity:0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.6); }
     }
 
-    /* pressed feedback */
     .sideHeart.pressed{ transform: translate(-50%,-50%) scale(0.98); }
 
-  
-    /* === World FX (center ambience) === */
     .world{ position:relative; overflow:hidden; }
     .worldBody{ position:relative; }
     .worldFX{
@@ -2151,7 +2093,6 @@ html, body { overflow: hidden !important; }
       100%{ transform: translate(var(--dx), -120vh) rotate(var(--r)); opacity: 0; }
     }
 
-    /* Make center lanes more "game-like" */
     .worldLine{
       background:
         linear-gradient(180deg, rgba(0,0,0,.35), rgba(255,255,255,.03)),
@@ -2174,15 +2115,12 @@ html, body { overflow: hidden !important; }
       background: rgba(0,0,0,.35);
     }
 
-    /* Hide the small centerStrip "Лента прогресса" to declutter (optional) */
     .centerStrip{ display:none; }
 
 
     .unit.pop{ animation: popUnit .22s ease-out 1; }
     @keyframes popUnit{ 0%{ transform: scale(.92); } 70%{ transform: scale(1.06);} 100%{ transform: scale(1);} }
 
-
-    /* ===== Chat in center (Miyeon x Neverland) ===== */
     .worldBody{ position:relative; }
     .chatWrap{
       position:relative;
@@ -2277,19 +2215,15 @@ html, body { overflow: hidden !important; }
       0%,100%{ transform: translateY(0); opacity:.55; }
       50%{ transform: translateY(-3px); opacity:.95; }
     }
-/* ===== Hard lock: no scrollbars anywhere ===== */
+
 html, body { overflow: hidden !important; }
 
-/* ===== Keep heart stable on click (no drifting) ===== */
 .sideHeart { will-change: transform; }
 .sideHeart.pressed { transform: translate(-50%,-50%) scale(0.98) !important; }
 .sideHeart:active { transform: translate(-50%,-50%) scale(.985) !important; }
 
-/* ===== Give chat safe margins so bubbles/shadows never clip ===== */
 .chatWrap { padding: 26px 44px 34px !important; }
 
-  
-/* ===== Lock top stats pills: no swapping / no wrapping ===== */
 .stats{
   display:flex !important;
   flex-wrap:nowrap !important;
@@ -2307,7 +2241,7 @@ html, body { overflow: hidden !important; }
   text-align:right;
   font-variant-numeric: tabular-nums;
 }
-/* explicit order */
+    
 #pillTotal{order:1;}
 #pillPerClick{order:2;}
 #pillAuto{order:3;}
@@ -2330,8 +2264,6 @@ html, body { overflow: hidden !important; }
   color: #fff;
 }
 
-
-/* ===== Fan Meeting Event ===== */
 .eventBanner{
   margin: 10px 14px 0;
   padding: 10px 12px;
@@ -2372,8 +2304,6 @@ body.fanmeet .eventBadge{
   background: rgba(255, 125, 202, .14);
 }
 
-
-/* ===== Cube Roulette Event ===== */
 body.cuberoulette .eventBanner{
   border-color: rgba(160, 120, 255, .48);
   box-shadow: 0 20px 70px rgba(160,120,255,.14), 0 18px 60px rgba(0,0,0,.25);
@@ -2382,9 +2312,6 @@ body.cuberoulette .eventBadge{
   border-color: rgba(160, 120, 255, .58);
   background: rgba(160, 120, 255, .16);
 }
-
-
-
 
 .ach-btn-top{
   align-self:center;
@@ -2575,7 +2502,6 @@ body.cuberoulette .eventBadge{
   color: rgba(255,255,255,.65);
 }
 
-/* QUIZ */
 .quizOverlay{
   position:fixed; inset:0;
   background: rgba(0,0,0,.55);
@@ -2659,9 +2585,6 @@ body.cuberoulette .eventBadge{
   font-size:12.5px;
 }
 
-
-
-/* Animations */
   20%{transform:translateX(-6px)}
   40%{transform:translateX(6px)}
   60%{transform:translateX(-4px)}
@@ -2681,8 +2604,6 @@ body.cuberoulette .eventBadge{
   filter:drop-shadow(0 6px 10px rgba(0,0,0,.35));
 }
 
-
-/* Upgrades bar toggle */
 .upBarTitle{
   background:transparent;
   border:none;
@@ -2702,8 +2623,6 @@ body.cuberoulette .eventBadge{
 .upBar.collapsed .upIcons{ display:none; }
 .upBar.collapsed .caret{ transform:rotate(-90deg) translateY(1px); }
 
-
-/* Click floating value */
 .clickFloat{
   position:absolute;
   pointer-events:none;
@@ -2719,8 +2638,6 @@ body.cuberoulette .eventBadge{
   transform:translateY(-28px);
 }
 
-
-/* Floating click gain */
 .clickPop{
   position:fixed;
   left:0;
@@ -2770,7 +2687,6 @@ body.cuberoulette .eventBadge{
     </div>
 
     <div class="main">
-      <!-- PLAYFIELD -->
       <div class="panel play" id="playPanel">
         <div class="playHeader">
           <div class="bigStat">
@@ -2789,7 +2705,6 @@ body.cuberoulette .eventBadge{
           <div class="glow"></div>
           <div class="heartsLayer" id="heartsLayer"></div>
 
-          <!-- side heart clicker -->
           <div class="cursorRing" id="cursorRing"></div>
 
           <div class="sideHeart" id="sideHeart" aria-label="кликер">
@@ -2799,7 +2714,6 @@ body.cuberoulette .eventBadge{
         </div>
       </div>
 
-      <!-- CENTER STRIP -->
       <div class="centerStrip">
         <div class="stripTop">
           <div class="stripTitle">Лента прогресса</div>
@@ -2810,8 +2724,6 @@ body.cuberoulette .eventBadge{
         </div>
       </div>
 
-      
-      <!-- WORLD / PRODUCTION STRIPS -->
       <div class="panel world" id="worldPanel">
         <div class="worldTop">
           <div class="worldMsg" id="worldMsg">Ваше 💚 стало популярно и в других странах.</div>
@@ -2835,7 +2747,6 @@ body.cuberoulette .eventBadge{
         </div>
       </div>
 
-<!-- SHOP -->
       <div class="panel sideShop">
         <div class="shopHeader">Магазин</div>
 
@@ -2864,10 +2775,6 @@ body.cuberoulette .eventBadge{
   <div class="tt" id="tt"></div>
   <div class="toast" id="toast"></div>
 
-  
-
-
-  <!-- ACHIEVEMENTS -->
   <div class="achOverlay hidden" id="achOverlay" aria-hidden="true">
     <div class="achModal" role="dialog" aria-modal="true" aria-label="Достижения">
       <div class="achHeader">
@@ -2882,7 +2789,6 @@ body.cuberoulette .eventBadge{
 
   </div>
 
-  <!-- STATS -->
   <div class="statsOverlay hidden" id="statsOverlay" aria-hidden="true">
     <div class="statsModal" role="dialog" aria-modal="true" aria-label="Статистика">
       <div class="statsHeader">
@@ -2909,7 +2815,6 @@ body.cuberoulette .eventBadge{
   </div>
 
 
-  <!-- QUIZ -->
   <div class="quizOverlay hidden" id="quizOverlay" aria-hidden="true">
     <div class="quizModal" role="dialog" aria-modal="true" aria-label="Квиз">
       <div class="quizHeader">
@@ -2947,9 +2852,6 @@ body.cuberoulette .eventBadge{
 (() => {
   "use strict";
 
-  /* =======================
-     CONFIG
-  ======================= */
   const KEY = "miyeon_green_clicker_v2";
 
     const ITEMS = [{ id:"like",    icon:"👍", name:"Лайки",        desc:"Неверленды ставят лайки. +1 💚/сек за уровень.",          baseCost:100,  costMult:1.15, add:1 },
@@ -2975,31 +2877,29 @@ body.cuberoulette .eventBadge{
     "🎉 Хлопушки хлоп! Сердечки летят!",
     "🫶 Поддержка от Неверлендов: лайки + комментарии = магия",
     "🌿 Зелёная тема включена: копим 💚 для именинницы!",
-"💖 Сегодня весь мир говорит Миён тёплые слова",
-"🎂 Торт почти готов, добавим ещё любви",
-"🌸 Цветы распускаются для Миён",
-"💚 Сердечки копятся и день становится ярче",
-"🎈 Шарики взлетают, настроение тоже",
-"✨ Каждый клик делает праздник громче",
-"🫶 Неверленды рядом и это чувствуется",
-"🥰 Миён читает сообщения и улыбается",
-"🎉 Праздник продолжается, не останавливаемся",
-"💐 Букеты множатся от вашей поддержки",
-"🍰 Сладости и любовь сегодня без ограничений",
-"💫 Этот день запомнится надолго",
-"🎊 Сердца бьются в одном ритме",
-"🌷 Тёплые слова заполняют весь экран",
-"💖 Любовь фанатов растёт с каждым мгновением",
-"🥳 Сегодня можно всё ради Миён",
-"🧁 Ещё чуть чуть и торт станет идеальным",
-"✨ Магия Неверлендов работает",
-"💚 Кликаем и делаем день счастливее",
-"🎈 Радость витает в воздухе"
+    "💖 Сегодня весь мир говорит Миён тёплые слова",
+    "🎂 Торт почти готов, добавим ещё любви",
+    "🌸 Цветы распускаются для Миён",
+    "💚 Сердечки копятся и день становится ярче",
+    "🎈 Шарики взлетают, настроение тоже",
+    "✨ Каждый клик делает праздник громче",
+    "🫶 Неверленды рядом и это чувствуется",
+    "🥰 Миён читает сообщения и улыбается",
+    "🎉 Праздник продолжается, не останавливаемся",
+    "💐 Букеты множатся от вашей поддержки",
+    "🍰 Сладости и любовь сегодня без ограничений",
+    "💫 Этот день запомнится надолго",
+    "🎊 Сердца бьются в одном ритме",
+    "🌷 Тёплые слова заполняют весь экран",
+    "💖 Любовь фанатов растёт с каждым мгновением",
+    "🥳 Сегодня можно всё ради Миён",
+    "🧁 Ещё чуть чуть и торт станет идеальным",
+    "✨ Магия Неверлендов работает",
+    "💚 Кликаем и делаем день счастливее",
+    "🎈 Радость витает в воздухе"
   ];
 
-  /* =======================
-     STATE
-  ======================= */
+
   const QUIZ_THRESHOLDS = [40,90,160,260,400,600,850,1150,1500,1900,2400,3000,3700,4500,5400];
 
 const state = {
@@ -3012,10 +2912,10 @@ const state = {
     eventSeen: {},
         love: 0,
     best: 0,
-    owned: {},          // itemId -> count
-    upgrades: {},       // itemId -> level (0..3)
-    revealedItems: {},  // itemId -> bool
-    boughtUpgrades: {}, // upgradeId -> bool
+    owned: {},          
+    upgrades: {},       
+    revealedItems: {},  
+    boughtUpgrades: {}, 
     clickBase: 1,
     clickLevel: 0,
     clickCpsPct: 0,
@@ -3051,13 +2951,10 @@ const state = {
       if(typeof state.clickCpsPct !== 'number') state.clickCpsPct = 0;
       state.event = state.event || { type:null, endsAt:0, nextFanAt:0, nextCubeAt:0, cubeMode:null, cubeBonus:0 };
 
-      // quiz defaults
       state.quiz = state.quiz || { idx: 0, nextAt: (QUIZ_THRESHOLDS[0]||40), used: {}, snoozeUntil: 0};
       state.quiz.used = state.quiz.used || {};
-      // migrate / validate quiz thresholds
       if(typeof state.quiz.idx !== "number" || state.quiz.idx < 0) state.quiz.idx = 0;
 
-      // If older saves had only nextAt, map it into idx based on thresholds
       if(typeof state.quiz.nextAt === "number" && (state.quiz.nextAt > 0) && (!("idx" in state.quiz) || state.quiz.idx === 0)){
         const oldNext = state.quiz.nextAt;
         const mapped = QUIZ_THRESHOLDS.findIndex(t=>t >= oldNext);
@@ -3067,9 +2964,8 @@ const state = {
       const next = (state.quiz.idx < QUIZ_THRESHOLDS.length) ? QUIZ_THRESHOLDS[state.quiz.idx] : Number.POSITIVE_INFINITY;
       state.quiz.nextAt = next;
       if(typeof state.quiz.snoozeUntil !== "number") state.quiz.snoozeUntil = 0;
-      state.quizActive = false; // always start closed on load
+      state.quizActive = false;
 
-      // buffs defaults
       state.buffs = state.buffs || { clickMult: 1, clickMultUntil: 0, shopDiscountLeft: 0, freePurchase: false };
       state.quizStats = state.quizStats || { started:0, answered:0, correct:0, streak:0, bestStreak:0, lastStartedIdx:-1, bonusPick:{ perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 } };
       state.quizStats.bonusPick = state.quizStats.bonusPick || { perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 };
@@ -3077,7 +2973,6 @@ const state = {
       if(typeof state.buffs.clickMultUntil !== "number") state.buffs.clickMultUntil = 0;
       state.buffs.shopDiscountLeft = Number.isFinite(state.buffs.shopDiscountLeft) ? Math.max(0, Math.floor(state.buffs.shopDiscountLeft)) : 0;
       state.buffs.freePurchase = !!state.buffs.freePurchase;
-      // never carry temporary buffs across full reload if already expired
       if(Date.now() > state.buffs.clickMultUntil){ state.buffs.clickMult = 1; state.buffs.clickMultUntil = 0; }
 
 
@@ -3089,9 +2984,6 @@ const state = {
     }catch(_){}
   }
 
-  /* =======================
-     DOM
-  ======================= */
   const $ = (id) => document.getElementById(id);
 
   const loveEl     = $("love");
@@ -3144,7 +3036,6 @@ const qtyTabs = $("qtyTabs");
 
   const heartsLayer = $("heartsLayer");
 
-  // Quiz
   const quizOverlay = $("quizOverlay");
   const quizClose   = $("quizClose");
   const quizYes     = $("quizYes");
@@ -3160,13 +3051,9 @@ const qtyTabs = $("qtyTabs");
   const quizHintReady = $("quizHintReady");
   const quizHintQ     = $("quizHintQ");
 
-  // Ensure quiz overlay never blocks clicks on load
   if(quizOverlay){ quizOverlay.classList.add("hidden"); quizOverlay.setAttribute("aria-hidden","true"); }
 
 
-  /* =======================
-     UTILS
-  ======================= */
   const fmt = (n) => {
     if(!isFinite(n)) return "0";
     const abs = Math.abs(n);
@@ -3188,7 +3075,6 @@ const qtyTabs = $("qtyTabs");
   const setOwned = (id, v) => { state.owned[id] = Math.max(0, Math.floor(v||0)); };
 
   const isRevealed = (id) => !!state.revealedItems[id];
-  // returns true if this is the first time the item gets revealed
   const revealItem = (id) => {
     if(state.revealedItems[id]) return false;
     state.revealedItems[id] = true;
@@ -3203,9 +3089,6 @@ const qtyTabs = $("qtyTabs");
     toastLong._t = setTimeout(()=>toastEl.classList.remove("show"), 2600);
   }
 
-  /* =======================
-     ACHIEVEMENTS
-  ======================= */
   const ACHIEVEMENTS = [
     // Visible (obvious)
     { id:"first_click",  icon:"💚", name:"Первый тык", desc:"Нажми на большое сердечко 1 раз.", hidden:false, cat:"Клик-клик",
@@ -3240,7 +3123,6 @@ const qtyTabs = $("qtyTabs");
     { id:"up_1",         icon:"✨", name:"Апгрейд!", desc:"Купи любое улучшение.", hidden:false, cat:"Клик-клик",
       prog:()=> Math.min(1, Object.keys(state.boughtUpgrades||{}).length / 1) },
 
-    // Hidden (secret)
     { id:"love_10k",     icon:"🚀", name:"10 000 любви", desc:"Достигни рекорда 10 000 💚.", hidden:false, cat:"Клик-клик",
       prog:()=> Math.min(1, (state.best||0) / 10000) },
 
@@ -3249,6 +3131,9 @@ const qtyTabs = $("qtyTabs");
 
     { id:"love_1m",      icon:"💫", name:"1 000 000 любви", desc:"Достигни рекорда 1 000 000 💚.", hidden:false, cat:"Клик-клик",
       prog:()=> Math.min(1, (state.best||0) / 1000000) },
+
+    { id:"love_1b", icon:"💚", name:"1 000 000 000 любви", desc:"Достигни рекорда 1 000 000 000 💚.", hidden:true, cat:"Клик-клик",
+      prog:()=> Math.min(1, (Number(state.best||0) / 1_000_000_000)) },
 
     { id:"auto_1k",      icon:"⚙️", name:"Автопоток", desc:"Доведи 💚/сек до 1 000.", hidden:false, cat:"Клик-клик",
       prog:()=> Math.min(1, autoRate() / 1000) },
@@ -3268,7 +3153,6 @@ const qtyTabs = $("qtyTabs");
     { id:"click_monster",icon:"🖱️", name:"Клик как праздник", desc:"Доведи 💚 за клик до 50.", hidden:false, cat:"Клик-клик",
       prog:()=> Math.min(1, perClickStable() / 50) },
 
-    // i-dle squad
     { id:"fan_minnie",   icon:"🐭", name:"Фанат Минни", desc:"Купи Минни 10 раз.", hidden:true, cat:"Neverland",
       prog:()=> Math.min(1, getOwned("minnie") / 10) },
 
@@ -3284,7 +3168,7 @@ const qtyTabs = $("qtyTabs");
     { id:"soojin_support",icon:"🦊", name:"Тёплая поддержка", desc:"Позови Суджин 1 раз.", hidden:true, cat:"Neverland",
       prog:()=> Math.min(1, getOwned("soojin") / 1) },
 
-    { id:"cube_installed",icon:"🧊", name:"Куб включён", desc:"Купи Cube Entertainment 1 раз.", hidden:true,
+    { id:"cube_installed",icon:"🧊", name:"Куб включён", desc:"Купи Cube Entertainment 1 раз.", hidden:false, cat:"Neverland",
       prog:()=> Math.min(1, getOwned("cube") / 1) },
 
     { id:"idle_party",   icon:"🌈", name:"i-dle рядом", desc:"Купи Минни, Юци, Шухуа и Соён хотя бы по 1.", hidden:true, cat:"Neverland",
@@ -3293,41 +3177,25 @@ const qtyTabs = $("qtyTabs");
         return ok ? 1 : 0;
       } 
     },
-
-    // Events (birthday vibes)
+    
     { id:"fanmeet_once", icon:"🎂", name:"Фанмитинг!", desc:"Поймай ивент Фанмитинг хотя бы 1 раз.", hidden:true, cat:"Ивенты",
       prog:()=> (state.eventSeen && state.eventSeen.fanmeet) ? 1 : 0 },
 
-    { id:"cube_triple",  icon:"🎲", name:"Три лица Cube", desc:"В Cube Roulette получи хорошее, плохое и ничего.", hidden:false, cat:"Ивенты",
-      prog:()=> {
-        const s = state.eventSeen || {};
-        const ok = !!(s.cubeGood && s.cubeBad && s.cubeNothing);
-        return ok ? 1 : 0;
-      } 
-    },
 
     { id:"cube_bonus",   icon:"💥", name:"Джекпот!", desc:"В Cube Roulette поймай мгновенный бонус.", hidden:true, cat:"Ивенты",
       prog:()=> (state.eventSeen && state.eventSeen.cubeBonus) ? 1 : 0 },
   
-    
-
-
-    
-
-
-
-    /* Quiz achievements */
     { id:"quiz_first", icon:"❓", name:"Первый квиз", desc:"Ответь на вопрос в квизе хотя бы 1 раз.", hidden:false, cat:"Квизы",
       prog:()=> Math.min(1, ((state.quizStats&&state.quizStats.answered)||0) / 1) },
 
     { id:"quiz_3_correct", icon:"🧠", name:"Умница", desc:"Дай 3 правильных ответа в квизах.", hidden:false, cat:"Квизы",
       prog:()=> Math.min(1, ((state.quizStats&&state.quizStats.correct)||0) / 3) },
 
-    { id:"quiz_10_correct", icon:"🌟", name:"Миён в сердце", desc:"Дай 10 правильных ответов в квизах.", hidden:true, cat:"Квизы",
-      prog:()=> Math.min(1, ((state.quizStats&&state.quizStats.correct)||0) / 10) },
+    { id:"quiz_10_correct", icon:"🌟", name:"Миён в сердце", desc:"Дай 7 правильных ответов в квизах.", hidden:true, cat:"Квизы",
+      prog:()=> Math.min(1, ((state.quizStats&&state.quizStats.correct)||0) / 7) },
 
-    { id:"quiz_10_total", icon:"🏁", name:"Квиз‑марафон", desc:"Ответь на 10 вопросов в квизах.", hidden:true, cat:"Квизы",
-      prog:()=> Math.min(1, ((state.quizStats&&state.quizStats.answered)||0) / 10) },
+    { id:"quiz_10_total", icon:"🏁", name:"Квиз‑марафон", desc:"Ответь на 7 вопросов в квизах.", hidden:true, cat:"Квизы",
+      prog:()=> Math.min(1, ((state.quizStats&&state.quizStats.answered)||0) / 7) },
 
     { id:"quiz_streak_5", icon:"🔥", name:"Безошибочно", desc:"Сделай серию из 5 правильных ответов подряд.", hidden:true, cat:"Квизы",
       prog:()=> Math.min(1, ((state.quizStats&&state.quizStats.bestStreak)||0) / 5) },
@@ -3350,9 +3218,6 @@ const qtyTabs = $("qtyTabs");
     { id:"quiz_5400", icon:"🏔️", name:"Дошла до 5400", desc:"Дойди до порога квиза 5400 кликов.", hidden:true, cat:"Квизы",
       prog:()=> Math.min(1, (Number(state.totalClicks||0) >= 5400 ? 1 : 0)) },
 
-    { id:"quiz_all", icon:"🏆", name:"Квиз‑легенда", desc:"Пройди все квизы по порогам (15/15).", hidden:true, cat:"Квизы", cat:"Квизы",
-      prog:()=> Math.min(1, ((state.quiz && Number(state.quiz.idx)||0) / QUIZ_THRESHOLDS.length)) },
-
 ];
 
   function isAchDone(id){ return !!(state.achievements && state.achievements[id]); }
@@ -3365,12 +3230,6 @@ const qtyTabs = $("qtyTabs");
   }
 
   function upgradeKindsBought(){
-    // Count whether player has at least ONE upgrade of each upgrade-kind.
-    // Kinds:
-    // 1) Shop item upgrades: "<item>_uN" (for any shop item)
-    // 2) Click multiplier upgrades: click_u*
-    // 3) Click power (additive) upgrades: click_p*
-    // 4) Click scaling (% of cps) upgrades: click_s*
     const bought = state.boughtUpgrades || {};
     let shop = false, clickMult = false, clickPower = false, clickScale = false;
 
@@ -3391,7 +3250,6 @@ const qtyTabs = $("qtyTabs");
   }
 
 function totalUpgradesGoal(){
-    // 3 upgrades per shop item + 6 click-related upgrades (3 multipliers + 3 additive)
     return (ITEMS.length * 3) + 6;
   }
 
@@ -3415,7 +3273,6 @@ function totalUpgradesGoal(){
     if(changed) renderAchievements();
   }
 
-  /* UI */
   const achBtn = $("achBtn");
   const achOverlay = $("achOverlay");
   const achClose = $("achClose");
@@ -3436,31 +3293,27 @@ function totalUpgradesGoal(){
 
   function renderAchievements(){
     function isAchVisible(a){
-      // Visible if not hidden, already earned, or revealed by unlocking the related system.
       if(!a.hidden) return true;
       if(isAchDone(a.id)) return true;
 
       const cat = a.cat || "";
-      // Quiz achievements reveal after the very first quiz answer.
       if(cat === "Квизы"){
         return !!(((state.quizStats||{}).answered||0) >= 1);
       }
-      // Event achievements reveal after seeing any event once.
       if(cat === "Ивенты"){
         const s = state.eventSeen || {};
         return !!(s.fanmeet || s.cubeGood || s.cubeBad || s.cubeNothing || s.cubeBonus);
       }
-      // Neverland achievements reveal per member
+
       if(cat === "Neverland"){
-        // Map achievement id to member
         const map = {
           fan_minnie: "minnie",
           fan_yuqi: "yuqi",
           fan_shuhua: "shuhua",
           fan_soyeon: "soyeon",
           fan_soojin: "soojin",
-          idle_party: null,      // revealed when any 4 main members owned
-          idle_together: null,   // revealed when all members owned
+          idle_party: null,      
+          idle_together: null,   
           yg_first: null,
           yg_lvl5: null
         };
@@ -3477,7 +3330,6 @@ function totalUpgradesGoal(){
           return ["minnie","yuqi","shuhua","soyeon","soojin"].every(m => getOwned(m)>0);
         }
 
-        // YG achievements reveal when YG item bought
         if(a.id === "yg_first" || a.id === "yg_lvl5"){
           return getOwned("yg") > 0;
         }
@@ -3493,12 +3345,10 @@ function totalUpgradesGoal(){
     const done = (state.achievements && Object.keys(state.achievements).length) ? Object.keys(state.achievements).length : 0;
     achList.innerHTML = "";
 
-    // Group achievements by category (subsections)
     const groups = new Map();
 
     ACHIEVEMENTS.forEach((a, idx)=>{
       let cat = a.cat || "Другое";
-      // Hard category routing (safety net)
       if(a.id.startsWith("cube_") || a.id === "fanmeet_once") cat = "Ивенты";
       if(a.id.startsWith("quiz_") || a.id.startsWith("bonus_")) cat = "Квизы";
       if(a.id.startsWith("fan_") || a.id === "idle_party" || a.id === "idle_together" || a.id === "soojin_support" || a.id.startsWith("yg_")) cat = "Neverland";
@@ -3527,7 +3377,6 @@ function totalUpgradesGoal(){
         const achNum = item.idx + 1;
 
         let p = Math.max(0, Math.min(1, a.prog ? a.prog() : 0));
-        // Скрытые достижения не показывают прогресс до получения
         if(a.hidden && !isAchDone(a.id) && !isAchVisible(a)) p = 0;
 
         const row = document.createElement("div");
@@ -3557,8 +3406,6 @@ function totalUpgradesGoal(){
   if(achClose) achClose.addEventListener("click", closeAchievements);
   if(achOverlay) achOverlay.addEventListener("click", (e)=>{ if(e.target === achOverlay) closeAchievements(); });
 
-
-/* STATS UI */
 const statsBtn = $("statsBtn");
 const statsOverlay = $("statsOverlay");
 const statsClose = $("statsClose");
@@ -3646,13 +3493,12 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
   function announceReveal(itemId){
     const it = ITEMS.find(x=>x.id===itemId);
     if(!it) return;
-    // show item description immediately even if user didn't click the heart
     toastLong(`Открыт новый предмет: ${it.icon} ${it.name} – ${it.desc}`);
     checkAchievements();
   }
 
   const upgradeLevel = (itemId) => Math.max(0, Math.min(6, state.upgrades[itemId] || 0));
-  const upgradeMult  = (itemId) => Math.pow(2, upgradeLevel(itemId)); // 1,2,4,8,16,32,64
+  const upgradeMult  = (itemId) => Math.pow(2, upgradeLevel(itemId));
 
   function toast(msg){
     if(!toastEl) return;
@@ -3662,10 +3508,6 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
     toast._t = setTimeout(()=>toastEl.classList.remove("show"), 1200);
   }
 
-
-  /* =======================
-     QUIZ (by manual clicks)
-  ======================= */
   const QUIZ_POOL = [
     { id:"q01", q:"Какой цвет Миён называет своим любимым?", a:["Голубой","Розовый","Зелёный","Белый"], correct:2 },
     { id:"q02", q:"Какое время года Миён любит больше всего?", a:["Весну","Осень","Зиму","Лето"], correct:3 },
@@ -3701,34 +3543,29 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
     { id:"q32", q:"С каким артистом Миён выпустила трек «Side Effect»?", a:["Gray","Raiden","Loco","DPR LIVE"], correct:1 }
   ];
 
-  // quiz runtime guards + state machine
   let lastQuizInviteClick = -1;
   let quizYesLocked = false;
   let quizInBonusChoice = false;
 
-  // Phases: "ready" -> "question" -> "bonus"
   let quizPhase = "ready";
-  let currentQuiz = null; // { qobj, options }
+  let currentQuiz = null;
 
   function setQuizPhase(phase){
     quizPhase = phase;
-    // Visibility
+
     if(quizStepReady) quizStepReady.classList.toggle("hidden", phase !== "ready");
     if(quizStepQ)     quizStepQ.classList.toggle("hidden", phase !== "question");
     if(quizStepBonus) quizStepBonus.classList.toggle("hidden", phase !== "bonus");
 
-    // Controls
     if(quizNo)  quizNo.disabled  = (phase !== "ready");
     if(quizYes) quizYes.disabled = (phase !== "ready") || quizYesLocked;
 
-    // Close behaviour: cannot close during bonus choice (bonus must be chosen immediately)
     if(quizClose) quizClose.disabled = (phase === "bonus");
   }
 
   function openQuizReady(){
     if(!quizOverlay) return;
 
-    // Reset transient runtime state each time quiz opens
     quizYesLocked = false;
     quizInBonusChoice = false;
     currentQuiz = null;
@@ -3761,7 +3598,6 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
   }
 
   function prepareQuestion(qobj){
-    // Prepare shuffled answers once, keep correct mapping
     const options = qobj.a.map((label, i)=>({ label, isCorrect: i === qobj.correct }));
     shuffleInPlace(options);
     return { qobj, options };
@@ -3779,7 +3615,6 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
   function startQuizQuestion(){
     if(!quizOverlay) return;
 
-    // quiz stats (for achievements): count once per threshold when question actually starts
     state.quizStats = state.quizStats || { started:0, answered:0, correct:0, streak:0, bestStreak:0, lastStartedIdx:-1, bonusPick:{ perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 } };
     if(state.quiz && Number.isFinite(state.quiz.idx) && state.quizStats.lastStartedIdx !== state.quiz.idx){
       state.quizStats.started += 1;
@@ -3788,7 +3623,6 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
       checkAchievements();
     }
 
-    // Choose ONE question for this quiz, and mark it used immediately
     if(!currentQuiz){
       const qobj = pickQuizQuestion();
       if(!qobj){
@@ -3798,14 +3632,12 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
       }
       currentQuiz = prepareQuestion(qobj);
 
-      // Mark used as soon as we show the question (unique, never repeats)
       state.quiz = state.quiz || { idx: 0, nextAt: (QUIZ_THRESHOLDS[0]||40), used: {}, snoozeUntil: 0};
       state.quiz.used = state.quiz.used || {};
       state.quiz.used[qobj.id] = true;
       persist();
     }
 
-    // Render question
     if(quizQuestion) quizQuestion.textContent = currentQuiz.qobj.q;
     if(quizOptions){
       quizOptions.innerHTML = "";
@@ -3816,10 +3648,8 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
         b.textContent = opt.label;
 
         b.addEventListener("click", ()=>{
-          // lock all
           [...quizOptions.querySelectorAll("button.quizOpt")].forEach(x=>x.disabled=true);
 
-          // quiz stats: answered + streak
           state.quizStats = state.quizStats || { started:0, answered:0, correct:0, streak:0, bestStreak:0, lastStartedIdx:-1, bonusPick:{ perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 } };
           state.quizStats.answered = (state.quizStats.answered||0) + 1;
 
@@ -3837,8 +3667,6 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
             persist();
             checkAchievements();
             toastLong("Попробуй в следующий раз");
-
-            // finish this quiz, go to next threshold
             advanceQuizThreshold();
             persist();
             renderAll(true);
@@ -3854,16 +3682,8 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
     setQuizPhase("question");
   }
 
-  // === Quiz bonus system (player chooses immediately) ===
   function unlockedQuizBonuses(){
     const clicks = Number(state.totalClicks||0);
-
-    // Unlock rules (by totalClicks at the moment of choosing):
-    // 40+:  perm +5% (always),  ×300 for 10s (always, unlimited)
-    // 260+: +50% hearts instantly
-    // 850+: free purchase (+1 item) on next buy (only revealed items)
-    // 1500+: shop discount -10% for next 10 purchases (not stacking; resets to 10)
-
     const list = [
       {
         id: "perm05",
@@ -3923,7 +3743,7 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
           state.buffs = state.buffs || { clickMult: 1, clickMultUntil: 0, shopDiscountLeft: 0, freePurchase: false };
       state.quizStats = state.quizStats || { started:0, answered:0, correct:0, streak:0, bestStreak:0, lastStartedIdx:-1, bonusPick:{ perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 } };
       state.quizStats.bonusPick = state.quizStats.bonusPick || { perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 };
-          state.buffs.shopDiscountLeft = 10; // reset, not stack
+          state.buffs.shopDiscountLeft = 10;
           toastLong("🏷️ Скидка −10% активна на 10 покупок!");
         }
       }
@@ -3955,10 +3775,8 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
       btn.title = bns.desc;
 
       btn.addEventListener("click", ()=>{
-        // lock buttons
         [...quizBonusOptions.querySelectorAll("button")].forEach(x=>x.disabled=true);
 
-        // quiz stats: chosen bonus
         state.quizStats = state.quizStats || { started:0, answered:0, correct:0, streak:0, bestStreak:0, lastStartedIdx:-1, bonusPick:{ perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 } };
         state.quizStats.bonusPick = state.quizStats.bonusPick || { perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 };
         if(state.quizStats.bonusPick[bns.id] !== undefined){
@@ -3967,10 +3785,8 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
         persist();
         checkAchievements();
 
-        // apply
         bns.apply();
 
-        // finish this quiz, go to next threshold
         advanceQuizThreshold();
 
         persist();
@@ -3984,16 +3800,12 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
     setQuizPhase("bonus");
   }
 
-  /* =======================
-     QUIZ TRIGGER
-  ======================= */
   function forceMaybeTriggerQuiz(){
     if(!quizOverlay) return;
 
     state.quiz = state.quiz || { idx: 0, nextAt: (QUIZ_THRESHOLDS[0]||40), used: {}, snoozeUntil: 0};
     state.quiz.used = state.quiz.used || {};
 
-    // Normalize idx
     let idx = Number.isFinite(state.quiz.idx) ? state.quiz.idx : 0;
     if(idx < 0) idx = 0;
     if(idx >= QUIZ_THRESHOLDS.length) return;
@@ -4009,7 +3821,6 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
     if(nowClicks < snoozeUntil) return;
     if(nowClicks < nextAt) return;
 
-    // Do not duplicate invite on the same click
     if(lastQuizInviteClick === nowClicks) return;
     lastQuizInviteClick = nowClicks;
 
@@ -4020,7 +3831,6 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
     forceMaybeTriggerQuiz();
   }
 
-  // Quiz UI handlers
   if(quizOverlay){
     quizOverlay.addEventListener("pointerdown", (e)=>{
       if(e.target === quizOverlay){
@@ -4034,7 +3844,6 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
     closeQuiz();
   });
   if(quizNo) quizNo.addEventListener("click", ()=>{
-    // Skip this quiz iteration; show the next one only at the next threshold
     state.quiz = state.quiz || { idx: 0, nextAt: (QUIZ_THRESHOLDS[0]||40), used: {}, snoozeUntil: 0};
 
     const nextIdx = Number(state.quiz.idx||0) + 1;
@@ -4057,10 +3866,6 @@ if(statsOverlay) statsOverlay.addEventListener("click", (e)=>{ if(e.target === s
     startQuizQuestion();
   });
 
-
-/* =======================
-     SHOP PRICES
-  ======================= */
   function unitPrice(item){
     const c = getOwned(item.id);
     return Math.floor((item.baseCost * Math.pow(item.costMult, c)) * fanmeetShopDiscount() * quizShopDiscount());
@@ -4085,18 +3890,7 @@ function gainLove(amount){
   if(a > 0) state.totalEarned = (state.totalEarned || 0) + a;
 }
 
-  /* =======================
-     RATES
-  ======================= */
-  
-  
-  /* =======================
-     EVENTS
-     - clear UI banner + timer
-     - one event active at a time
-  ======================= */
 
-  // Fan Meeting: 60s buffs
   const FANMEET = {
     durationMs: 60000,
     minGapMs: 6 * 60000,
@@ -4105,12 +3899,6 @@ function gainLove(amount){
     autoMult: 1.5
   };
 
-  // Cube Roulette: 30s random chaos
-  // modes:
-  // 0 = Good mood: auto x2
-  // 1 = Bad mood:  auto x0.5
-  // 2 = Nothing:   no effect
-  // 3 = Bonus:     instant +love
   const CUBEROULETTE = {
     durationMs: 30000,
     minGapMs: 5 * 60000,
@@ -4150,8 +3938,6 @@ function gainLove(amount){
     if(!state.event.nextFanAt) scheduleNextFanMeet(now);
     if(!state.event.nextCubeAt) scheduleNextCubeRoulette(now);
 
-    // Если ты поменяла интервалы в коде, а в сохранении остались старые "дальние" таймеры –
-    // подтягиваем расписание к новым настройкам, чтобы ивенты можно было быстро проверить.
     if(state.event.nextFanAt - now > FANMEET.maxGapMs) scheduleNextFanMeet(now);
     if(state.event.nextCubeAt - now > CUBEROULETTE.maxGapMs) scheduleNextCubeRoulette(now);
   }
@@ -4163,7 +3949,6 @@ function gainLove(amount){
   function activeType(){ return isEventActive() ? state.event.type : null; }
 
   function baseAutoRate(){
-    // autoRate without any event multiplier
     let sum = 0;
     for(const [id, n] of Object.entries(state.owned || {})){
       const item = ITEMS.find(x => x.id === id);
@@ -4178,7 +3963,6 @@ function gainLove(amount){
   state.eventSeen = state.eventSeen || {};
   state.eventSeen.fanmeet = true;
 
-  // pick variant (v3 opens only after buying all 4 girls at least once)
   const canV3 = fanmeetV3Unlocked();
   const pool = canV3 ? [1,2,3] : [1,2];
   const variant = pool[Math.floor(Math.random()*pool.length)];
@@ -4186,7 +3970,6 @@ function gainLove(amount){
   state.event.type = "fanmeet";
   state.event.fanVariant = variant;
 
-  // duration: v1=13s, v2/v3=10s
   const dur = (variant===1) ? 13*1000 : 10*1000;
   state.event.endsAt = now + dur;
 
@@ -4201,14 +3984,6 @@ function gainLove(amount){
     const now = Date.now();
     state.event.type = "cuberoulette";
 
-    // Cube Roulette: раз в 5–10 минут, упор на ручные клики
-    // modes:
-    // tiny   – ×15 (10с)
-    // long   – ×60 (18с)
-    // sprint – ×120 (12с)
-    // ultra  – ×300 (8с)
-    // jackpot– мгновенный бонус (от силы клика) + ×450 (6с)
-    // error  – авто=0, но ×600 (15с)
     const roll = Math.random();
     let mode = "tiny";
     if(roll < 0.30) mode = "tiny";
@@ -4240,11 +4015,10 @@ function gainLove(amount){
     if(mode==="jackpot") state.eventSeen.cubeBonus = true;
 
     if(mode==="jackpot"){
-      // jackpot – мгновенный бонус, завязан на силу клика (не на буст зданий)
       const base = state.clickBase || 1;
       const mult = clickMultFromLevel(state.clickLevel||0);
       const pct = Math.max(0, state.clickCpsPct || 0);
-      const fromProd = autoRate() * pct; // часть, добавляемая к клику (уже существующая механика)
+      const fromProd = autoRate() * pct; 
       const rawClick = (base * mult + fromProd);
       const bonus = Math.max(1500, Math.floor(rawClick * 1200));
       state.event.cubeBonus = bonus;
@@ -4258,7 +4032,6 @@ function gainLove(amount){
     ensureSchedules();
     const now = Date.now();
 
-    // If active ended, clear
     if(state.event.type && now >= (state.event.endsAt || 0)){
       state.event.type = null;
       state.event.endsAt = 0;
@@ -4267,7 +4040,6 @@ function gainLove(amount){
     }
     if(isEventActive()) return;
 
-    // Priority: whichever is due first
     const fanDue  = now >= state.event.nextFanAt;
     const cubeDue = now >= state.event.nextCubeAt;
 
@@ -4283,14 +4055,13 @@ function gainLove(amount){
     const v = fanmeetVariant();
     if(v===1) return 777;
     if(v===3) return fanmeetV3Mult();
-    return 1; // v2: only shop discount
+    return 1;
   }
   if(activeType()==="cuberoulette"){
     return (state.event && state.event.cubeClickMult) ? state.event.cubeClickMult : 1;
   }
   return 1;
 }
-
 
   function eventAutoMult(){
   if(activeType()==="fanmeet") return 1;
@@ -4300,7 +4071,6 @@ function gainLove(amount){
   return 1;
 }
 
-// === Fanmeet variants (added) ===
 function fanmeetVariant(){
   return (state.event && state.event.type==="fanmeet") ? (state.event.fanVariant||1) : 1;
 }
@@ -4309,7 +4079,7 @@ function fanmeetV3Unlocked(){
 }
 function fanmeetV3Mult(){
   const total = getOwned("minnie")+getOwned("soyeon")+getOwned("shuhua")+getOwned("yuqi");
-  return Math.max(1, total + 7); // пример: 13 -> ×20
+  return Math.max(1, total + 7);
 }
 function fanmeetShopDiscount(){
   return (activeType()==="fanmeet" && fanmeetVariant()===2) ? 0.95 : 1;
@@ -4320,11 +4090,9 @@ function quizShopDiscount(){
 }
 
 function perClickStable(){
-    // Permanent click value WITHOUT temporary event/quiz multipliers
     const base = state.clickBase || 1;
     const mult = clickMultFromLevel(state.clickLevel||0);
 
-    // Use base (non-event) production for the % production add-on
     const pct = Math.max(0, state.clickCpsPct || 0);
     const fromProd = baseAutoRate() * pct;
 
@@ -4335,14 +4103,12 @@ function perClickStable(){
     const base = state.clickBase || 1;
     const mult = clickMultFromLevel(state.clickLevel||0);
 
-    // Cookie-clicker-like: add a % of current production to each click (from upgrades)
     const pct = Math.max(0, state.clickCpsPct || 0);
     const fromProd = autoRate() * pct;
 
-    // total click gain gets affected by events and quiz multipliers
     const tmpMult = (state.buffs && Date.now() < (state.buffs.clickMultUntil||0)) ? (state.buffs.clickMult||1) : 1;
     return (base * mult + fromProd) * eventClickMult() * tmpMult;
-  } // base click + % of production, then multipliers
+  }
 
 
   function baseAutoRate(){
@@ -4350,14 +4116,12 @@ function perClickStable(){
     for(const it of ITEMS){
       const c = getOwned(it.id);
       if(c<=0) continue;
-      // cube doesn't generate by itself via add
       a += (it.add || 0) * c * upgradeMult(it.id);
     }
     return Math.max(0, Math.floor(a));
   }
 
   function globalAutoMult(){
-    // Cube: +5% к автокликам за уровень
     const c = getOwned("cube");
     return Math.pow(1.05, c);
   }
@@ -4367,13 +4131,7 @@ function perClickStable(){
     return Math.max(0, Math.floor(base * globalAutoMult() * eventAutoMult()));
   }
 
-  /* =======================
-     UPGRADES (3 per item)
-     - disappear after purchase
-  ======================= */
   function upgradeChain(item){
-    // Upgrades are expensive on purpose: player shouldn't buy them instantly.
-    // Costs scale from the base item price and grow steeply across the chain.
     const base = Math.max(1000, Math.floor(item.baseCost * 10));
     return [
       { id:`${item.id}_u1`, itemId:item.id, icon:item.icon, name:`${item.name} I`,   desc:"Эффективность x2",             cost: base,        level:1, rarity:"common" },
@@ -4386,17 +4144,14 @@ function perClickStable(){
   }
 const UPGRADES = ITEMS.flatMap(upgradeChain);
 
-// Click upgrades (affect the player's own click)
 const CLICK_UPGRADES = [
   { id:"click_u1", itemId:"__click", icon:"🖱️", name:"Сила клика I",  desc:"Клик сильнее: 💚 за клик ×2",                 cost: 3000,   level:1, rarity:"common" },
   { id:"click_u2", itemId:"__click", icon:"🖱️", name:"Сила клика II", desc:"Ещё сильнее: 💚 за клик ×5 (в сумме)",        cost: 15000,   level:2, rarity:"epic", prereq:"click_u1" },
   { id:"click_u3", itemId:"__click", icon:"🖱️", name:"Сила клика III",desc:"Легендарно: 💚 за клик ×12 (в сумме)",        cost: 80000,  level:3, rarity:"legendary", prereq:"click_u2" },
 ];
 
-// merge
 UPGRADES.push(...CLICK_UPGRADES);
 
-// Additive click power upgrades (increase base click value)
 const CLICK_POWER = [
   { id:"click_p1", itemId:"__click", icon:"➕", name:"Усиление клика I", desc:"+1 💚 за клик", cost: 500, add: 1, prereq:null },
   { id:"click_p2", itemId:"__click", icon:"➕", name:"Усиление клика II", desc:"+3 💚 за клик", cost: 2500, add: 3, prereq:"click_p1" },
@@ -4405,9 +4160,6 @@ const CLICK_POWER = [
 
 UPGRADES.push(...CLICK_POWER);
 
-
-// Click scaling upgrades (Cookie Clicker style): each click adds % of current 💚/сек.
-// These upgrades unlock by the number of manual clicks (state.totalClicks).
 const CLICK_SCALE_UPGRADES = [
   { id:"click_s1", itemId:"__click", icon:"🎂", name:"Birthday Click 💚 I",  desc:"Клик даёт +1% к вашему 💚/сек.",  cost: 1000,   pctAdd: 0.01, unlockClicks: 100,   prereq:null,        rarity:"common" },
   { id:"click_s2", itemId:"__click", icon:"🎂", name:"Birthday Click 💚 II", desc:"Клик даёт ещё +1% к вашему 💚/сек.", cost: 10000,  pctAdd: 0.01, unlockClicks: 1000,  prereq:"click_s1",  rarity:"epic" },
@@ -4416,25 +4168,20 @@ const CLICK_SCALE_UPGRADES = [
 ];
 UPGRADES.push(...CLICK_SCALE_UPGRADES);
 
-// Event frequency upgrades (events appear 2x more often)
 const EVENT_FREQ_UPGRADES = [
   { id:"freq_fan",    eventKey:"fanmeet",itemId:"__event", icon:"🎂", name:"Фанмитинг чаще",   desc:"Фанмитинг появляется в 2 раза чаще.",          cost: 180000, rarity:"rare" },
   { id:"freq_cube",   eventKey:"cube",   itemId:"__event", icon:"🎲", name:"Cube Roulette чаще", desc:"Cube Roulette появляется в 2 раза чаще.",     cost: 260000, rarity:"epic" },
 ];
 UPGRADES.push(...EVENT_FREQ_UPGRADES);
 
-// Level-gated upgrades (per item): 1, 10, 25, 50, 100, 200, ...
 const LEVEL_MILESTONES = [1, 10, 25, 50, 100, 200, 300, 400, 500, 750, 1000];
 
-// Auto-assign unlockLevel for item-specific upgrades (excluding click/event upgrades).
 (function assignUpgradeLevels(){
   const groups = {};
   for (const u of UPGRADES){
     if (!u || !u.itemId) continue;
     if (u.itemId === "__click") continue;
     if (u.eventKey) continue;
-    // Only for upgrades that are tied to a shop item level progression.
-    // If author already set unlockLevel explicitly, keep it.
     groups[u.itemId] = groups[u.itemId] || [];
     groups[u.itemId].push(u);
   }
@@ -4461,13 +4208,11 @@ function clickMultFromLevel(lvl){
 
   function canShowUpgrade(u){    if(u.unlockLevel && getOwned(u.itemId) < u.unlockLevel) return false;
 
-    if(hasBoughtUpgrade(u.id)) return false; // disappears
+    if(hasBoughtUpgrade(u.id)) return false; 
     if(u.prereq && !hasBoughtUpgrade(u.prereq)) return false;
 
-    // unlock by manual clicks (for click scaling upgrades)
     if(typeof u.unlockClicks === "number" && (state.totalClicks||0) < u.unlockClicks) return false;
 
-    // require item at least 1 (except click upgrades and event upgrades)
     if(!u.eventKey && u.itemId !== "__click" && getOwned(u.itemId) <= 0) return false;
 
     return true;
@@ -4483,7 +4228,6 @@ function clickMultFromLevel(lvl){
     state.totalSpent = (state.totalSpent||0) + u.cost;
     state.totalPurchases = (state.totalPurchases||0) + 1;
 
-    // Apply upgrade effects
     if(u.eventKey){
       state.eventUpgrades = state.eventUpgrades || {};
       state.ui = state.ui || {};
@@ -4505,9 +4249,6 @@ function clickMultFromLevel(lvl){
     return true;
   }
 
-  /* =======================
-     TOOLTIP (hover + tap)
-  ======================= */
   function showTT(html, x, y){
     if(!tt) return;
     tt.innerHTML = html;
@@ -4526,9 +4267,6 @@ function clickMultFromLevel(lvl){
   window.addEventListener("scroll", hideTT, {passive:true});
   window.addEventListener("resize", hideTT);
 
-  /* =======================
-     HEARTS (background + burst)
-  ======================= */
   function spawnFallingHeart(){
     if(!heartsLayer) return;
     const el = document.createElement("div");
@@ -4562,14 +4300,10 @@ function clickMultFromLevel(lvl){
 
   setInterval(()=>{ spawnFallingHeart(); if(Math.random()<0.55) spawnFallingHeart(); if(Math.random()<0.25) spawnFallingHeart(); }, 380);
 
-  /* =======================
-     WORLD AMBIENCE (center particles)
-  ======================= */
   const worldFX = document.getElementById("worldFX");
   function spawnWorldParticle(){
     if(!worldFX) return;
 
-    // choose type depending on what you own
     const pool = ["💚","💚","💚"];
     if(getOwned("yuqi")>0) pool.push("🎈");
     if(getOwned("soyeon")>0) pool.push("🌸");
@@ -4598,14 +4332,7 @@ function clickMultFromLevel(lvl){
   }
   setInterval(()=>{ if(Math.random()<0.85) spawnWorldParticle(); }, 900);
 
-
-  /* =======================
-     CENTER PANEL (units)
-     - show up to 12 icons + +N
-     - wiggle + pop on purchase
-  ======================= */
   function renderWorldLanes(){
-    // keep the top minis in sync, but do NOT wipe the chat from the center
     if(worldAutoMini) worldAutoMini.textContent = `💚/сек: ${fmt(autoRate())}`;
 
     const bought = ITEMS
@@ -4619,16 +4346,10 @@ function clickMultFromLevel(lvl){
     const top = bought.slice().sort((a,b)=> (b.it.add*b.lvl*b.mult) - (a.it.add*a.lvl*a.mult))[0];
   }
 
-  /* =======================
-     CURSOR RING (likes -> cursors)
-  ======================= */
-  function renderCursorRing(){ /* removed */ }
+  function renderCursorRing(){ }
 
-  /* =======================
-     SHOP UI
-  ======================= */
   let buyMult = 1;
-  let shopMode = "buy"; // buy | sell
+  let shopMode = "buy"; 
 
   function renderUpgrades(){
     if(!upgradeIcons) return;
@@ -4637,7 +4358,6 @@ function clickMultFromLevel(lvl){
     const avail = UPGRADES.filter(canShowUpgrade);
     avail.sort((a,b)=> (a.cost||0) - (b.cost||0));
 
-    // If nothing is available, show subtle placeholder
     if(avail.length === 0){
       const ph = document.createElement("div");
       ph.className = "upPlaceholder";
@@ -4665,7 +4385,6 @@ function clickMultFromLevel(lvl){
       d.addEventListener("click", ()=>{
         if(!canAfford(u.cost)){ toast("Не хватает любви 💚"); return; }
         if(buyUpgrade(u)){
-          // pop animation
           d.classList.add("bought");
           setTimeout(()=>d.remove(), 120);
           renderAll();
@@ -4690,7 +4409,6 @@ function clickMultFromLevel(lvl){
       const owned = getOwned(id);
       const cost1 = unitPrice(item);
 
-      // reveal when enough for 1st unit
       if(love >= cost1){
         if(revealItem(id)) announceReveal(id);
       }
@@ -4699,11 +4417,9 @@ function clickMultFromLevel(lvl){
       const priceN = totalPrice(item, buyMult);
       const canAct = (shopMode === "buy") ? (revealed && love >= priceN) : (owned > 0);
 
-      // classes
       row.classList.toggle("locked", !revealed);
       row.classList.toggle("disabled", revealed && !canAct);
 
-      // update icon/name/cost text to match revealed state
       const icon = row.querySelector(".shopIcon");
       if(icon) icon.textContent = revealed ? item.icon : "❓";
 
@@ -4721,7 +4437,6 @@ function clickMultFromLevel(lvl){
       if(lvl) lvl.textContent = owned;
     });
 
-    // update upgrade icons affordance (fix: passive income should unlock upgrades)
     const upIcons = document.querySelectorAll(".upIcon");
     upIcons.forEach(el => {
       const uid = el.dataset.upgradeId;
@@ -4780,7 +4495,6 @@ const lvl = document.createElement("div");
       row.appendChild(main);
       row.appendChild(lvl);
 
-      // tooltip
       row.addEventListener("mouseenter", (e)=>{
         const tName = revealed ? item.name : "???";
 
@@ -4814,7 +4528,6 @@ row.addEventListener("mousemove", (e)=>{ if(tt && tt.style.display==="block") sh
 
         if(shopMode === "buy"){
           if(!canAfford(priceN)){
-            // buy as many as possible up to buyMult
             let lo=1, hi=buyMult, best=0;
             while(lo<=hi){
               const mid=(lo+hi)>>1;
@@ -4868,7 +4581,7 @@ row.addEventListener("mousemove", (e)=>{ if(tt && tt.style.display==="block") sh
                 toastLong(`🏷️ Скидка −10%: осталось покупок ${state.buffs.shopDiscountLeft}/10`);
               }
             }
-          // pop animation in center
+
           row.classList.add("bought");
           setTimeout(()=>row.classList.remove("bought"), 280);
           persist();
@@ -4877,7 +4590,6 @@ row.addEventListener("mousemove", (e)=>{ if(tt && tt.style.display==="block") sh
           if(owned <= 0){ toast("Нечего продавать"); return; }
           const sellCount = Math.min(buyMult, owned);
 
-          // refund ~50% of last sellCount purchases
           const r = item.costMult, base=item.baseCost;
           const sumFor = (count) => count<=0 ? 0 : base * (Math.pow(r, count) - 1) / (r - 1);
           const totalC = sumFor(owned);
@@ -4897,7 +4609,6 @@ row.addEventListener("mousemove", (e)=>{ if(tt && tt.style.display==="block") sh
     }
   }
 
-  // qty tabs
   if(qtyTabs){
     qtyTabs.addEventListener("click", (e)=>{
       const b = e.target.closest("button[data-m]");
@@ -4908,7 +4619,6 @@ row.addEventListener("mousemove", (e)=>{ if(tt && tt.style.display==="block") sh
     });
   }
 
-  // mode buttons (if exist)
   document.querySelectorAll(".modeTabs .tab").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       document.querySelectorAll(".modeTabs .tab").forEach(x=>x.classList.remove("active"));
@@ -4917,10 +4627,6 @@ row.addEventListener("mousemove", (e)=>{ if(tt && tt.style.display==="block") sh
       renderShop();
     });
   });
-
-  /* =======================
-     CLICK HANDLER (FIX)
-  ======================= */
   
 function popClickValue(x, y, val){
   const el = document.createElement("div");
@@ -4929,7 +4635,6 @@ function popClickValue(x, y, val){
   el.style.left = (x || window.innerWidth/2) + "px";
   el.style.top  = (y || window.innerHeight/2) + "px";
   document.body.appendChild(el);
-  // animate
   requestAnimationFrame(()=> el.classList.add("show"));
   setTimeout(()=>{ el.classList.remove("show"); el.style.opacity = "0"; }, 520);
   setTimeout(()=> el.remove(), 800);
@@ -4944,15 +4649,12 @@ function doClick(clientX, clientY){
     persist();
     checkAchievements();
 
-    /* click burst disabled (no flying effects) */
     renderTop();
-    // reveal items that become visible
     renderShop();
     renderUpgrades();
   applyUpBarState();
 
     renderWorldLanes();
-    /* renderCursorRing removed */
   }
 
   if(sideHeart){
@@ -4964,12 +4666,9 @@ function doClick(clientX, clientY){
       setTimeout(()=>sideHeart.classList.remove("pulse"), 220);
       doClick(e.clientX, e.clientY);
     });
-    sideHeart.addEventListener("click", (e)=>e.preventDefault()); // avoid double on some browsers
+    sideHeart.addEventListener("click", (e)=>e.preventDefault());
   }
 
-  /* =======================
-     CENTER MESSAGES ROTATION
-  ======================= */
   let lastMsg = -1;
   function rotateMsg(){
     if(!worldMsg) return;
@@ -4980,36 +4679,23 @@ function doClick(clientX, clientY){
   }
   setInterval(rotateMsg, 4200);
 
-  
-  /* =======================
-     CUBE: unstable bonus
-     - каждые 10 секунд: 50% шанс дать бонус
-  ======================= */
   let cubeTimer = 0;
   function cubeBonusTick(){
     const cubes = getOwned("cube");
     if(cubes <= 0) return;
-
-    // 50% шанс на каждый тик (не на каждый куб, чтобы не спамило)
     if(Math.random() > 0.5) return;
-
-    // бонус = 30 секунд базовой автогенерации * кол-во кубов
     const base = baseAutoRate();
     if(base <= 0) return;
-
     const bonus = Math.floor(base * 30 * cubes);
     gainLove(bonus);
     toast(`Cube неожиданно помог: +${fmt(bonus)} 💚`);
   }
   setInterval(cubeBonusTick, 10000);
 
-/* =======================
-     TICK LOOP (auto gain + offline)
-  ======================= */
   function applyOffline(){
     const now = Date.now();
     const last = Number(state.lastSeen || now);
-    const deltaSec = Math.max(0, Math.min(3*60*60, (now - last)/1000)); // cap 3 hours when tab was closed
+    const deltaSec = Math.max(0, Math.min(3*60*60, (now - last)/1000));
     const rate = autoRate();
     if(deltaSec > 2 && rate > 0){
       const gain = Math.floor(rate * deltaSec);
@@ -5058,14 +4744,12 @@ state.best = Math.max(state.best, state.love);
     }
   });
 
-
   window.addEventListener("pagehide", ()=>{
     state.lastSeen = Date.now();
     persist();
   });
 
   setInterval(()=>persist(), 1200);
-
 
   function renderTop(){
     const love = Math.floor(state.love);
@@ -5317,19 +5001,25 @@ if(loveEl) loveEl.textContent = fmt(love);
     state.eventUpgrades = {};
     state.clicks = 0;
     state.totalClicks = 0;
+
     state.quiz = { idx: 0, nextAt: (QUIZ_THRESHOLDS[0]||40), used: {}, snoozeUntil: 0};
     state.quizActive = false;
     state._quizCurrent = null;
+
     state.quizStats = { started:0, answered:0, correct:0, streak:0, bestStreak:0, lastStartedIdx:-1, bonusPick:{ perm05:0, x300_10s:0, plus50pct:0, freebuy:0, discount10x:0 } };
+
     state.buffs = { clickMult: 1, clickMultUntil: 0, shopDiscountLeft: 0, freePurchase: false };
     state.totalPurchases = 0;
     state.playTimeMs = 0;
     state._lastTickTs = Date.now();
     state._autoFrac = 0;
+
     state.achievements = {};
+
     state.clickBase = 1;
     state.clickLevel = 0;
     state.clickCpsPct = 0;
+
     state.event = { type:null, endsAt:0, nextFanAt:0, nextCubeAt:0, cubeMode:null, cubeBonus:0, cubeClickMult:1, cubeAutoOff:false };
     state.lastSeen = Date.now();
 
